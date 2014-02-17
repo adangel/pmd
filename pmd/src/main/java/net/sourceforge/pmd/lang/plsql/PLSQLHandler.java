@@ -5,12 +5,10 @@ package net.sourceforge.pmd.lang.plsql;
 
 import java.io.Writer;
 
-import net.sourceforge.pmd.lang.AbstractLanguageVersionHandler;
-import net.sourceforge.pmd.lang.DataFlowHandler;
-import net.sourceforge.pmd.lang.Parser;
-import net.sourceforge.pmd.lang.ParserOptions;
-import net.sourceforge.pmd.lang.VisitorStarter;
+import net.sf.saxon.sxpath.IndependentContext;
+import net.sourceforge.pmd.lang.*;
 import net.sourceforge.pmd.lang.ast.Node;
+import net.sourceforge.pmd.lang.ast.xpath.AbstractASTXPathHandler;
 import net.sourceforge.pmd.lang.dfa.DFAGraphRule;
 import net.sourceforge.pmd.lang.plsql.ast.ASTInput;
 import net.sourceforge.pmd.lang.plsql.ast.DumpFacade;
@@ -38,6 +36,16 @@ public class PLSQLHandler extends AbstractLanguageVersionHandler {
 	return PLSQLRuleViolationFactory.INSTANCE;
     }
 
+    @Override
+    public XPathHandler getXPathHandler() {
+        return new AbstractASTXPathHandler() {
+            public void initialize() {
+            }
+
+            public void initialize(IndependentContext context) {
+            }
+        };
+    }
     @Override
     public DFAGraphRule getDFAGraphRule() {
         return new DFAPLSQLGraphRule();
