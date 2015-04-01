@@ -210,7 +210,7 @@
 *   Mark Holczhammer - bug report for InefficientStringBuffering
 *   Raja Rajan - 2 bug reports for CompareObjectswithEquals
 *   Jeff Chamblee - suggested better message for UnnecessaryCaseChange, bug report for CompareObjectsWithEquals
-*   Dave Brosius - suggested MisleadingVariableName rule, a couple of nice patches to clean up some string handling
+*   Dave Brosius - suggested M_IsleadingVariableName rule, a couple of nice patches to clean up some string handling
     inefficiencies, non-static class usages, and unclosed streams/readers - found with Findbugs, I daresay :-)
 *   Chris Grindstaff - fixed SWTException when Eclipse plugin is run on a file with syntax error
 *   Eduard Naum - fixed JDK 1.3 runtime problems in Eclipse plugin
