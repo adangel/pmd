@@ -2533,7 +2533,7 @@ The binary package still contains all languages and can be used as usual. Have a
      Basic ruleset: ClassCastExceptionWithToArray, AvoidDecimalLiteralsInBigDecimalConstructor
      Design ruleset: NonThreadSafeSingleton, UncommentedEmptyMethod, UncommentedEmptyConstructor
      Controversial ruleset: DefaultPackage
-     Naming ruleset: MisleadingVariableName
+     Naming ruleset: M_IsLeadingVariableName
      Migration ruleset: ReplaceVectorWithList, ReplaceHashtableWithMap, ReplaceEnumerationWithIterator, AvoidEnumAsIdentifier, AvoidAssertAsIdentifier
      Strings ruleset: UseStringBufferLength
     Fixed bug 1292745 - Removed unused source file ExceptionTypeChecking.java

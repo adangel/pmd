@@ -455,12 +455,12 @@ public class SomeClass {
         </example>
       </rule>
 
-    <rule name="MisleadingVariableName"
+    <rule name="M_IsLeadingVariableName"
    		language="java"
           since="3.4"
           message="Avoid naming non-fields with the prefix 'm_'"
           class="net.sourceforge.pmd.lang.rule.XPathRule"
-          externalInfoUrl="${pmd.website.baseurl}/rules/java/naming.html#MisleadingVariableName">
+          externalInfoUrl="${pmd.website.baseurl}/rules/java/naming.html#M_IsLeadingVariableName">
       <description>
 Detects when a non-field has a name starting with 'm_'.  This usually denotes a field and could be confusing.
       </description>

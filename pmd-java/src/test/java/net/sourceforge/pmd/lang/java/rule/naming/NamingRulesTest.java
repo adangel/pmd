@@ -21,7 +21,7 @@ public class NamingRulesTest extends SimpleAggregatorTst {
         addRule(RULESET, "LongVariable");
         addRule(RULESET, "MethodNamingConventions");
         addRule(RULESET, "MethodWithSameNameAsEnclosingClass");
-        addRule(RULESET, "MisleadingVariableName");
+        addRule(RULESET, "M_IsLeadingVariableName");
         addRule(RULESET, "NoPackage");
         addRule(RULESET, "PackageCase");
         addRule(RULESET, "ShortMethodName");
