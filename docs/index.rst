@@ -6,11 +6,36 @@
 Welcome to pmd's documentation!
 ===============================
 
-Contents:
+
+.. _user-docs:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
+   :caption: User Documentation
+   
+   user-docs/getting_started
+   user-docs/rulesets
+   user-docs/best_practices
+   user-docs/tools
+   user-docs/help
 
+.. _rules:
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Rule Reference
+   
+   rules/apex
+   rules/java
+
+.. _dev-docs:
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Developer Documentation
+   
+   dev-docs/contributing
+   dev-docs/guides
 
 
 Indices and tables
