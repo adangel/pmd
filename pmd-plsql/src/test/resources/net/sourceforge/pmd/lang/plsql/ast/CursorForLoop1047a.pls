@@ -7,7 +7,6 @@ CREATE OR REPLACE PROCEDURE test2 ( a OUT number, b OUT number )
  BEGIN
         FOR registro IN ( SELECT  SUM(field1),
                                   MAX(field2)
-                            INTO a,b
                             FROM  test_tbl
                             GROUP BY fieldx)
         LOOP
