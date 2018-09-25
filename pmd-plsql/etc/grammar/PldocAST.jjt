@@ -27,6 +27,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 /**
+ * Correctly parse the select statement in CursorForLoops.
+ *
+ * Andreas Dangel 09/2018
+ *====================================================================
  * Added support for OrderBy and RowLimiting clauses for SELECT statements
  * Removed FROM from the RelationalExpression
  * Support QueryPartitionClause
@@ -1827,7 +1831,7 @@ ASTCursorForLoopStatement CursorForLoopStatement() :
 ASTSelectStatement SelectStatement() :
 {}
 {
-    SqlStatement("(", ")")
+    Subquery()
     { return jjtThis ; }
 }
 
