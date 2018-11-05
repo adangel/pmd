@@ -1946,7 +1946,7 @@ Dims:
  * See https://docs.oracle.com/javase/specs/jls/se10/html/jls-8.html#jls-UnannType
  */
 // TODO make void
-void Type():
+void Type() #void:
 {
     Token t;
 }
@@ -1984,7 +1984,7 @@ void Dims() #ArrayTypeDims:
 }
 
 // TODO make void
-void ReferenceType():
+void ReferenceType() #void:
 {}
 {
 
