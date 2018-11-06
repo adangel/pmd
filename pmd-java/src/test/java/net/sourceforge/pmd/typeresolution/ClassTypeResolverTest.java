@@ -824,7 +824,7 @@ public class ClassTypeResolverTest {
 
         ASTReferenceType typeNode = declaration.getFirstChildOfType(ASTType.class).getFirstChildOfType(ASTReferenceType.class);
         assertNotNull(typeNode);
-        assertTrue(typeNode.isArray());
+        assertTrue(typeNode.isArrayType());
         assertEquals(1, typeNode.getArrayDepth());
         assertEquals("int", typeNode.getFirstChildOfType(ASTPrimitiveType.class).getImage());
 
@@ -851,7 +851,7 @@ public class ClassTypeResolverTest {
 
         ASTReferenceType typeNode = declaration.getFirstChildOfType(ASTType.class).getFirstChildOfType(ASTReferenceType.class);
         assertNotNull(typeNode);
-        assertTrue(typeNode.isArray());
+        assertTrue(typeNode.isArrayType());
         assertEquals(1, typeNode.getArrayDepth());
         assertEquals("String", typeNode.getFirstChildOfType(ASTClassOrInterfaceType.class).getImage());
 
