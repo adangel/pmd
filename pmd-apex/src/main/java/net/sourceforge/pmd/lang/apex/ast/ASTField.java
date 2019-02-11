@@ -35,4 +35,8 @@ public class ASTField extends AbstractApexNode<Field> implements CanSuppressWarn
         }
         return false;
     }
+
+    public String getTypeRef() {
+        return String.valueOf(node.getTypeRef());
+    }
 }
