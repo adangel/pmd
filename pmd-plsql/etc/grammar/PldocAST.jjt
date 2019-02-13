@@ -1505,6 +1505,18 @@ ASTWithinClause WithinClause() :
     { return jjtThis; }
 }
 
+ASTListaggOverflowClause ListaggOverflowClause() :
+{}
+{
+    <ON> "OVERFLOW"
+    (
+      "ERROR"
+    |
+      <TRUNCATE> [ StringLiteral() ] [ ( <WITH> | "WITHOUT" ) "COUNT" ]
+    )
+    { return jjtThis; }
+}
+
 ASTColumn Column() :
 { ASTID id; }
 {
@@ -3153,15 +3165,15 @@ ASTQualifiedName QualifiedName() :
 }
 
 ASTArguments Arguments() :
+{}
 {
-}
-{
-  //"(" [ ArgumentList() ] ")"
+  "("
+      [ [<ALL> | <DISTINCT> | <UNIQUE>] ("*" | ArgumentList()) ]
+      // Note: ListaggOverflowClause is only allowed for LISTAGG function, but this grammar allows it for all functions.
+      [ ListaggOverflowClause() ]
+  ")"
 
-  "(" [ [<ALL> | <DISTINCT> | <UNIQUE>] ("*" | ArgumentList()) ] ")"
- {
- return jjtThis ;
- }
+ { return jjtThis; }
 }
 
 ASTArgumentList ArgumentList() :
@@ -4754,6 +4766,7 @@ ASTKEYWORD_UNRESERVED KEYWORD_UNRESERVED (): {}
 // PL/SQL UNRESERVED KEYWORDS - V$RESERVED.RESERVED='N'
 (
 "FIRST" | "REPLACE" | "REF" | "LAST" | "TRIM" | "OVER" | "UNBOUNDED" | "PRECEDING" | "FOLLOWING" | "WITHIN" |
+"OVERFLOW" | "ERROR" | "WITHOUT" | "COUNT" |
 <FALSE>
  | <TRUE>
  | <A>
@@ -5002,7 +5015,6 @@ ASTKEYWORD_UNRESERVED KEYWORD_UNRESERVED (): {}
 //| <ENQUEUE>
 //| <ENTERPRISE>
 //| <ENTRY>
-//| <ERROR>
 //| <ERROR_ON_OVERLAP_TIME>
 //| <ERRORS>
 | <ESCAPE>
@@ -5421,7 +5433,6 @@ ASTKEYWORD_UNRESERVED KEYWORD_UNRESERVED (): {}
 //| <OUTLINE>
 //| <OUTLINE_LEAF>
 //| <OVER>
-//| <OVERFLOW>
 //| <OVERFLOW_NOMOVE>
 //| <OVERLAPS>
 | <OVERRIDING>
@@ -5807,7 +5818,6 @@ ASTKEYWORD_UNRESERVED KEYWORD_UNRESERVED (): {}
 | <WHENEVER>
 //| <WHITESPACE>
 //| <WITHIN>
-//| <WITHOUT>
 //| <WORK>
 //| <WRAPPED>
 //| <WRITE>
@@ -5952,7 +5962,6 @@ ASTID ID(): {}
 		| <NUMBER_BASE>
 		| <OCIROWID>
 		| <OF>  //RESERVED WORD
-		//| <ON>  //RESERVED WORD
 		//20120501 | <OPAQUE>
 		| <BFILE_BASE>
 		| <BLOB_BASE> |
@@ -6018,7 +6027,6 @@ ASTID ID(): {}
 		| <STRING>
 		//| <UROWID> | <VARRAY> | <VARYING>
 		//20120429 | <BFILE> | <BLOB> | <CLOB> | <NCLOB>
-		| <WITH>  //RESERVED WORD
 		| <WHILE> //SYNTAX
 		// | <LOCAL> | <ZONE> | <CHARACTER>
 		//| <PARENT>  | <MEMBER>
@@ -6209,7 +6217,6 @@ ASTQualifiedID QualifiedID(): {}
 		| <NUMBER_BASE>
 		| <OCIROWID>
 		//<OF>
-		//<ON>
 		//20120501 | <OPAQUE>
 		//20120501 | <OPEN>
 		| <OPERATOR>
@@ -6293,7 +6300,6 @@ ASTQualifiedID QualifiedID(): {}
 		//20120429 | <CLOB>
 		//20120429 | <NCLOB>
 		//| <LOCAL>
-		//<WITH>
 		| <WHILE>
 		// | <ZONE>
 		//| <CHARACTER>
