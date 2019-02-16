@@ -113,9 +113,29 @@ class ASTClassOrInterfaceTypeTest : FunSpec({
 
         "ArrayTypes[][][]" should matchType<ASTArrayType> {
 
+            it.elementType shouldBe child<ASTClassOrInterfaceType> {
+                it.typeImage shouldBe "ArrayTypes"
+            }
+
+            it.dimensions shouldBe child {
+
+                child<ASTArrayTypeDim> {}
+                child<ASTArrayTypeDim> {}
+                child<ASTArrayTypeDim> {}
+            }
         }
 
-        "ArrayTypes[][][] c = new ArrayTypes[][][] { new ArrayTypes[1][2] };"
+        "new ArrayTypes[][][] { }" should matchExpr<ASTAllocationExpression> {
+
+            // not an array type
+            child<ASTClassOrInterfaceType> {
+                it.typeImage shouldBe "ArrayTypes"
+            }
+
+            child<ASTArrayDimsAndInits> {
+                child<ASTArrayInitializer> { }
+            }
+        }
 
     }
 
