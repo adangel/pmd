@@ -71,7 +71,7 @@ public class MethodNameDeclaration extends AbstractNameDeclaration {
         MethodNameDeclaration other = (MethodNameDeclaration) o;
 
         // compare name
-        if (!other.getName().equals(getName())) { // method declarators have no image
+        if (!other.getName().equals(getName())) {
             return false;
         }
 
