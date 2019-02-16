@@ -109,4 +109,14 @@ class ASTClassOrInterfaceTypeTest : FunSpec({
         }
     }
 
+    testGroup("Test array types") {
+
+        "ArrayTypes[][][]" should matchType<ASTArrayType> {
+
+        }
+
+        "ArrayTypes[][][] c = new ArrayTypes[][][] { new ArrayTypes[1][2] };"
+
+    }
+
 })
