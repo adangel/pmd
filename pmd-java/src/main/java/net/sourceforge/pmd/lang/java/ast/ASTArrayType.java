@@ -31,6 +31,16 @@ public final class ASTArrayType extends AbstractJavaTypeNode implements ASTRefer
     }
 
 
+    public ASTType getElementType() {
+        return (ASTType) jjtGetChild(0);
+    }
+
+    @Override
+    public String getTypeImage() {
+        return getElementType().getTypeImage();
+    }
+
+
     @Override
     public int getArrayDepth() {
         return getDimensions().getSize();

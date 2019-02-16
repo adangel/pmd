@@ -127,9 +127,10 @@ public class MethodNameDeclaration extends AbstractNameDeclaration {
 
         ASTFormalParameters myParams = (ASTFormalParameters) node.jjtGetChild(0);
         for (ASTFormalParameter myParam : myParams) {
-            String myTypeImg = myParam.getTypeNode().getTypeImage();
-
-            hash = hash * 31 + myTypeImg.hashCode();
+            if (!myParam.isTypeInferred()) {
+                String myTypeImg = myParam.getTypeNode().getTypeImage();
+                hash = hash * 31 + myTypeImg.hashCode();
+            }
         }
 
         return hash;
