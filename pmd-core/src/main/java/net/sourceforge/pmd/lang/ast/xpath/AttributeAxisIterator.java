@@ -7,7 +7,6 @@ package net.sourceforge.pmd.lang.ast.xpath;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -123,9 +122,6 @@ public class AttributeAxisIterator implements Iterator<Attribute> {
     }
 
 
-    class doo<F extends Collection<T>, T> {
-
-    }
     /**
      * Associates an attribute accessor with the XPath-accessible
      * name of the attribute. This is used to avoid recomputing
