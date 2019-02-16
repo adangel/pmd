@@ -9,6 +9,7 @@ import net.sourceforge.pmd.lang.java.ast.ASTFormalParameter;
 import net.sourceforge.pmd.lang.java.ast.ASTFormalParameters;
 import net.sourceforge.pmd.lang.java.ast.ASTMethodDeclarator;
 import net.sourceforge.pmd.lang.java.ast.ASTPrimitiveType;
+import net.sourceforge.pmd.lang.java.ast.ASTType;
 import net.sourceforge.pmd.lang.symboltable.AbstractNameDeclaration;
 
 public class MethodNameDeclaration extends AbstractNameDeclaration {
@@ -125,16 +126,8 @@ public class MethodNameDeclaration extends AbstractNameDeclaration {
         int hash = node.getImage().hashCode() * 31 + ((ASTMethodDeclarator) node).getParameterCount();
 
         ASTFormalParameters myParams = (ASTFormalParameters) node.jjtGetChild(0);
-        for (int i = 0; i < ((ASTMethodDeclarator) node).getParameterCount(); i++) {
-            ASTFormalParameter myParam = (ASTFormalParameter) myParams.jjtGetChild(i);
-            Node myTypeNode = myParam.getTypeNode().jjtGetChild(0);
-
-            String myTypeImg;
-            if (myTypeNode instanceof ASTPrimitiveType) {
-                myTypeImg = myTypeNode.getImage();
-            } else {
-                myTypeImg = myTypeNode.jjtGetChild(0).getImage();
-            }
+        for (ASTFormalParameter myParam : myParams) {
+            String myTypeImg = myParam.getTypeNode().getTypeImage();
 
             hash = hash * 31 + myTypeImg.hashCode();
         }

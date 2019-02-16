@@ -31,6 +31,7 @@ public final class ASTArrayType extends AbstractJavaTypeNode implements ASTRefer
     }
 
 
+    @Override
     public int getArrayDepth() {
         return getDimensions().getSize();
     }
