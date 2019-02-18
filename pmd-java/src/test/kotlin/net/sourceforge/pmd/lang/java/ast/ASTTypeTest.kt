@@ -1,15 +1,14 @@
 package net.sourceforge.pmd.lang.java.ast
 
 import io.kotlintest.shouldBe
-import io.kotlintest.specs.FunSpec
 
 /**
  * @author Clément Fournier
  * @since 7.0.0
  */
-class ASTTypeTest : FunSpec({
+class ASTTypeTest : ParserTestSpec({
 
-    testGroup("Test non-recursive ClassOrInterfaceTypes") {
+    parserTest("Test non-recursive ClassOrInterfaceTypes") {
 
         "java.util.List" should matchType<ASTClassOrInterfaceType> {
             it.typeImage shouldBe "java.util.List"
@@ -31,7 +30,7 @@ class ASTTypeTest : FunSpec({
         }
     }
 
-    testGroup("Test recursive ClassOrInterfaceTypes") {
+    parserTest("Test recursive ClassOrInterfaceTypes") {
 
         "java.util.Map.@Foo Entry<K, V>" should matchType<ASTClassOrInterfaceType> {
             it.typeImage shouldBe "java.util.Map.Entry"
@@ -109,7 +108,7 @@ class ASTTypeTest : FunSpec({
         }
     }
 
-    testGroup("Test array types") {
+    parserTest("Test array types") {
 
         "ArrayTypes[][][]" should matchType<ASTArrayType> {
 
@@ -122,18 +121,6 @@ class ASTTypeTest : FunSpec({
                 child<ASTArrayTypeDim> {}
                 child<ASTArrayTypeDim> {}
                 child<ASTArrayTypeDim> {}
-            }
-        }
-
-        "new ArrayTypes[][][] { }" should matchExpr<ASTAllocationExpression> {
-
-            // not an array type
-            child<ASTClassOrInterfaceType> {
-                it.typeImage shouldBe "ArrayTypes"
-            }
-
-            child<ASTArrayDimsAndInits> {
-                child<ASTArrayInitializer> { }
             }
         }
 
