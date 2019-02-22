@@ -64,7 +64,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * Sergey Yanzin 11/2016
  */
 
-//
+// test
 options {
 	DEBUG_PARSER = false;
 	DEBUG_TOKEN_MANAGER = false;
