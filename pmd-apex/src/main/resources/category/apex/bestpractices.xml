@@ -109,4 +109,24 @@ trigger Accounts on Account (before insert, before update, before delete, after 
 ]]>
         </example>
     </rule>
+
+    <rule name="UnusedFormalParameter"
+          since="6.13.0"
+          message="Avoid unused method parameters such as ''{0}''."
+          class="net.sourceforge.pmd.lang.apex.rule.bestpractices.UnusedFormalParameterRule"
+          externalInfoUrl="${pmd.website.baseurl}/pmd_rules_apex_bestpractices.html#unusedformalparameter">
+        <description>
+Avoid passing parameters to methods without actually referencing them in the method body.
+        </description>
+        <priority>3</priority>
+        <example>
+<![CDATA[
+public class Foo {
+    public void bar(int param1, int param2) { // param2 is unused
+        int localvar = param1 + 2;
+    }
+}
+]]>
+        </example>
+    </rule>
 </ruleset>
