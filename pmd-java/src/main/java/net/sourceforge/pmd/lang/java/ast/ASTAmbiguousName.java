@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import net.sourceforge.pmd.lang.ast.xpath.NoAttribute;
+import net.sourceforge.pmd.lang.ast.xpath.NoAttribute.NoAttrScope;
 
 
 /**
@@ -63,6 +65,7 @@ import java.util.function.Function;
  * information. A second pass on the AST after building the symbol tables
  * would allow us to remove all the remaining ambiguous names.
  */
+@NoAttribute(scope = NoAttrScope.INHERITED) // don't expose irrelevant attributes
 public final class ASTAmbiguousName extends AbstractJavaTypeNode implements ASTReferenceType, ASTPrimaryExpression {
 
     ASTAmbiguousName(int id) {
@@ -97,8 +100,8 @@ public final class ASTAmbiguousName extends AbstractJavaTypeNode implements ASTR
         visitor.visit(this, data);
     }
 
-
     @Override
+    @NoAttribute
     public String getTypeImage() {
         return getImage();
     }
