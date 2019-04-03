@@ -4,6 +4,15 @@
 
 package net.sourceforge.pmd.lang.java.ast;
 
+/**
+ * One of the {@linkplain ASTSwitchLabeledRule SwitchLabeledRule}s.
+ *
+ * <pre class="grammar">
+ *
+ * SwitchLabeledBlock ::= {@link ASTSwitchLabel SwitchLabel} "->" {@link ASTBlock Block}
+ *
+ * </pre>
+ */
 public class ASTSwitchLabeledBlock extends AbstractJavaNode implements ASTSwitchLabeledRule {
 
     ASTSwitchLabeledBlock(int id) {

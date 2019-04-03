@@ -4,6 +4,15 @@
 
 package net.sourceforge.pmd.lang.java.ast;
 
+/**
+ * One of the {@linkplain ASTSwitchLabeledRule SwitchLabeledRule}s.
+ *
+ * <pre class="grammar">
+ *
+ * SwitchLabeledThrowStatement ::= {@link ASTSwitchLabel SwitchLabel} "->" {@link ASTThrowStatement ThrowStatement}
+ *
+ * </pre>
+ */
 public class ASTSwitchLabeledThrowStatement extends AbstractJavaNode implements ASTSwitchLabeledRule {
 
     ASTSwitchLabeledThrowStatement(int id) {
