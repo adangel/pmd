@@ -13,7 +13,7 @@ package net.sourceforge.pmd.lang.java.ast;
  *
  * </pre>
  */
-public class ASTSwitchLabeledBlock extends AbstractJavaNode implements ASTSwitchLabeledRule {
+public final class ASTSwitchLabeledBlock extends AbstractJavaNode implements ASTSwitchLabeledRule {
 
     ASTSwitchLabeledBlock(int id) {
         super(id);
