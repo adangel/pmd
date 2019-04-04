@@ -12,7 +12,6 @@ import java.util.function.Function;
 
 import net.sourceforge.pmd.lang.ast.xpath.NoAttribute;
 import net.sourceforge.pmd.lang.ast.xpath.NoAttribute.NoAttrScope;
-import net.sourceforge.pmd.lang.java.xpath.SemanticAmbiguityChecker;
 
 
 /**
@@ -111,10 +110,6 @@ public final class ASTAmbiguousName extends AbstractJavaTypeNode implements ASTR
         return Arrays.asList(getImage().split("\\."));
     }
 
-    @Deprecated
-    public SemanticAmbiguityChecker.SemanticAmbiguityResult getSemanticCheck() {
-        return SemanticAmbiguityChecker.semanticCheck(this);
-    }
 
     // Package-private construction methods:
 
