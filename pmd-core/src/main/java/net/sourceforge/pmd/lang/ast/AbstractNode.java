@@ -229,6 +229,8 @@ public abstract class AbstractNode implements Node {
 
     public void jjtSetFirstToken(final GenericToken token) {
         this.firstToken = token;
+        this.beginLine = token.getBeginLine();
+        this.beginColumn = token.getBeginColumn();
     }
 
     public GenericToken jjtGetLastToken() {
@@ -237,6 +239,8 @@ public abstract class AbstractNode implements Node {
 
     public void jjtSetLastToken(final GenericToken token) {
         this.lastToken = token;
+        this.endLine = token.getEndLine();
+        this.endColumn = token.getEndColumn();
     }
 
     @Override
