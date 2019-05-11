@@ -1911,6 +1911,34 @@ void Initializer() :
 }
 
 
+
+
+/* JLS: https://docs.oracle.com/javase/specs/jls/se8/html/jls-4.html#jls-4.3
+
+ReferenceType:
+    ClassOrInterfaceType
+    TypeVariable
+    ArrayType
+ClassOrInterfaceType:
+    ClassType
+    InterfaceType
+ClassType:
+    {Annotation} Identifier [TypeArguments]
+    ClassOrInterfaceType . {Annotation} Identifier [TypeArguments]
+InterfaceType:
+    ClassType
+TypeVariable:
+    {Annotation} Identifier
+ArrayType:
+    PrimitiveType Dims
+    ClassOrInterfaceType Dims
+    TypeVariable Dims
+Dims:
+    {Annotation} [ ] {{Annotation} [ ]}
+
+*/
+
+
 /*
  * Type, name and expression syntax follows.
  * Type is the same as "UnannType" in JLS
@@ -1922,18 +1950,39 @@ void Type():
     Token t;
 }
 {
- LOOKAHEAD(2) ReferenceType()
+ // lookahead to catch arrays of primitive types.
+ // we can't lookahead for just PrimitiveType() "["
+ // because the "[" may be preceded by annotations
+ LOOKAHEAD(PrimitiveType() ArrayTypeDim() | <IDENTIFIER>) ReferenceType()
  | PrimitiveType()
+}
+
+void Dims() #ArrayTypeDims:
+{}
+{
+  // the list of dimensions is flat which is not cool for annotation
+  // placement, but realistically that's a corner case.
+  (ArrayTypeDim())+
+}
+
+void ArrayTypeDim():
+{}
+{
+  (TypeAnnotation())* "[" "]"
 }
 
 void ReferenceType():
 {}
 {
-  // The grammar here is mildly wrong, the annotations can be before each []
-  // This will wait for #997
-   PrimitiveType() (TypeAnnotation())* ( LOOKAHEAD(2) "[" "]" { jjtThis.bumpArrayDepth(); })+
-  |
-   ( ClassOrInterfaceType()) (TypeAnnotation())* ( LOOKAHEAD(2) "[" "]" { jjtThis.bumpArrayDepth(); })*
+
+  // TODO TypeVariable is ambiguous with ClassOrInterfaceType
+  // but I think it would be good to have a node for it nevertheless
+  // to help typeres, since TypeVariables have special types (intersection types)
+  // This could be handled in a rewrite phase, which is necessary for
+  // disambiguation. Since type parameters shadow anything, their disambiguation
+  // is stable regardless of classpath config.
+    ( PrimitiveType() Dims() )                           #ArrayType
+  | ( ClassOrInterfaceType() [ LOOKAHEAD(2) Dims() ] )   #ArrayType(>1)
 }
 
 void ClassOrInterfaceType():
