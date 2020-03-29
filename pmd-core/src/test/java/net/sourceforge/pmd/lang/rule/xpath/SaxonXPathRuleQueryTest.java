@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import net.sourceforge.pmd.RuleContext;
 import net.sourceforge.pmd.lang.ast.Node;
+import net.sourceforge.pmd.lang.rule.xpath.internal.ExpressionPrinter;
 import net.sourceforge.pmd.properties.PropertyDescriptor;
 import net.sourceforge.pmd.properties.PropertyFactory;
 
@@ -101,6 +102,23 @@ public class SaxonXPathRuleQueryTest {
         assertExpression("LetExpression(LazyExpression((((/)/descendant::element(ClassOrInterfaceType, xs:anyType)) or ((/)/descendant::element(OtherNode, xs:anyType)))), (((/)/descendant::element(dummyNode, xs:anyType))[$zz:zz1364913072]))", query.nodeNameToXPaths.get(SaxonXPathRuleQuery.AST_ROOT).get(0));
     }
 
+    /**
+     * If somewhere the ancestor axis is used, then we should not use rule chain,
+     * since that might lead to worse performance.
+     */
+    @Test
+    public void ruleChainVisitsAncestor() {
+        SaxonXPathRuleQuery query = createQuery("//dummyNode[ancestor::RootNode[@Image = 'bar']]");
+        List<String> ruleChainVisits = query.getRuleChainVisits();
+        
+        ExpressionPrinter printer = new ExpressionPrinter();
+        printer.visit(query.xpathExpression.getInternalExpression());
+        
+        System.out.println(query.nodeNameToXPaths);
+        Assert.assertEquals(0, ruleChainVisits.size());
+        Assert.assertEquals(1, query.nodeNameToXPaths.size());
+    }
+    
     @Test
     public void ruleChainVisitsNested() {
         SaxonXPathRuleQuery query = createQuery("//dummyNode/foo/*/bar[@Test = 'false']");

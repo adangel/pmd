@@ -40,13 +40,14 @@ public class RuleChainAnalyzer extends SaxonExprVisitor {
     private boolean rootElementReplaced;
     private boolean insideLazyExpression;
     private boolean foundPathInsideLazy;
+    private boolean foundAncestorAxis;
 
     public RuleChainAnalyzer(Configuration currentConfiguration) {
         this.configuration = currentConfiguration;
     }
 
     public String getRootElement() {
-        if (!foundPathInsideLazy && rootElementReplaced) {
+        if (!foundPathInsideLazy && !foundAncestorAxis && rootElementReplaced) {
             return rootElement;
         }
         return null;
@@ -101,6 +102,9 @@ public class RuleChainAnalyzer extends SaxonExprVisitor {
             } else if (test.getPrimitiveType() == Type.ELEMENT && e.getAxis() == Axis.CHILD) {
                 rootElement = configuration.getNamePool().getClarkName(test.getFingerprint());
             }
+        }
+        if (e.getAxis() == Axis.ANCESTOR || e.getAxis() == Axis.ANCESTOR_OR_SELF) {
+            foundAncestorAxis = true;
         }
         return super.visit(e);
     }
