@@ -7,8 +7,8 @@ package net.sourceforge.pmd.lang.rule.xpath.internal;
 import net.sf.saxon.expr.AxisExpression;
 import net.sf.saxon.expr.Expression;
 import net.sf.saxon.expr.RootExpression;
-import net.sf.saxon.expr.Token;
 import net.sf.saxon.expr.VennExpression;
+import net.sf.saxon.expr.parser.Token;
 import net.sf.saxon.om.Axis;
 
 /**

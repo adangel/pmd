@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.saxon.expr.Expression;
-import net.sf.saxon.expr.Token;
 import net.sf.saxon.expr.VennExpression;
+import net.sf.saxon.expr.parser.Token;
 
 /**
  * Splits a venn expression with the union operator into single expressions.

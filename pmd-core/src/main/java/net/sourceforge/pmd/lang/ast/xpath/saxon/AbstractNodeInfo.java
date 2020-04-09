@@ -9,17 +9,19 @@ import net.sourceforge.pmd.annotation.InternalApi;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.event.Receiver;
 import net.sf.saxon.om.Axis;
-import net.sf.saxon.om.AxisIterator;
 import net.sf.saxon.om.DocumentInfo;
-import net.sf.saxon.om.FastStringBuffer;
 import net.sf.saxon.om.NamePool;
-import net.sf.saxon.om.Navigator.AxisFilter;
+import net.sf.saxon.om.NamespaceBinding;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.SequenceIterator;
-import net.sf.saxon.om.SiblingCountingNode;
-import net.sf.saxon.om.VirtualNode;
 import net.sf.saxon.pattern.NodeTest;
 import net.sf.saxon.trans.XPathException;
+import net.sf.saxon.tree.iter.AxisIterator;
+import net.sf.saxon.tree.util.FastStringBuffer;
+import net.sf.saxon.tree.util.Navigator.AxisFilter;
+import net.sf.saxon.tree.wrapper.SiblingCountingNode;
+import net.sf.saxon.tree.wrapper.VirtualNode;
+import net.sf.saxon.type.SchemaType;
 import net.sf.saxon.value.Value;
 
 /**
@@ -63,6 +65,11 @@ public class AbstractNodeInfo implements VirtualNode, SiblingCountingNode {
     }
 
     @Override
+    public Object getRealNode() {
+        return getUnderlyingNode();
+    }
+
+    @Override
     public int getSiblingPosition() {
         throw createUnsupportedOperationException("SiblingCountingNode.getSiblingPosition()");
     }
@@ -78,9 +85,8 @@ public class AbstractNodeInfo implements VirtualNode, SiblingCountingNode {
     }
 
     @Override
-    public void copy(Receiver receiver, int whichNamespaces, boolean copyAnnotations, int locationId)
-            throws XPathException {
-        throw createUnsupportedOperationException("ValueRepresentation.copy(Receiver, int, boolean, int)");
+    public void copy(Receiver receiver, int copyOptions, int locationId) throws XPathException {
+        throw createUnsupportedOperationException("NodeInfo.copy(Receiver,int,int)");
     }
 
     /**
@@ -120,6 +126,11 @@ public class AbstractNodeInfo implements VirtualNode, SiblingCountingNode {
     }
 
     @Override
+    public String getAttributeValue(String uri, String local) {
+        throw createUnsupportedOperationException("NodeInfo.getAttributeValue(String,String)");
+    }
+
+    @Override
     public String getBaseURI() {
         throw createUnsupportedOperationException("NodeInfo.getBaseURI()");
     }
@@ -135,8 +146,8 @@ public class AbstractNodeInfo implements VirtualNode, SiblingCountingNode {
     }
 
     @Override
-    public int[] getDeclaredNamespaces(int[] buffer) {
-        throw createUnsupportedOperationException("NodeInfo.getDeclaredNamespaces(int[])");
+    public NamespaceBinding[] getDeclaredNamespaces(NamespaceBinding[] buffer) {
+        throw createUnsupportedOperationException("NodeInfo.getDeclaredNamespaces(NamespaceBinding[])");
     }
 
     @Override
@@ -150,7 +161,7 @@ public class AbstractNodeInfo implements VirtualNode, SiblingCountingNode {
      * {@inheritDoc}
      */
     @Override
-    public int getDocumentNumber() {
+    public long getDocumentNumber() {
         return 0;
     }
 
@@ -265,6 +276,11 @@ public class AbstractNodeInfo implements VirtualNode, SiblingCountingNode {
             axisIterator = new AxisFilter(axisIterator, nodeTest);
         }
         return axisIterator;
+    }
+
+    @Override
+    public SchemaType getSchemaType() {
+        throw createUnsupportedOperationException("NodeInfo.getSchemaType()");
     }
 
     /**

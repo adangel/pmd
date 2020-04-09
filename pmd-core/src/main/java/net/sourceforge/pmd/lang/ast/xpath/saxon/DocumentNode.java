@@ -12,11 +12,11 @@ import net.sourceforge.pmd.annotation.InternalApi;
 import net.sourceforge.pmd.lang.ast.Node;
 
 import net.sf.saxon.om.Axis;
-import net.sf.saxon.om.AxisIterator;
 import net.sf.saxon.om.DocumentInfo;
-import net.sf.saxon.om.Navigator;
 import net.sf.saxon.om.NodeInfo;
-import net.sf.saxon.om.SingleNodeIterator;
+import net.sf.saxon.tree.iter.AxisIterator;
+import net.sf.saxon.tree.iter.SingleNodeIterator;
+import net.sf.saxon.tree.util.Navigator;
 import net.sf.saxon.type.Type;
 
 /**
@@ -60,8 +60,8 @@ public class DocumentNode extends AbstractNodeInfo implements DocumentInfo {
     }
 
     @Override
-    public NodeInfo selectID(String id) {
-        throw createUnsupportedOperationException("DocumentInfo.selectID(String)");
+    public NodeInfo selectID(String id, boolean getParent) {
+        throw createUnsupportedOperationException("DocumentInfo.selectID(String,boolean)");
     }
 
     @Override
@@ -77,6 +77,21 @@ public class DocumentNode extends AbstractNodeInfo implements DocumentInfo {
     @Override
     public boolean hasChildNodes() {
         return true;
+    }
+
+    @Override
+    public boolean isTyped() {
+        return true;
+    }
+
+    @Override
+    public Object getUserData(String key) {
+        throw createUnsupportedOperationException("DocumentInfo.getUserData(String)");
+    }
+
+    @Override
+    public void setUserData(String key, Object value) {
+        throw createUnsupportedOperationException("DocumentInfo.setUserData(String,Object)");
     }
 
     @Override

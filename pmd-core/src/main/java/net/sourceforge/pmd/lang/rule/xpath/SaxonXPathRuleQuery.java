@@ -24,8 +24,8 @@ import net.sourceforge.pmd.lang.xpath.Initializer;
 import net.sourceforge.pmd.properties.PropertyDescriptor;
 
 import net.sf.saxon.expr.Expression;
+import net.sf.saxon.lib.NamespaceConstant;
 import net.sf.saxon.om.Item;
-import net.sf.saxon.om.NamespaceConstant;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.ValueRepresentation;
 import net.sf.saxon.sxpath.AbstractStaticContext;
@@ -151,7 +151,7 @@ public class SaxonXPathRuleQuery extends AbstractXPathRuleQuery {
 
         // Set variable values on the dynamic context
         for (final XPathVariable xpathVariable : xpathVariables) {
-            final String variableName = xpathVariable.getVariableQName().getLocalName();
+            final String variableName = xpathVariable.getVariableQName().getLocalPart();
             for (final Map.Entry<PropertyDescriptor<?>, Object> entry : super.properties.entrySet()) {
                 if (variableName.equals(entry.getKey().name())) {
                     final ValueRepresentation valueRepresentation = getRepresentation(entry.getKey(), entry.getValue());

@@ -9,8 +9,8 @@ import java.util.Iterator;
 import net.sourceforge.pmd.annotation.InternalApi;
 import net.sourceforge.pmd.lang.ast.xpath.Attribute;
 
-import net.sf.saxon.om.Navigator;
-import net.sf.saxon.om.SequenceIterator;
+import net.sf.saxon.tree.iter.AxisIterator;
+import net.sf.saxon.tree.util.Navigator;
 
 /**
  * An adapter over our {@link net.sourceforge.pmd.lang.ast.xpath.AttributeAxisIterator}
@@ -34,7 +34,7 @@ public class AttributeAxisIterator extends Navigator.BaseEnumeration {
     }
 
     @Override
-    public SequenceIterator getAnother() {
+    public AxisIterator getAnother() {
         return new AttributeAxisIterator(startNodeInfo);
     }
 

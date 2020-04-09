@@ -8,13 +8,14 @@ import net.sourceforge.pmd.annotation.InternalApi;
 import net.sourceforge.pmd.lang.ast.Node;
 
 import net.sf.saxon.om.Axis;
-import net.sf.saxon.om.AxisIterator;
 import net.sf.saxon.om.DocumentInfo;
-import net.sf.saxon.om.EmptyIterator;
-import net.sf.saxon.om.Navigator;
-import net.sf.saxon.om.NodeArrayIterator;
 import net.sf.saxon.om.NodeInfo;
-import net.sf.saxon.om.SingleNodeIterator;
+import net.sf.saxon.tree.iter.ArrayIterator;
+import net.sf.saxon.tree.iter.AxisIterator;
+import net.sf.saxon.tree.iter.AxisIteratorOverSequence;
+import net.sf.saxon.tree.iter.EmptyAxisIterator;
+import net.sf.saxon.tree.iter.SingleNodeIterator;
+import net.sf.saxon.tree.util.Navigator;
 import net.sf.saxon.type.Type;
 
 /**
@@ -134,9 +135,9 @@ public class ElementNode extends AbstractNodeInfo {
             return new AttributeAxisIterator(this);
         case Axis.CHILD:
             if (children == null) {
-                return EmptyIterator.getInstance();
+                return EmptyAxisIterator.emptyAxisIterator();
             } else {
-                return new NodeArrayIterator(children);
+                return new AxisIteratorOverSequence<>(new ArrayIterator(children));
             }
         case Axis.DESCENDANT:
             return new Navigator.DescendantEnumeration(this, false, true);
@@ -146,9 +147,9 @@ public class ElementNode extends AbstractNodeInfo {
             return new Navigator.FollowingEnumeration(this);
         case Axis.FOLLOWING_SIBLING:
             if (parent == null || siblingPosition == parent.children.length - 1) {
-                return EmptyIterator.getInstance();
+                return EmptyAxisIterator.emptyAxisIterator();
             } else {
-                return new NodeArrayIterator(parent.children, siblingPosition + 1, parent.children.length);
+                return new AxisIteratorOverSequence<>(new ArrayIterator(parent.children, siblingPosition + 1, parent.children.length));
             }
         case Axis.NAMESPACE:
             return super.iterateAxis(axisNumber);
@@ -158,9 +159,9 @@ public class ElementNode extends AbstractNodeInfo {
             return new Navigator.PrecedingEnumeration(this, false);
         case Axis.PRECEDING_SIBLING:
             if (parent == null || siblingPosition == 0) {
-                return EmptyIterator.getInstance();
+                return EmptyAxisIterator.emptyAxisIterator();
             } else {
-                return new NodeArrayIterator(parent.children, 0, siblingPosition);
+                return new AxisIteratorOverSequence<>(new ArrayIterator(parent.children, 0, siblingPosition));
             }
         case Axis.SELF:
             return SingleNodeIterator.makeIterator(this);
