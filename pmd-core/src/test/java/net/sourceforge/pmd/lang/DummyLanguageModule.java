@@ -26,6 +26,8 @@ import net.sourceforge.pmd.lang.rule.AbstractRuleViolationFactory;
 import net.sourceforge.pmd.lang.rule.ParametricRuleViolation;
 
 import net.sf.saxon.expr.XPathContext;
+import net.sf.saxon.lib.ExtensionFunctionDefinition;
+import net.sf.saxon.s9api.ExtensionFunction;
 import net.sf.saxon.sxpath.IndependentContext;
 
 /**
@@ -90,6 +92,11 @@ public class DummyLanguageModule extends BaseLanguageModule {
                 @Override
                 public Navigator getNavigator() {
                     return new DocumentNavigator();
+                }
+                
+                @Override
+                public List<ExtensionFunctionDefinition> getFunctions() {
+                    return super.getFunctions(LanguageRegistry.getLanguage(DummyLanguageModule.NAME), TestFunctions.class);
                 }
             };
         }

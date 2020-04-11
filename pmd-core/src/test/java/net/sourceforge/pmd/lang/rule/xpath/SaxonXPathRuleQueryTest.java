@@ -25,13 +25,13 @@ public class SaxonXPathRuleQueryTest {
     public void testListAttribute() {
         DummyNodeWithListAndEnum dummy = new DummyNodeWithListAndEnum(1);
 
-//        assertQuery(1, "//dummyNode[@List = \"A\"]", dummy);
-//        assertQuery(1, "//dummyNode[@List = \"B\"]", dummy);
-//        assertQuery(0, "//dummyNode[@List = \"C\"]", dummy);
+        assertQuery(1, "//dummyNode[@List = \"A\"]", dummy);
+        assertQuery(1, "//dummyNode[@List = \"B\"]", dummy);
+        assertQuery(0, "//dummyNode[@List = \"C\"]", dummy);
         assertQuery(1, "//dummyNode[@Enum = \"FOO\"]", dummy);
         assertQuery(0, "//dummyNode[@Enum = \"BAR\"]", dummy);
-//        assertQuery(1, "//dummyNode[@EnumList = \"FOO\"]", dummy);
-//        assertQuery(1, "//dummyNode[@EnumList = \"BAR\"]", dummy);
+        assertQuery(1, "//dummyNode[@EnumList = \"FOO\"]", dummy);
+        assertQuery(1, "//dummyNode[@EnumList = \"BAR\"]", dummy);
         assertQuery(1, "//dummyNode[@EnumList = (\"FOO\", \"BAR\")]", dummy);
         assertQuery(0, "//dummyNode[@EmptyList = (\"A\")]", dummy);
     }

@@ -5,6 +5,7 @@
 package net.sourceforge.pmd.lang.java;
 
 import java.io.Writer;
+import java.util.List;
 
 import net.sourceforge.pmd.lang.AbstractLanguageVersionHandler;
 import net.sourceforge.pmd.lang.DataFlowHandler;
@@ -37,6 +38,7 @@ import net.sourceforge.pmd.lang.metrics.LanguageMetricsProvider;
 import net.sourceforge.pmd.lang.rule.RuleViolationFactory;
 import net.sourceforge.pmd.util.designerbindings.DesignerBindings;
 
+import net.sf.saxon.lib.ExtensionFunctionDefinition;
 import net.sf.saxon.sxpath.IndependentContext;
 
 /**
@@ -72,6 +74,11 @@ public abstract class AbstractJavaHandler extends AbstractLanguageVersionHandler
             @Override
             public void initialize(IndependentContext context) {
                 super.initialize(context, LanguageRegistry.getLanguage(JavaLanguageModule.NAME), JavaFunctions.class);
+            }
+            
+            @Override
+            public List<ExtensionFunctionDefinition> getFunctions() {
+                return super.getFunctions(LanguageRegistry.getLanguage(JavaLanguageModule.NAME), JavaFunctions.class);
             }
         };
     }

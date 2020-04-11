@@ -7,6 +7,7 @@ package net.sourceforge.pmd.lang.rule.xpath;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,37 +17,45 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import net.sourceforge.pmd.RuleContext;
+import net.sourceforge.pmd.lang.Language;
+import net.sourceforge.pmd.lang.LanguageRegistry;
+import net.sourceforge.pmd.lang.LanguageVersion;
+import net.sourceforge.pmd.lang.LanguageVersionHandler;
 import net.sourceforge.pmd.lang.ast.Node;
+import net.sourceforge.pmd.lang.ast.xpath.AbstractASTXPathHandler;
 import net.sourceforge.pmd.lang.ast.xpath.saxon.DocumentNode;
 import net.sourceforge.pmd.lang.ast.xpath.saxon.ElementNode;
 import net.sourceforge.pmd.lang.rule.xpath.internal.RuleChainAnalyzer;
-import net.sourceforge.pmd.lang.xpath.Initializer;
+import net.sourceforge.pmd.lang.xpath.PMDFunctions;
 import net.sourceforge.pmd.properties.PropertyDescriptor;
 
+import net.sf.saxon.Configuration;
 import net.sf.saxon.expr.Expression;
+import net.sf.saxon.lib.ExtensionFunctionDefinition;
 import net.sf.saxon.lib.NamespaceConstant;
+import net.sf.saxon.om.AtomicArray;
+import net.sf.saxon.om.AtomicSequence;
+import net.sf.saxon.om.EmptyAtomicSequence;
 import net.sf.saxon.om.Item;
 import net.sf.saxon.om.SequenceIterator;
-import net.sf.saxon.om.ValueRepresentation;
-import net.sf.saxon.sxpath.AbstractStaticContext;
+import net.sf.saxon.s9api.Processor;
+import net.sf.saxon.s9api.QName;
+import net.sf.saxon.s9api.SaxonApiException;
+import net.sf.saxon.s9api.XPathCompiler;
+import net.sf.saxon.s9api.XPathExecutable;
 import net.sf.saxon.sxpath.IndependentContext;
 import net.sf.saxon.sxpath.XPathDynamicContext;
-import net.sf.saxon.sxpath.XPathEvaluator;
 import net.sf.saxon.sxpath.XPathExpression;
-import net.sf.saxon.sxpath.XPathStaticContext;
 import net.sf.saxon.sxpath.XPathVariable;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.AtomicValue;
 import net.sf.saxon.value.BigIntegerValue;
 import net.sf.saxon.value.BooleanValue;
 import net.sf.saxon.value.DoubleValue;
-import net.sf.saxon.value.EmptySequence;
 import net.sf.saxon.value.FloatValue;
 import net.sf.saxon.value.Int64Value;
-import net.sf.saxon.value.SequenceExtent;
 import net.sf.saxon.value.StringValue;
 import net.sf.saxon.value.UntypedAtomicValue;
-import net.sf.saxon.value.Value;
 
 /**
  * This is a Saxon based XPathRule query.
@@ -154,7 +163,7 @@ public class SaxonXPathRuleQuery extends AbstractXPathRuleQuery {
             final String variableName = xpathVariable.getVariableQName().getLocalPart();
             for (final Map.Entry<PropertyDescriptor<?>, Object> entry : super.properties.entrySet()) {
                 if (variableName.equals(entry.getKey().name())) {
-                    final ValueRepresentation valueRepresentation = getRepresentation(entry.getKey(), entry.getValue());
+                    final AtomicSequence valueRepresentation = getRepresentation(entry.getKey(), entry.getValue());
                     dynamicContext.setVariable(xpathVariable, valueRepresentation);
                 }
             }
@@ -163,7 +172,7 @@ public class SaxonXPathRuleQuery extends AbstractXPathRuleQuery {
     }
 
 
-    private ValueRepresentation getRepresentation(final PropertyDescriptor<?> descriptor, final Object value) {
+    private AtomicSequence getRepresentation(final PropertyDescriptor<?> descriptor, final Object value) {
         if (descriptor.isMultiValue()) {
             return getSequenceRepresentation((List<?>) value);
         } else {
@@ -222,41 +231,75 @@ public class SaxonXPathRuleQuery extends AbstractXPathRuleQuery {
             return;
         }
         try {
-            final XPathEvaluator xpathEvaluator = new XPathEvaluator();
-            final XPathStaticContext xpathStaticContext = xpathEvaluator.getStaticContext();
+            final Processor xpathProcessor = new Processor(false);
+            final XPathCompiler xpathCompiler = xpathProcessor.newXPathCompiler();
+            //final XPathEvaluator xpathEvaluator = new XPathEvaluator(xpathProcessor.getUnderlyingConfiguration());
+            //final XPathStaticContext xpathStaticContext = xpathEvaluator.getStaticContext();
 
             // Enable XPath 1.0 compatibility
             if (XPATH_1_0_COMPATIBILITY.equals(version)) {
-                ((AbstractStaticContext) xpathStaticContext).setBackwardsCompatibilityMode(true);
+                xpathCompiler.setBackwardsCompatible(true);
+                //((AbstractStaticContext) xpathStaticContext).setBackwardsCompatibilityMode(true);
             }
 
-            ((IndependentContext) xpathEvaluator.getStaticContext()).declareNamespace("fn", NamespaceConstant.FN);
+            //((IndependentContext) xpathEvaluator.getStaticContext()).declareNamespace("fn", NamespaceConstant.FN);
+            xpathCompiler.declareNamespace("fn", NamespaceConstant.FN);
 
             // Register PMD functions
-            Initializer.initialize((IndependentContext) xpathStaticContext);
+            //Initializer.initialize((IndependentContext) xpathStaticContext);
+            
+            //context.declareNamespace("pmd", "java:" + PMDFunctions.class.getName());
+            xpathCompiler.declareNamespace("pmd", "https://pmd.github.io/pmd/xpath/lang/core");
+            for (ExtensionFunctionDefinition f : AbstractASTXPathHandler.convertAllStatics("pmd", "https://pmd.github.io/pmd/xpath/lang/core", PMDFunctions.class)) {
+                xpathProcessor.registerExtensionFunction(f);
+            }
+            
+            for (Language language : LanguageRegistry.getLanguages()) {
+                for (LanguageVersion languageVersion : language.getVersions()) {
+                    LanguageVersionHandler languageVersionHandler = languageVersion.getLanguageVersionHandler();
+                    if (languageVersionHandler != null) {
+                        final List<ExtensionFunctionDefinition> functions = languageVersionHandler.getXPathHandler().getFunctions();
+                        if (!functions.isEmpty()) {
+                            final String namespacePrefix = "pmd-" + language.getTerseName();
+                            final String namespaceUri = "https://pmd.github.io/pmd/xpath/lang/" + language.getTerseName();
+                            xpathCompiler.declareNamespace(namespacePrefix, namespaceUri);
+                            for (ExtensionFunctionDefinition f : functions) {
+                                xpathProcessor.registerExtensionFunction(f);
+                            }
+                        }
+                    }
+                }
+            }
 
             /*
             Create XPathVariables for later use. It is a Saxon quirk that XPathVariables must be defined on the
             static context, and reused later to associate an actual value on the dynamic context creation, in
             createDynamicContext(ElementNode).
             */
-            xpathVariables = new ArrayList<>();
             for (final PropertyDescriptor<?> propertyDescriptor : super.properties.keySet()) {
                 final String name = propertyDescriptor.name();
                 if (!"xpath".equals(name)) {
-                    final XPathVariable xpathVariable = xpathStaticContext.declareVariable(null, name);
-                    xpathVariables.add(xpathVariable);
+                    //final XPathVariable xpathVariable = xpathStaticContext.declareVariable(null, name);
+                    xpathCompiler.declareVariable(new QName(name));
+                    //xpathVariables.add(xpathVariable);
                 }
             }
+            xpathVariables = new ArrayList<>();
+            Iterator<XPathVariable> it = ((IndependentContext) xpathCompiler.getUnderlyingStaticContext()).iterateExternalVariables();
+            while (it.hasNext()) {
+                xpathVariables.add(it.next());
+            }
 
-            xpathExpression = xpathEvaluator.createExpression(super.xpath);
-            analyzeXPathForRuleChain(xpathEvaluator);
-        } catch (final XPathException e) {
+            //xpathExpression = xpathEvaluator.createExpression(super.xpath);
+            final XPathExecutable xpathExecutable = xpathCompiler.compile(xpath);
+            xpathExpression = xpathExecutable.getUnderlyingExpression();
+            analyzeXPathForRuleChain(xpathProcessor.getUnderlyingConfiguration());
+        } catch (final SaxonApiException e) {
             throw new RuntimeException(e);
         }
     }
     
-    private void analyzeXPathForRuleChain(final XPathEvaluator xpathEvaluator) {
+    private void analyzeXPathForRuleChain(final Configuration configuration) {
         final Expression expr = xpathExpression.getInternalExpression();
 
         boolean useRuleChain = true;
@@ -266,7 +309,7 @@ public class SaxonXPathRuleQuery extends AbstractXPathRuleQuery {
 
         // Second step: Analyze each expression separately
         for (Expression subexpression : subexpressions) {
-            RuleChainAnalyzer rca = new RuleChainAnalyzer(xpathEvaluator.getConfiguration());
+            RuleChainAnalyzer rca = new RuleChainAnalyzer(configuration);
             Expression modified = rca.visit(subexpression);
 
             if (rca.getRootElement() != null) {
@@ -333,15 +376,15 @@ public class SaxonXPathRuleQuery extends AbstractXPathRuleQuery {
         }
     }
 
-    public static Value getSequenceRepresentation(List<?> list) {
+    public static AtomicSequence getSequenceRepresentation(List<?> list) {
         if (list == null || list.isEmpty()) {
-            return EmptySequence.getInstance();
+            return EmptyAtomicSequence.getInstance();
         }
-        final Item[] converted = new Item[list.size()];
+        final AtomicValue[] converted = new AtomicValue[list.size()];
         for (int i = 0; i < list.size(); i++) {
             converted[i] = getAtomicRepresentation(list.get(i));
         }
-        return new SequenceExtent(converted);
+        return new AtomicArray(converted);
     }
 
     @Override

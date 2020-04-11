@@ -8,8 +8,10 @@ import net.sourceforge.pmd.annotation.InternalApi;
 
 import net.sf.saxon.Configuration;
 import net.sf.saxon.event.Receiver;
-import net.sf.saxon.om.Axis;
+import net.sf.saxon.om.AtomicSequence;
+import net.sf.saxon.om.AxisInfo;
 import net.sf.saxon.om.DocumentInfo;
+import net.sf.saxon.om.Item;
 import net.sf.saxon.om.NamePool;
 import net.sf.saxon.om.NamespaceBinding;
 import net.sf.saxon.om.NodeInfo;
@@ -22,7 +24,6 @@ import net.sf.saxon.tree.util.Navigator.AxisFilter;
 import net.sf.saxon.tree.wrapper.SiblingCountingNode;
 import net.sf.saxon.tree.wrapper.VirtualNode;
 import net.sf.saxon.type.SchemaType;
-import net.sf.saxon.value.Value;
 
 /**
  * This is a basic implementation of the Saxon NodeInfo and related interfaces.
@@ -55,11 +56,6 @@ public class AbstractNodeInfo implements VirtualNode, SiblingCountingNode {
     }
 
     @Override
-    public SequenceIterator getTypedValue() throws XPathException {
-        throw createUnsupportedOperationException("Item.getTypedValue()");
-    }
-
-    @Override
     public Object getUnderlyingNode() {
         throw createUnsupportedOperationException("VirtualNode.getUnderlyingNode()");
     }
@@ -75,7 +71,7 @@ public class AbstractNodeInfo implements VirtualNode, SiblingCountingNode {
     }
 
     @Override
-    public Value atomize() throws XPathException {
+    public AtomicSequence atomize() throws XPathException {
         throw createUnsupportedOperationException("NodeInfo.atomize()");
     }
 
@@ -118,11 +114,6 @@ public class AbstractNodeInfo implements VirtualNode, SiblingCountingNode {
     @Override
     public void generateId(FastStringBuffer buffer) {
         throw createUnsupportedOperationException("NodeInfo.generateId(FastStringBuffer)");
-    }
-
-    @Override
-    public String getAttributeValue(int fingerprint) {
-        throw createUnsupportedOperationException("NodeInfo.getAttributeValue(int)");
     }
 
     @Override
@@ -259,7 +250,7 @@ public class AbstractNodeInfo implements VirtualNode, SiblingCountingNode {
     @Override
     public AxisIterator iterateAxis(byte axisNumber) {
         throw createUnsupportedOperationException(
-                "NodeInfo.iterateAxis(byte) for axis '" + Axis.axisName[axisNumber] + "'");
+                "NodeInfo.iterateAxis(byte) for axis '" + AxisInfo.axisName[axisNumber] + "'");
     }
 
     /**
@@ -281,6 +272,21 @@ public class AbstractNodeInfo implements VirtualNode, SiblingCountingNode {
     @Override
     public SchemaType getSchemaType() {
         throw createUnsupportedOperationException("NodeInfo.getSchemaType()");
+    }
+
+    @Override
+    public int comparePosition(NodeInfo other) {
+        throw createUnsupportedOperationException("NodeInfo.comparePosition(NodeInfo)");
+    }
+
+    @Override
+    public Item head() throws XPathException {
+        throw createUnsupportedOperationException("Sequence.head()");
+    }
+
+    @Override
+    public SequenceIterator<? extends Item> iterate() throws XPathException {
+        throw createUnsupportedOperationException("Sequence.iteratre()");
     }
 
     /**

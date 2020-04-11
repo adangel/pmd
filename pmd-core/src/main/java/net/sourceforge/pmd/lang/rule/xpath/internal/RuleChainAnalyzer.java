@@ -16,7 +16,7 @@ import net.sf.saxon.expr.FilterExpression;
 import net.sf.saxon.expr.RootExpression;
 import net.sf.saxon.expr.SlashExpression;
 import net.sf.saxon.expr.sort.DocumentSorter;
-import net.sf.saxon.om.Axis;
+import net.sf.saxon.om.AxisInfo;
 import net.sf.saxon.pattern.NameTest;
 import net.sf.saxon.type.Type;
 
@@ -65,18 +65,18 @@ public class RuleChainAnalyzer extends SaxonExprVisitor {
                     SlashExpression newPath = (SlashExpression) result;
                     if (newPath.getControlledExpression() instanceof FilterExpression) {
                         FilterExpression filterExpression = (FilterExpression) newPath.getControlledExpression();
-                        result = new FilterExpression(new AxisExpression(Axis.SELF, null), filterExpression.getFilter());
+                        result = new FilterExpression(new AxisExpression(AxisInfo.SELF, null), filterExpression.getFilter());
                         rootElementReplaced = true;
                     } else if (newPath.getControlledExpression() instanceof AxisExpression) {
                         if (newPath.getControllingExpression() instanceof RootExpression) {
-                            result = new AxisExpression(Axis.SELF, null);
+                            result = new AxisExpression(AxisInfo.SELF, null);
                         } else {
-                            result = new SlashExpression(newPath.getControllingExpression(), new AxisExpression(Axis.SELF, null));
+                            result = new SlashExpression(newPath.getControllingExpression(), new AxisExpression(AxisInfo.SELF, null));
                         }
                         rootElementReplaced = true;
                     }
                 } else {
-                    result = new AxisExpression(Axis.DESCENDANT_OR_SELF, null);
+                    result = new AxisExpression(AxisInfo.DESCENDANT_OR_SELF, null);
                     rootElementReplaced = true;
                 }
             }
@@ -90,9 +90,9 @@ public class RuleChainAnalyzer extends SaxonExprVisitor {
     public Expression visit(AxisExpression e) {
         if (rootElement == null && e.getNodeTest() instanceof NameTest) {
             NameTest test = (NameTest) e.getNodeTest();
-            if (test.getPrimitiveType() == Type.ELEMENT && e.getAxis() == Axis.DESCENDANT) {
+            if (test.getPrimitiveType() == Type.ELEMENT && e.getAxis() == AxisInfo.DESCENDANT) {
                 rootElement = configuration.getNamePool().getClarkName(test.getFingerprint());
-            } else if (test.getPrimitiveType() == Type.ELEMENT && e.getAxis() == Axis.CHILD) {
+            } else if (test.getPrimitiveType() == Type.ELEMENT && e.getAxis() == AxisInfo.CHILD) {
                 rootElement = configuration.getNamePool().getClarkName(test.getFingerprint());
             }
         }

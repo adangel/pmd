@@ -10,11 +10,9 @@ import net.sourceforge.pmd.annotation.InternalApi;
 import net.sourceforge.pmd.lang.ast.xpath.Attribute;
 import net.sourceforge.pmd.lang.rule.xpath.SaxonXPathRuleQuery;
 
+import net.sf.saxon.om.AtomicSequence;
 import net.sf.saxon.om.NodeInfo;
-import net.sf.saxon.om.SequenceIterator;
-import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.type.Type;
-import net.sf.saxon.value.Value;
 
 /**
  * A Saxon OM Attribute node for an AST Node Attribute.
@@ -26,7 +24,7 @@ import net.sf.saxon.value.Value;
 public class AttributeNode extends AbstractNodeInfo {
     protected final Attribute attribute;
     protected final int id;
-    protected Value value;
+    protected AtomicSequence value;
 
 
     /**
@@ -55,7 +53,7 @@ public class AttributeNode extends AbstractNodeInfo {
     }
 
     @Override
-    public Value atomize() {
+    public AtomicSequence atomize() {
         if (value == null) {
             Object data = attribute.getValue();
             if (data instanceof List) {
@@ -70,11 +68,6 @@ public class AttributeNode extends AbstractNodeInfo {
     @Override
     public CharSequence getStringValueCS() {
         return attribute.getStringValue();
-    }
-
-    @Override
-    public SequenceIterator getTypedValue() throws XPathException {
-        return atomize().iterate();
     }
 
     @Override

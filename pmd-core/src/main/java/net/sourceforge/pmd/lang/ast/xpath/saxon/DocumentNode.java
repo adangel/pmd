@@ -11,7 +11,7 @@ import java.util.Map;
 import net.sourceforge.pmd.annotation.InternalApi;
 import net.sourceforge.pmd.lang.ast.Node;
 
-import net.sf.saxon.om.Axis;
+import net.sf.saxon.om.AxisInfo;
 import net.sf.saxon.om.DocumentInfo;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.tree.iter.AxisIterator;
@@ -81,7 +81,7 @@ public class DocumentNode extends AbstractNodeInfo implements DocumentInfo {
 
     @Override
     public boolean isTyped() {
-        return true;
+        return false;
     }
 
     @Override
@@ -97,11 +97,11 @@ public class DocumentNode extends AbstractNodeInfo implements DocumentInfo {
     @Override
     public AxisIterator iterateAxis(byte axisNumber) {
         switch (axisNumber) {
-        case Axis.DESCENDANT:
+        case AxisInfo.DESCENDANT:
             return new Navigator.DescendantEnumeration(this, false, true);
-        case Axis.DESCENDANT_OR_SELF:
+        case AxisInfo.DESCENDANT_OR_SELF:
             return new Navigator.DescendantEnumeration(this, true, true);
-        case Axis.CHILD:
+        case AxisInfo.CHILD:
             return SingleNodeIterator.makeIterator(rootNode);
         default:
             return super.iterateAxis(axisNumber);

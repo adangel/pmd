@@ -4,11 +4,15 @@
 
 package net.sourceforge.pmd.lang;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.jaxen.Navigator;
 
 import net.sourceforge.pmd.annotation.InternalApi;
 import net.sourceforge.pmd.lang.xpath.Initializer;
 
+import net.sf.saxon.lib.ExtensionFunctionDefinition;
 import net.sf.saxon.sxpath.IndependentContext;
 
 /**
@@ -34,6 +38,11 @@ public interface XPathHandler {
         public Navigator getNavigator() {
             return null;
         }
+
+        @Override
+        public List<ExtensionFunctionDefinition> getFunctions() {
+            return Collections.emptyList();
+        }
     };
 
     /**
@@ -56,4 +65,6 @@ public interface XPathHandler {
      */
     @Deprecated
     Navigator getNavigator();
+    
+    List<ExtensionFunctionDefinition> getFunctions();
 }
