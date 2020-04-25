@@ -18,7 +18,11 @@ permalink: /tocpage/
             <ul>
                 {% for folderitem in folder.folderitems %}
                 {% if folderitem.output contains "pdf" and folderitem.type != "frontmatter"%}
-                <li><a href="{{folderitem.url | prepend: site.baseurl}}">{{folderitem.title}}</a>
+                <li>
+                    {% unless folderitem.url == blank or folderitem.url == empty or folderitem.url == nil %}
+                    <a href="{{folderitem.url | prepend: site.baseurl}}">{{folderitem.title}}</a>
+                    {% endunless %}
+
                     {% for subfolders in folderitem.subfolders %}
                     {% if subfolders.output contains "pdf" and subfolders.type != "frontmatter" %}
                 <li class="sectionHead">{{ subfolders.title }}

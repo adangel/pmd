@@ -43,7 +43,7 @@ exclude:
   - Dockerfile
   - build-docs.sh
   - pdf-*.sh
-  - pdfconfigs/
+  - pdfconfigs/config_pmd_pdf.yml
   - pdf/
 
 feedback_subject_line: PMD Source Code Analyzer

@@ -1,0 +1,17 @@
+destination: _site/
+url: "http://127.0.0.1:4010"
+baseurl: "/pmd-pdf"
+port: 4010
+output: pdf
+product: pmd
+print_title: PMD Source Code Analyzer
+output: pdf
+defaults:
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page_print"
+      comments: true
+      search: true

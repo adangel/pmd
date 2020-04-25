@@ -1,6 +1,7 @@
 ---
 layout: none
 search: exclude
+permalink: /prince-list.txt
 ---
 
 {% include custom/sidebarconfigs.html %}
@@ -10,7 +11,9 @@ search: exclude
       {% if folder.output contains "pdf" %}
               {% for folderitem in folder.folderitems %}
                  {% if folderitem.output contains "pdf"  %}
+                    {% unless folderitem.url == blank or folderitem.url == empty or folderitem.url == nil %}
                     {{site.url}}{{site.baseurl}}{{folderitem.url}}
+                    {% endunless %}
                           {% for subfolders in folderitem.subfolders %}
                              {% if subfolders.output contains "pdf" %}
                                         {% for subfolderitem in subfolders.subfolderitems %}
