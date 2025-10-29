@@ -18,6 +18,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.sourceforge.pmd.internal.PeakMemoryUsageMonitor;
 import net.sourceforge.pmd.internal.util.FileCollectionUtil;
 import net.sourceforge.pmd.internal.util.IOUtil;
 import net.sourceforge.pmd.lang.Language;
@@ -187,11 +188,16 @@ public final class CpdAnalysis implements AutoCloseable {
             }
 
             LOGGER.debug("Running match algorithm on {} files...", sourceManager.size());
+            LOGGER.debug("Total tokens: {}", tokens.size());
             MatchAlgorithm matchAlgorithm = new MatchAlgorithm(tokens, configuration.getMinimumTileSize());
-            List<Match> matches = matchAlgorithm.findMatches(listener, sourceManager);
-            tokens = null; // NOPMD null it out before rendering
-            LOGGER.debug("Finished: {} duplicates found", matches.size());
+            List<Match> matches = null;
+            try (PeakMemoryUsageMonitor peakMemoryUsageMonitor = new PeakMemoryUsageMonitor()) {
+                matches = matchAlgorithm.findMatches(listener, sourceManager);
+                LOGGER.debug("Finished: {} duplicates found", matches.size());
+                peakMemoryUsageMonitor.logPeakMemory();
+            }
 
+            tokens = null; // NOPMD null it out before rendering
             CPDReport cpdReport = new CPDReport(sourceManager, matches, numberOfTokensPerFile);
 
             if (renderer != null) {
@@ -206,7 +212,6 @@ public final class CpdAnalysis implements AutoCloseable {
         }
         // source manager is closed and closes all text files now.
     }
-
 
     @Override
     public void close() throws IOException {
