@@ -5,19 +5,18 @@
 package net.sourceforge.pmd.cpd;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 class MatchCollector {
 
     private final Map<Integer, List<Match>> matchTree = new TreeMap<>();
 
-    private final Map<Integer, Set<Integer>> tokenMatchSets = new HashMap<>();
+    private final Map<Integer, BitSet> tokenMatchSets = new HashMap<>();
 
     private final MatchAlgorithm ma;
 
@@ -68,7 +67,7 @@ class MatchCollector {
          *  - BC
          * It should be reduced to a single match with 3 marks
          */
-        if (tokenMatchSets.computeIfAbsent(mark1.getIndex(), this::wrapInSet).contains(mark2.getIndex())) {
+        if (tokenMatchSets.computeIfAbsent(mark1.getIndex(), this::wrapInSet).get(mark2.getIndex())) {
             return;
         }
 
@@ -116,11 +115,18 @@ class MatchCollector {
     }
 
     private void registerTokenMatch(TokenEntry mark1, TokenEntry mark2) {
-        Set<Integer> first = tokenMatchSets.computeIfAbsent(mark1.getIndex(), this::wrapInSet);
-        Set<Integer> second = tokenMatchSets.computeIfAbsent(mark2.getIndex(), this::wrapInSet);
+        BitSet first = tokenMatchSets.computeIfAbsent(mark1.getIndex(), this::wrapInSet);
+        BitSet second = tokenMatchSets.computeIfAbsent(mark2.getIndex(), this::wrapInSet);
         if (first != second) {
-            first.addAll(second);
-            second.forEach(index -> tokenMatchSets.put(index, first));
+            first.or(second);
+
+            for (int i = second.nextSetBit(0); i >= 0; i = second.nextSetBit(i + 1)) {
+                // operate on index i here
+                tokenMatchSets.put(i, first);
+                if (i == Integer.MAX_VALUE) {
+                    break; // or (i+1) would overflow
+                }
+            }
         }
     }
 
@@ -149,9 +155,9 @@ class MatchCollector {
                 || token2.isEof();
     }
 
-    private Set<Integer> wrapInSet(Integer val) {
-        HashSet<Integer> set = new HashSet<>();
-        set.add(val);
+    private BitSet wrapInSet(Integer val) {
+        BitSet set = new BitSet();
+        set.set(val);
         return set;
     }
 }
