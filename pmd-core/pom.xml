@@ -3,6 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>pmd-core</artifactId>
     <name>PMD Core</name>
+    <version>6.55.0-peak-memory-usage-SNAPSHOT</version>
 
     <parent>
         <groupId>net.sourceforge.pmd</groupId>
