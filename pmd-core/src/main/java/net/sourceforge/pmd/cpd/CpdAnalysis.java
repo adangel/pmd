@@ -21,6 +21,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.sourceforge.pmd.cpd.internal.CPDLoggingListener;
+import net.sourceforge.pmd.internal.PeakMemoryUsageMonitor;
 import net.sourceforge.pmd.internal.util.FileCollectionUtil;
 import net.sourceforge.pmd.internal.util.IOUtil;
 import net.sourceforge.pmd.lang.Language;
@@ -201,10 +203,15 @@ public final class CpdAnalysis implements AutoCloseable {
         }
 
         LOGGER.debug("Running match algorithm on {} files...", sourceManager.size());
+        LOGGER.debug("Total tokens: {}", tokens.size());
+
         MatchAlgorithm matchAlgorithm = new MatchAlgorithm(tokens, configuration.getMinimumTileSize());
-        List<Match> matches = matchAlgorithm.findMatches(listener, sourceManager);
-        LOGGER.debug("Finished: {} duplicates found", matches.size());
-        return matches;
+        try (PeakMemoryUsageMonitor peakMemoryUsageMonitor = new PeakMemoryUsageMonitor()) {
+            List<Match> matches = matchAlgorithm.findMatches(new CPDLoggingListener(listener), sourceManager);
+            LOGGER.debug("Finished: {} duplicates found", matches.size());
+            peakMemoryUsageMonitor.logPeakMemory();
+            return matches;
+        }
     }
 
     @SuppressWarnings("PMD.CloseResource")
