@@ -68,7 +68,7 @@ class MatchCollector {
          *  - BC
          * It should be reduced to a single match with 3 marks
          */
-        if (tokenMatchSets.computeIfAbsent(mark1.getIndex(), (i) -> new HashSet<>()).contains(mark2.getIndex())) {
+        if (tokenMatchSets.computeIfAbsent(mark1.getIndex(), this::wrapInSet).contains(mark2.getIndex())) {
             return;
         }
 
@@ -116,8 +116,12 @@ class MatchCollector {
     }
 
     private void registerTokenMatch(TokenEntry mark1, TokenEntry mark2) {
-        tokenMatchSets.computeIfAbsent(mark1.getIndex(), (i) -> new HashSet<>()).add(mark2.getIndex());
-        tokenMatchSets.computeIfAbsent(mark2.getIndex(), (i) -> new HashSet<>()).add(mark1.getIndex());
+        Set<Integer> first = tokenMatchSets.computeIfAbsent(mark1.getIndex(), this::wrapInSet);
+        Set<Integer> second = tokenMatchSets.computeIfAbsent(mark2.getIndex(), this::wrapInSet);
+        if (first != second) {
+            first.addAll(second);
+            second.forEach(index -> tokenMatchSets.put(index, first));
+        }
     }
 
     List<Match> getMatches() {
@@ -143,5 +147,11 @@ class MatchCollector {
         return token1.getIdentifier() != token2.getIdentifier()
                 || token1.isEof()
                 || token2.isEof();
+    }
+
+    private Set<Integer> wrapInSet(Integer val) {
+        HashSet<Integer> set = new HashSet<>();
+        set.add(val);
+        return set;
     }
 }
