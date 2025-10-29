@@ -22,7 +22,9 @@ import java.util.logging.Logger;
 
 import net.sourceforge.pmd.annotation.Experimental;
 import net.sourceforge.pmd.cli.internal.CliMessages;
+import net.sourceforge.pmd.cpd.internal.CPDLoggingListener;
 import net.sourceforge.pmd.cpd.renderer.CPDReportRenderer;
+import net.sourceforge.pmd.internal.PeakMemoryUsageMonitor;
 import net.sourceforge.pmd.lang.ast.TokenMgrError;
 import net.sourceforge.pmd.util.FileFinder;
 import net.sourceforge.pmd.util.IOUtil;
@@ -61,9 +63,12 @@ public class CPD {
 
     public void go() {
         LOGGER.fine("Running match algorithm on " + source.size() + " files...");
-        matchAlgorithm = new MatchAlgorithm(source, tokens, configuration.getMinimumTileSize(), listener);
-        matchAlgorithm.findMatches();
-        LOGGER.fine("Finished: " + matchAlgorithm.getMatches().size() + " duplicates found");
+        matchAlgorithm = new MatchAlgorithm(source, tokens, configuration.getMinimumTileSize(), new CPDLoggingListener(listener));
+        try (PeakMemoryUsageMonitor peakMemoryUsageMonitor = new PeakMemoryUsageMonitor()) {
+            matchAlgorithm.findMatches();
+            LOGGER.fine("Finished: " + matchAlgorithm.getMatches().size() + " duplicates found");
+            peakMemoryUsageMonitor.logPeakMemory();
+        }
     }
 
     public Iterator<Match> getMatches() {

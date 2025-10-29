@@ -11,7 +11,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MatchAlgorithm {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MatchAlgorithm.class);
 
     private static final int MOD = 37;
     private int lastHash;
@@ -62,6 +66,8 @@ public class MatchAlgorithm {
     public void findMatches() {
         cpdListener.phaseUpdate(CPDListener.HASH);
         Map<TokenEntry, Object> markGroups = hash();
+        LOGGER.trace("markGroups: size={}", markGroups.size());
+        LOGGER.trace(" actual size: {}", markGroups.values().stream().filter(it -> it instanceof List).count());
 
         cpdListener.phaseUpdate(CPDListener.MATCH);
         MatchCollector matchCollector = new MatchCollector(this);
