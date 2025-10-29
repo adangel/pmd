@@ -5,14 +5,13 @@
 package net.sourceforge.pmd.cpd.internal;
 
 import java.io.File;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.sourceforge.pmd.cpd.CPDListener;
 
 public class CPDLoggingListener implements CPDListener {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CPDLoggingListener.class);
+    private static final Logger LOGGER = Logger.getLogger(CPDLoggingListener.class.getName());
 
     private final CPDListener delegate;
 
@@ -30,22 +29,22 @@ public class CPDLoggingListener implements CPDListener {
         delegate.phaseUpdate(phase);
         switch (phase) {
         case CPDListener.INIT:
-            LOGGER.debug("Phase: INIT");
+            LOGGER.log(Level.FINE, "Phase: INIT");
             break;
         case CPDListener.HASH:
-            LOGGER.debug("Phase: HASH");
+            LOGGER.log(Level.FINE, "Phase: HASH");
             break;
         case CPDListener.MATCH:
-            LOGGER.debug("Phase: MATCH");
+            LOGGER.log(Level.FINE, "Phase: MATCH");
             break;
         case CPDListener.GROUPING:
-            LOGGER.debug("Phase: GROUPING");
+            LOGGER.log(Level.FINE, "Phase: GROUPING");
             break;
         case CPDListener.DONE:
-            LOGGER.debug("Phase: Done");
+            LOGGER.log(Level.FINE, "Phase: Done");
             break;
         default:
-            LOGGER.debug("Unknown Phase: {}", phase);
+            LOGGER.log(Level.FINE, "Unknown Phase: {}", phase);
             break;
         }
     }

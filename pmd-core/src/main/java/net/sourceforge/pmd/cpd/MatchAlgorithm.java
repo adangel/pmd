@@ -10,12 +10,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MatchAlgorithm {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MatchAlgorithm.class);
+    private static final Logger LOGGER = Logger.getLogger(MatchAlgorithm.class.getName());
 
     private static final int MOD = 37;
     private int lastHash;
@@ -66,8 +65,15 @@ public class MatchAlgorithm {
     public void findMatches() {
         cpdListener.phaseUpdate(CPDListener.HASH);
         Map<TokenEntry, Object> markGroups = hash();
-        LOGGER.trace("markGroups: size={}", markGroups.size());
-        LOGGER.trace(" actual size: {}", markGroups.values().stream().filter(it -> it instanceof List).count());
+        LOGGER.fine("markGroups: size=" + markGroups.size());
+        int actualSize = 0;
+        for (Iterator<Object> i = markGroups.values().iterator(); i.hasNext();) {
+            Object o = i.next();
+            if (o instanceof List) {
+                actualSize++;
+            }
+        }
+        LOGGER.fine(" actual size: " + actualSize);
 
         cpdListener.phaseUpdate(CPDListener.MATCH);
         MatchCollector matchCollector = new MatchCollector(this);

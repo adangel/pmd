@@ -6,34 +6,35 @@ package net.sourceforge.pmd.internal;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
-import java.lang.management.MemoryUsage;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PeakMemoryUsageMonitor implements AutoCloseable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PeakMemoryUsageMonitor.class);
+    private static final Logger LOGGER = Logger.getLogger(PeakMemoryUsageMonitor.class.getName());
 
     private ScheduledExecutorService scheduledExecutorService;
 
     public PeakMemoryUsageMonitor() {
-        if (LOGGER.isTraceEnabled()) {
+        if (LOGGER.isLoggable(Level.FINE)) {
             scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-            scheduledExecutorService.scheduleAtFixedRate(() -> {
-                LOGGER.trace(determinePeakMemory());
+            scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    LOGGER.fine(PeakMemoryUsageMonitor.this.determinePeakMemory());
+                }
             }, 0L, 1L, TimeUnit.SECONDS);
         }
     }
 
     private String determinePeakMemory() {
-        long bytes = ManagementFactory.getMemoryPoolMXBeans().stream()
-                .map(MemoryPoolMXBean::getPeakUsage)
-                .mapToLong(MemoryUsage::getUsed)
-                .sum();
+        long bytes = 0;
+        for (MemoryPoolMXBean bean : ManagementFactory.getMemoryPoolMXBeans()) {
+            bytes += bean.getPeakUsage().getUsed();
+        }
         String[] units = {"B", "KB", "MiB", "GiB"};
         double unitValue = bytes;
         int unitSelector = 0;
@@ -45,7 +46,7 @@ public class PeakMemoryUsageMonitor implements AutoCloseable {
     }
 
     public void logPeakMemory() {
-        LOGGER.debug(determinePeakMemory());
+        LOGGER.fine(determinePeakMemory());
     }
 
     @Override
@@ -54,7 +55,7 @@ public class PeakMemoryUsageMonitor implements AutoCloseable {
             scheduledExecutorService.shutdown();
             try {
                 if (!scheduledExecutorService.awaitTermination(10, TimeUnit.SECONDS)) {
-                    LOGGER.warn("Couldn't terminate scheduledExecutorService");
+                    LOGGER.warning("Couldn't terminate scheduledExecutorService");
                 }
             } catch (InterruptedException ignored) {
                 Thread.currentThread().interrupt();
