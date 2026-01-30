@@ -21,8 +21,12 @@ abstract class AbstractHtmlNode<T extends Node> extends AbstractNode<AbstractHtm
         this.node = node;
     }
 
-    public String getNodeName() {
-        return node.nodeName();
+    /**
+     * @deprecated Since 7.22.0. Use {@link #getXPathNodeName()} instead.
+     */
+    @Deprecated
+    public String getNodeName() { // NOPMD PublicMembersInNonPublicType
+        return getXPathNodeName();
     }
 
     @Override

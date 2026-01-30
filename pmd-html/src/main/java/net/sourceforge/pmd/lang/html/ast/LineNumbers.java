@@ -16,7 +16,7 @@ class LineNumbers {
         this.htmlString = document.getTextDocument().getText();
     }
 
-    public void determine() {
+    void determine() {
         determineLocation(document, 0);
     }
 

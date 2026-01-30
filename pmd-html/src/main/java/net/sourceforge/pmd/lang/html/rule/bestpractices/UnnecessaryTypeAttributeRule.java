@@ -12,9 +12,9 @@ public class UnnecessaryTypeAttributeRule extends AbstractHtmlRule {
 
     @Override
     public Object visit(ASTHtmlElement node, Object data) {
-        if ("link".equalsIgnoreCase(node.getNodeName())) {
+        if ("link".equalsIgnoreCase(node.getXPathNodeName())) {
             checkLink(node, data);
-        } else if ("script".equalsIgnoreCase(node.getNodeName())) {
+        } else if ("script".equalsIgnoreCase(node.getXPathNodeName())) {
             checkScript(node, data);
         }
         return super.visit(node, data);
