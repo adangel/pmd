@@ -41,7 +41,7 @@ class AstDocumentNode extends BaseNodeInfo implements AstNodeOwner {
         return children;
     }
 
-    public AstElementNode getRootElement() {
+    AstElementNode getRootElement() {
         return rootElement;
     }
 

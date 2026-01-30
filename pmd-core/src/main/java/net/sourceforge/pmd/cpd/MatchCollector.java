@@ -24,7 +24,7 @@ class MatchCollector {
         this.ma = ma;
     }
 
-    public void collect(List<TokenEntry> marks) {
+    void collect(List<TokenEntry> marks) {
         // first get a pairwise collection of all maximal matches
         int skipped;
         for (int i = 0; i < marks.size() - 1; i += skipped + 1) {

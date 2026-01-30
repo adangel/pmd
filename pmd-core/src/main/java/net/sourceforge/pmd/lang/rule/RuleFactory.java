@@ -101,7 +101,7 @@ class RuleFactory {
      *
      * @return A rule reference to the referenced rule
      */
-    public RuleReference decorateRule(Rule referencedRule, RuleSetReference ruleSetReference, Element ruleElement, PmdXmlReporter err) {
+    RuleReference decorateRule(Rule referencedRule, RuleSetReference ruleSetReference, Element ruleElement, PmdXmlReporter err) {
         RuleReference ruleReference = new RuleReference(referencedRule, ruleSetReference);
 
         DEPRECATED.getAttributeOpt(ruleElement).map(Boolean::parseBoolean).ifPresent(ruleReference::setDeprecated);
@@ -155,7 +155,7 @@ class RuleFactory {
      *
      * @throws IllegalArgumentException if the element doesn't describe a valid rule.
      */
-    public Rule buildRule(Element ruleElement, PmdXmlReporter err) {
+    Rule buildRule(Element ruleElement, PmdXmlReporter err) {
 
         Rule rule;
         try {
@@ -230,7 +230,7 @@ class RuleFactory {
     /**
      * Parse a priority. If invalid, report it and return null.
      */
-    public static @Nullable RulePriority parsePriority(PmdXmlReporter err, Element node) {
+    static @Nullable RulePriority parsePriority(PmdXmlReporter err, Element node) {
         String text = XmlUtil.parseTextNode(node);
         RulePriority rp = RulePriority.valueOfNullable(text);
         if (rp == null) {

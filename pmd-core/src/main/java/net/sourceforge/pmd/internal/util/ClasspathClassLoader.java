@@ -279,7 +279,7 @@ public class ClasspathClassLoader extends URLClassLoader {
             return null;
         }
 
-        public String getModuleName() {
+        private String getModuleName() {
             return moduleName;
         }
     }

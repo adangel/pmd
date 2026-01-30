@@ -23,9 +23,9 @@ final class ParameterizedMetricKey<N extends Node, R extends Number> implements 
     private static final ConcurrentMap<ParameterizedMetricKey<?, ?>, ParameterizedMetricKey<?, ?>> POOL = new ConcurrentHashMap<>();
 
     /** The metric key. */
-    public final Metric<N, R> metric;
+    final Metric<N, R> metric;
     /** The options of the metric. */
-    public final MetricOptions options;
+    final MetricOptions options;
 
 
     /** Used internally by the pooler. */
@@ -65,7 +65,7 @@ final class ParameterizedMetricKey<N extends Node, R extends Number> implements 
      * @return An instance of parameterized metric key corresponding to the parameters
      */
     @SuppressWarnings("PMD.SingletonClassReturningNewInstance")
-    public static <N extends Node, R extends Number> ParameterizedMetricKey<N, R> getInstance(Metric<N, R> key, MetricOptions options) {
+    static <N extends Node, R extends Number> ParameterizedMetricKey<N, R> getInstance(Metric<N, R> key, MetricOptions options) {
         // sharing instances allows using DataMap, which uses reference identity
         ParameterizedMetricKey<N, R> tmp = new ParameterizedMetricKey<>(key, options);
         POOL.putIfAbsent(tmp, tmp);

@@ -66,7 +66,7 @@ final class SourceCodePositioner {
      *
      * @throws IndexOutOfBoundsException If the offset is invalid in this document
      */
-    public int lineNumberFromOffset(final int offset) {
+    int lineNumberFromOffset(final int offset) {
         AssertionUtil.requireIndexNonNegative("offset", offset);
         if (offset > sourceCodeLength) {
             return -1;
@@ -93,7 +93,7 @@ final class SourceCodePositioner {
      *
      * @throws IndexOutOfBoundsException If the line number does not exist
      */
-    public int columnFromOffset(final int lineNumber, final int globalOffset) {
+    int columnFromOffset(final int lineNumber, final int globalOffset) {
         AssertionUtil.requireInPositiveRange("Line number", lineNumber, lineOffsets.length);
 
         int lineIndex = lineNumber - 1;
@@ -116,7 +116,7 @@ final class SourceCodePositioner {
      *
      * @return Text offset (zero-based), or -1
      */
-    public int offsetFromLineColumn(final int line, final int column) {
+    int offsetFromLineColumn(final int line, final int column) {
         if (!isValidLine(line)) {
             if (line == lineOffsets.length && column == 1) {
                 return sourceCodeLength;
@@ -142,7 +142,7 @@ final class SourceCodePositioner {
      *
      * @throws IndexOutOfBoundsException If the line is invalid
      */
-    public int offsetOfEndOfLine(final int line) {
+    int offsetOfEndOfLine(final int line) {
         if (!isValidLine(line)) {
             throw new IndexOutOfBoundsException(
                 line + " is not a valid line number, expected at most " + lineOffsets.length);
@@ -159,18 +159,18 @@ final class SourceCodePositioner {
      * Returns the number of lines, which is also the ordinal of the
      * last line.
      */
-    public int getLastLine() {
+    int getLastLine() {
         return lineOffsets.length - 1;
     }
 
-    public int getNumLines() {
+    int getNumLines() {
         return getLastLine();
     }
 
     /**
      * Returns the last column number of the last line in the document.
      */
-    public int getLastLineColumn() {
+    int getLastLineColumn() {
         return getLastColumnOfLine(getLastLine());
     }
 
@@ -191,7 +191,7 @@ final class SourceCodePositioner {
      *
      * @param charSeq Text to wrap
      */
-    public static SourceCodePositioner create(CharSequence charSeq) {
+    static SourceCodePositioner create(CharSequence charSeq) {
         final int len = charSeq.length();
         Builder builder = new Builder();
 
@@ -228,7 +228,7 @@ final class SourceCodePositioner {
          *               terminator in the source text. Eg for {@code \r\n}
          *               or {@code \n}, it's the index of the {@code \n}, plus 1.
          */
-        public void addLineEndAtOffset(int offset) {
+        void addLineEndAtOffset(int offset) {
             addLineImpl(offset, false);
         }
 
@@ -246,7 +246,7 @@ final class SourceCodePositioner {
             count++;
         }
 
-        public SourceCodePositioner build(int eofOffset) {
+        SourceCodePositioner build(int eofOffset) {
             addLineImpl(eofOffset, true);
             int[] finalOffsets = Arrays.copyOf(buf, count);
             return new SourceCodePositioner(finalOffsets, eofOffset);

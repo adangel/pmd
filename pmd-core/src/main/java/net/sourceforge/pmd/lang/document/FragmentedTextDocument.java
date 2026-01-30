@@ -117,7 +117,7 @@ final class FragmentedTextDocument extends BaseMappedDocument implements TextDoc
             }
         }
 
-        public Chars getChars() {
+        Chars getChars() {
             return chars;
         }
 

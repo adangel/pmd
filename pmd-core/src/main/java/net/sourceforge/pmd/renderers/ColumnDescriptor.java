@@ -9,11 +9,15 @@ package net.sourceforge.pmd.renderers;
  */
 final class ColumnDescriptor<T> {
 
-    public final String id;
-    public final String title;
-    public final Accessor<T> accessor;
+    final String id;
+    final String title;
+    final Accessor<T> accessor;
 
-    public interface Accessor<T> {
+    /**
+     * @deprecated Since 7.22.0. This interface should not have been public.
+     */
+    @Deprecated
+    public interface Accessor<T> { // NOPMD PublicMembersInNonPublicType
 
         String get(int idx, T violation, String lineSeparator);
     }

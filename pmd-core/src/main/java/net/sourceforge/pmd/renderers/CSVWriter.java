@@ -32,7 +32,7 @@ class CSVWriter<T> {
         lineSeparator = theLineSeparator;
     }
 
-    public void writeTitles(Writer writer) throws IOException {
+    void writeTitles(Writer writer) throws IOException {
         StringBuilder buf = new StringBuilder(300);
         for (int i = 0; i < columns.size() - 1; i++) {
             quoteAndCommify(buf, columns.get(i).title);
@@ -44,7 +44,7 @@ class CSVWriter<T> {
         writer.write(buf.toString());
     }
 
-    public void writeData(Writer writer, Iterator<T> items) throws IOException {
+    void writeData(Writer writer, Iterator<T> items) throws IOException {
 
         int count = 1;
 

@@ -19,49 +19,49 @@ import net.sf.saxon.expr.VennExpression;
 import net.sf.saxon.expr.sort.DocumentSorter;
 
 abstract class SaxonExprVisitor {
-    public Expression visit(DocumentSorter e) {
+    Expression visit(DocumentSorter e) {
         Expression base = visit(e.getBaseExpression());
         return new DocumentSorter(base);
     }
 
-    public Expression visit(SlashExpression e) {
+    Expression visit(SlashExpression e) {
         Expression start = visit(e.getStart());
         Expression step = visit(e.getStep());
         return new SlashExpression(start, step);
     }
 
-    public Expression visit(RootExpression e) {
+    Expression visit(RootExpression e) {
         return e;
     }
 
-    public Expression visit(AxisExpression e) {
+    Expression visit(AxisExpression e) {
         return e;
     }
 
-    public Expression visit(VennExpression e) {
+    Expression visit(VennExpression e) {
         Expression operand0 = visit(e.getLhsExpression());
         Expression operand1 = visit(e.getRhsExpression());
         return new VennExpression(operand0, e.getOperator(), operand1);
     }
 
-    public Expression visit(FilterExpression e) {
+    Expression visit(FilterExpression e) {
         Expression base = visit(e.getLhsExpression());
         Expression filter = visit(e.getFilter());
         return new FilterExpression(base, filter);
     }
 
-    public Expression visit(BinaryExpression e) {
+    Expression visit(BinaryExpression e) {
         Expression base = visit(e.getLhsExpression());
         Expression filter = visit(e.getRhsExpression());
 
         return new FilterExpression(base, filter);
     }
 
-    public Expression visit(QuantifiedExpression e) {
+    Expression visit(QuantifiedExpression e) {
         return e;
     }
 
-    public Expression visit(LetExpression e) {
+    Expression visit(LetExpression e) {
         Expression action = visit(e.getAction());
         Expression sequence = visit(e.getSequence());
         LetExpression result = new LetExpression();
@@ -73,7 +73,7 @@ abstract class SaxonExprVisitor {
         return result;
     }
 
-    public Expression visit(BooleanExpression e) {
+    Expression visit(BooleanExpression e) {
         Expression operand0 = visit(e.getLhsExpression());
         Expression operand1 = visit(e.getRhsExpression());
 
@@ -81,7 +81,7 @@ abstract class SaxonExprVisitor {
                                           : new OrExpression(operand0, operand1);
     }
 
-    public Expression visit(Expression expr) {
+    Expression visit(Expression expr) {
         Expression result;
         if (expr instanceof DocumentSorter) {
             result = visit((DocumentSorter) expr);

@@ -267,7 +267,7 @@ public class SaxonXPathRuleQuery {
             getPackageData().setSchemaAware(true);
         }
 
-        public void declareProperty(PropertyDescriptor<?> prop) {
+        void declareProperty(PropertyDescriptor<?> prop) {
             XPathVariable var = declareVariable(null, prop.name());
             propertiesByName.put(var.getVariableQName(), prop);
         }

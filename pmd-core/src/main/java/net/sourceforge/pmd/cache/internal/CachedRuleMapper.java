@@ -24,7 +24,7 @@ class CachedRuleMapper {
      * @param languageName The terse name of the language for which the rule applies
      * @return The requested rule
      */
-    public Rule getRuleForClass(final String className, final String ruleName, final String languageName) {
+    Rule getRuleForClass(final String className, final String ruleName, final String languageName) {
         return cachedRulesInstances.get(getRuleKey(className, ruleName, languageName));
     }
 
@@ -32,7 +32,7 @@ class CachedRuleMapper {
      * Initialize the mapper with the given rulesets.
      * @param rs The rulesets from which to retrieve rules.
      */
-    public void initialize(final RuleSets rs) {
+    void initialize(final RuleSets rs) {
         for (final Rule r : rs.getAllRules()) {
             cachedRulesInstances.put(getRuleKey(r.getRuleClass(), r.getName(), r.getLanguage().getId()), r);
         }

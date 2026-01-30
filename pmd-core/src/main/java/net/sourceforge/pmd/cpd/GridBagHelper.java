@@ -36,11 +36,11 @@ class GridBagHelper {
         c.fill = GridBagConstraints.HORIZONTAL;
     }
 
-    public void add(Component component) {
+    void add(Component component) {
         add(component, 1);
     }
 
-    public void add(Component component, int width) {
+    void add(Component component, int width) {
         c.gridx = x;
         c.gridy = y;
         c.weightx = weights[x];
@@ -50,12 +50,12 @@ class GridBagHelper {
         x += width;
     }
 
-    public void nextRow() {
+    void nextRow() {
         y++;
         x = 0;
     }
 
-    public void addLabel(String label) {
+    void addLabel(String label) {
         add(new JLabel(label, labelAlignment));
     }
 

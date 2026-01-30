@@ -84,7 +84,7 @@ public class GUI implements CPDListener {
 
     private abstract static class LanguageConfig {
 
-        public abstract Language getLanguage();
+        abstract Language getLanguage();
 
         boolean canUseCustomExtension() {
             return false;
@@ -94,27 +94,27 @@ public class GUI implements CPDListener {
             // by default do nothing
         }
 
-        public boolean canIgnoreIdentifiers() {
+        private boolean canIgnoreIdentifiers() {
             return getLanguage().newPropertyBundle().hasDescriptor(CpdLanguageProperties.CPD_ANONYMIZE_IDENTIFIERS);
         }
 
-        public boolean canIgnoreLiterals() {
+        private boolean canIgnoreLiterals() {
             return getLanguage().newPropertyBundle().hasDescriptor(CpdLanguageProperties.CPD_ANONYMIZE_LITERALS);
         }
 
-        public boolean canIgnoreAnnotations() {
+        private boolean canIgnoreAnnotations() {
             return getLanguage().newPropertyBundle().hasDescriptor(CpdLanguageProperties.CPD_IGNORE_METADATA);
         }
 
-        public boolean canIgnoreUsings() {
+        private boolean canIgnoreUsings() {
             return getLanguage().newPropertyBundle().hasDescriptor(CpdLanguageProperties.CPD_IGNORE_IMPORTS);
         }
 
-        public boolean canIgnoreLiteralSequences() {
+        private boolean canIgnoreLiteralSequences() {
             return getLanguage().newPropertyBundle().hasDescriptor(CpdLanguageProperties.CPD_IGNORE_LITERAL_SEQUENCES);
         }
 
-        public boolean canIgnoreIdentifierAndLiteralSequences() {
+        private boolean canIgnoreIdentifierAndLiteralSequences() {
             return getLanguage().newPropertyBundle().hasDescriptor(CpdLanguageProperties.CPD_IGNORE_LITERAL_AND_IDENTIFIER_SEQUENCES);
         }
 
@@ -172,33 +172,33 @@ public class GUI implements CPDListener {
                                                                             false);
     private static final KeyStroke DELETE_KEY_STROKE = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0);
 
-    private static class ColumnSpec {
+    private static final class ColumnSpec {
 
         private final String label;
         private final int alignment;
         private final int width;
         private final Comparator<Match> sorter;
 
-        ColumnSpec(String aLabel, int anAlignment, int aWidth, Comparator<Match> aSorter) {
+        private ColumnSpec(String aLabel, int anAlignment, int aWidth, Comparator<Match> aSorter) {
             label = aLabel;
             alignment = anAlignment;
             width = aWidth;
             sorter = aSorter;
         }
 
-        public String label() {
+        private String label() {
             return label;
         }
 
-        public int alignment() {
+        private int alignment() {
             return alignment;
         }
 
-        public int width() {
+        private int width() {
             return width;
         }
 
-        public Comparator<Match> sorter() {
+        private Comparator<Match> sorter() {
             return sorter;
         }
     }

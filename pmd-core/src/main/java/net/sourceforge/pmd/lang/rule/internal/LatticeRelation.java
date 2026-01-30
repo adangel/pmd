@@ -180,7 +180,7 @@ class LatticeRelation<K, @NonNull V, C> {
      * @throws IllegalStateException If the order has a cycle
      * @throws NullPointerException  If either of the parameters is null
      */
-    public void put(@NonNull K key, @NonNull V value) {
+    void put(@NonNull K key, @NonNull V value) {
         AssertionUtil.requireParamNotNull("key", key);
         AssertionUtil.requireParamNotNull("value", value);
         putDontCheckParams(key, value);
@@ -200,13 +200,13 @@ class LatticeRelation<K, @NonNull V, C> {
      *
      * @throws NullPointerException If the key is null
      */
-    public @NonNull C get(@NonNull K key) {
+    @NonNull C get(@NonNull K key) {
         AssertionUtil.requireParamNotNull("key", key);
         LNode n = nodes.get(key);
         return n == null ? emptyValue : n.computeValue();
     }
 
-    public void clearValues() {
+    void clearValues() {
         for (LNode n : nodes.values()) {
             n.resetValue();
         }

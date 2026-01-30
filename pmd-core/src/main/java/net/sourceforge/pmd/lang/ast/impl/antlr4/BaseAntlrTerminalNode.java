@@ -75,7 +75,11 @@ public abstract class BaseAntlrTerminalNode<N extends AntlrNode<N>>
 
         private final BaseAntlrTerminalNode<N> pmdNode;
 
-        public AntlrTerminalPmdAdapter(BaseAntlrTerminalNode<N> pmdNode, Token symbol) {
+        /**
+         * @deprecated Since 7.22.0. This constructor will be made protected.
+         */
+        @Deprecated
+        public AntlrTerminalPmdAdapter(BaseAntlrTerminalNode<N> pmdNode, Token symbol) { // NOPMD PublicMembersInNonPublicType
             super(symbol);
             this.pmdNode = pmdNode;
         }
@@ -99,7 +103,11 @@ public abstract class BaseAntlrTerminalNode<N extends AntlrNode<N>>
 
     protected static class AntlrErrorPmdAdapter<N extends AntlrNode<N>> extends AntlrTerminalPmdAdapter<N> implements ErrorNode {
 
-        public AntlrErrorPmdAdapter(BaseAntlrTerminalNode<N> pmdNode, Token symbol) {
+        /**
+         * @deprecated Since 7.22.0. This constructor will be made protected.
+         */
+        @Deprecated
+        public AntlrErrorPmdAdapter(BaseAntlrTerminalNode<N> pmdNode, Token symbol) { // NOPMD PublicMembersInNonPublicType
             super(pmdNode, symbol);
         }
 

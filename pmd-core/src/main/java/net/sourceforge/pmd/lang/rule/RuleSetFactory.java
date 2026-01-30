@@ -654,7 +654,7 @@ final class RuleSetFactory {
      * Create a new {@link RuleSetLoader} with the same config as this
      * factory. This is a transitional API.
      */
-    public RuleSetLoader toLoader() {
+    private RuleSetLoader toLoader() {
         return new RuleSetLoader().loadResourcesWith(resourceLoader)
                                   .filterAbovePriority(minimumPriority)
                                   .warnDeprecated(warnDeprecated)

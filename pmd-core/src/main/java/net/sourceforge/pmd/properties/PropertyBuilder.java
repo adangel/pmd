@@ -247,7 +247,7 @@ public abstract class PropertyBuilder<B extends PropertyBuilder<B, T>, T> {
          *
          * @see #map(Collector)
          */
-        public GenericCollectionPropertyBuilder<T, List<T>> toList() {
+        GenericCollectionPropertyBuilder<T, List<T>> toList() {
             return map(Collectors.toList());
         }
 
@@ -274,7 +274,7 @@ public abstract class PropertyBuilder<B extends PropertyBuilder<B, T>, T> {
          *
          * @throws IllegalStateException if the default value has already been set
          */
-        public <C extends Iterable<T>> GenericCollectionPropertyBuilder<T, C> map(Collector<? super T, ?, ? extends C> collector) {
+        <C extends Iterable<T>> GenericCollectionPropertyBuilder<T, C> map(Collector<? super T, ?, ? extends C> collector) {
 
             if (isDefaultValueSet()) {
                 throw new IllegalStateException("The default value is already set!");
@@ -299,7 +299,7 @@ public abstract class PropertyBuilder<B extends PropertyBuilder<B, T>, T> {
          *
          * @return A new property builder for an optional.
          */
-        public GenericPropertyBuilder<Optional<T>> toOptional(String missingValue) {
+        GenericPropertyBuilder<Optional<T>> toOptional(String missingValue) {
             AssertionUtil.requireParamNotNull("missingValue", missingValue);
 
             PropertySerializer<Optional<T>> serializer =
@@ -344,6 +344,21 @@ public abstract class PropertyBuilder<B extends PropertyBuilder<B, T>, T> {
 
         GenericPropertyBuilder(String name, PropertySerializer<T> parser) {
             super(name, parser);
+        }
+
+        @Override
+        public GenericCollectionPropertyBuilder<T, List<T>> toList() {
+            return super.toList();
+        }
+
+        @Override
+        public <C extends Iterable<T>> GenericCollectionPropertyBuilder<T, C> map(Collector<? super T, ?, ? extends C> collector) {
+            return super.map(collector);
+        }
+
+        @Override
+        public GenericPropertyBuilder<Optional<T>> toOptional(String missingValue) {
+            return super.toOptional(missingValue);
         }
     }
 
@@ -394,6 +409,21 @@ public abstract class PropertyBuilder<B extends PropertyBuilder<B, T>, T> {
         public RegexPropertyBuilder defaultValue(String pattern, int flags) {
             super.defaultValue(Pattern.compile(pattern, flags));
             return this;
+        }
+
+        @Override
+        public GenericPropertyBuilder<Optional<Pattern>> toOptional(String missingValue) {
+            return super.toOptional(missingValue);
+        }
+
+        @Override
+        public GenericCollectionPropertyBuilder<Pattern, List<Pattern>> toList() {
+            return super.toList();
+        }
+
+        @Override
+        public <C extends Iterable<Pattern>> GenericCollectionPropertyBuilder<Pattern, C> map(Collector<? super Pattern, ?, ? extends C> collector) {
+            return super.map(collector);
         }
     }
 

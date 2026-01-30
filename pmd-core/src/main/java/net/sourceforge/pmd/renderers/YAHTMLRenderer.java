@@ -202,7 +202,7 @@ public class YAHTMLRenderer extends AbstractAccumulatingRenderer {
             + "</td></tr>";
     }
 
-    private static class ReportNode {
+    private static final class ReportNode {
         // deliberately starts with a space, so that it is sorted before the packages
         private static final String ROOT_NODE_NAME = " <root> ";
 
@@ -211,41 +211,41 @@ public class YAHTMLRenderer extends AbstractAccumulatingRenderer {
         private int violationCount;
         private final List<RuleViolation> violations = new LinkedList<>();
 
-        ReportNode(String packageName) {
+        private ReportNode(String packageName) {
             this.packageName = packageName;
             this.className = "-";
         }
 
-        ReportNode(String packageName, String className) {
+        private ReportNode(String packageName, String className) {
             this.packageName = packageName;
             this.className = className;
         }
 
-        public void incrementViolations() {
+        private void incrementViolations() {
             violationCount++;
         }
 
-        public void addRuleViolation(RuleViolation violation) {
+        private void addRuleViolation(RuleViolation violation) {
             violations.add(violation);
         }
 
-        public String getPackageName() {
+        private String getPackageName() {
             return packageName;
         }
 
-        public String getClassName() {
+        private String getClassName() {
             return className;
         }
 
-        public int getViolationCount() {
+        private int getViolationCount() {
             return violationCount + violations.size();
         }
 
-        public List<RuleViolation> getViolations() {
+        private List<RuleViolation> getViolations() {
             return violations;
         }
 
-        public boolean hasViolations() {
+        private boolean hasViolations() {
             return !violations.isEmpty();
         }
 

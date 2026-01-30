@@ -38,7 +38,7 @@ final class TreeWalker {
         this.crossFindBoundaries = crossFindBoundaries;
     }
 
-    public boolean isCrossFindBoundaries() {
+    boolean isCrossFindBoundaries() {
         return crossFindBoundaries;
     }
 

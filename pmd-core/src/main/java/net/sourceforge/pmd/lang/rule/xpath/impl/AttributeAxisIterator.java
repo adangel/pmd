@@ -204,9 +204,9 @@ public class AttributeAxisIterator implements Iterator<Attribute> {
     private static class MethodWrapper {
         static final Lookup LOOKUP = MethodHandles.publicLookup();
         private static final MethodType GETTER_TYPE = MethodType.methodType(Object.class, Node.class);
-        public final MethodHandle methodHandle;
-        public final Method method;
-        public final String name;
+        private final MethodHandle methodHandle;
+        private final Method method;
+        private final String name;
 
 
         MethodWrapper(Method m) throws IllegalAccessException {

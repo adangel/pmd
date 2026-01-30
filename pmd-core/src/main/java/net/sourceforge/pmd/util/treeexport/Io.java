@@ -14,17 +14,17 @@ import java.io.PrintStream;
  */
 final class Io {
 
-    public final PrintStream stdout;
-    public final PrintStream stderr;
-    public final InputStream stdin;
+    final PrintStream stdout;
+    final PrintStream stderr;
+    final InputStream stdin;
 
-    Io(PrintStream stdout, PrintStream stderr, InputStream stdin) {
+    private Io(PrintStream stdout, PrintStream stderr, InputStream stdin) {
         this.stdout = stdout;
         this.stderr = stderr;
         this.stdin = stdin;
     }
     
-    public static Io system() {
+    static Io system() {
         return new Io(System.out, System.err, System.in);
     }
 }

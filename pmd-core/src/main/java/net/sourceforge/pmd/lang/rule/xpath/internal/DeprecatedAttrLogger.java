@@ -103,7 +103,7 @@ public abstract class DeprecatedAttrLogger {
             }
         }
 
-        public String ruleToString() {
+        private String ruleToString() {
             // we can't compute that beforehand because the name is set
             // outside of the rule constructor
             String name = "'" + rule.getName() + "'";

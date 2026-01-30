@@ -93,17 +93,17 @@ public class IDEAJRenderer extends AbstractIncrementingRenderer {
         return className.substring(0, className.length() - ".java".length());
     }
 
-    private static class SourcePath {
+    private static final class SourcePath {
 
         private Set<String> paths = new HashSet<>();
 
-        SourcePath(String sourcePathString) {
+        private SourcePath(String sourcePathString) {
             for (StringTokenizer st = new StringTokenizer(sourcePathString, PATH_SEPARATOR); st.hasMoreTokens();) {
                 paths.add(st.nextToken());
             }
         }
 
-        public String clipPath(String fullFilename) {
+        private String clipPath(String fullFilename) {
             for (String path : paths) {
                 if (fullFilename.startsWith(path)) {
                     return fullFilename.substring(path.length() + 1);

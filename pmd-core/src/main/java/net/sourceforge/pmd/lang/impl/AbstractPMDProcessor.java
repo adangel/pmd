@@ -23,7 +23,7 @@ abstract class AbstractPMDProcessor implements AutoCloseable {
     /**
      * Analyse all files. Each text file is closed.
      */
-    public abstract void processFiles();
+    abstract void processFiles();
 
     /**
      * Joins tasks and await completion of the analysis. After this, all
@@ -38,7 +38,7 @@ abstract class AbstractPMDProcessor implements AutoCloseable {
      * <p>Note: Only {@code 0} threads disables multi-thread processing. See the CLI documentation
      * for parameter {@code --threads}.</p>
      */
-    public static AbstractPMDProcessor newFileProcessor(AnalysisTask analysisTask) {
+    static AbstractPMDProcessor newFileProcessor(AnalysisTask analysisTask) {
         return analysisTask.getThreadCount() > 0
                ? new MultiThreadProcessor(analysisTask)
                : new MonoThreadProcessor(analysisTask);

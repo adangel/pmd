@@ -110,7 +110,7 @@ public abstract class RuleTargetSelector extends TargetSelectorInternal {
 
     private static final class ClassRulechainVisits extends RuleTargetSelector {
 
-        public static final RuleTargetSelector ROOT_ONLY = new ClassRulechainVisits(Collections.singleton(RootNode.class));
+        private static final RuleTargetSelector ROOT_ONLY = new ClassRulechainVisits(Collections.singleton(RootNode.class));
 
         private final Set<Class<? extends Node>> visits;
 

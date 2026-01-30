@@ -15,7 +15,7 @@ import net.sourceforge.pmd.lang.ast.Node;
 // renamed because it conflicts with a Saxon node
 final class PmdDocumentSorter implements Comparator<Node> {
 
-    public static final PmdDocumentSorter INSTANCE = new PmdDocumentSorter();
+    static final PmdDocumentSorter INSTANCE = new PmdDocumentSorter();
 
     private PmdDocumentSorter() {
 

@@ -26,7 +26,7 @@ public abstract class TargetSelectorInternal {
     protected abstract Iterator<? extends Node> getVisitedNodes(TreeIndex index);
 
 
-    protected static final class ApplicatorBuilder {
+    public static final class ApplicatorBuilder {
 
         private final Set<String> namesToIndex = new HashSet<>();
         private final Set<Class<? extends Node>> classesToIndex = new HashSet<>();

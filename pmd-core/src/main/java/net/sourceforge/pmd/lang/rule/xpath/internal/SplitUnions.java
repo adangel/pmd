@@ -49,7 +49,7 @@ class SplitUnions extends SaxonExprVisitor {
         }
     }
 
-    public List<Expression> getExpressions() {
+    List<Expression> getExpressions() {
         return expressions;
     }
 }

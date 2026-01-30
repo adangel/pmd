@@ -29,7 +29,7 @@ public class CodeClimateIssue {
         public String path;
         public Lines lines;
 
-        private static final class Lines {
+        public static final class Lines {
             public int begin;
             public int end;
         }

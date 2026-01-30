@@ -32,15 +32,15 @@ class MatchAlgorithm {
     }
 
 
-    public TokenEntry tokenAt(int offset, TokenEntry m) {
+    TokenEntry tokenAt(int offset, TokenEntry m) {
         return code.get(offset + m.getIndex());
     }
 
-    public int getMinimumTileSize() {
+    int getMinimumTileSize() {
         return this.minTileSize;
     }
 
-    public List<Match> findMatches(@NonNull CPDListener cpdListener, SourceManager sourceManager) {
+    List<Match> findMatches(@NonNull CPDListener cpdListener, SourceManager sourceManager) {
         MatchCollector matchCollector = new MatchCollector(this);
         {
             cpdListener.phaseUpdate(CPDListener.HASH);

@@ -153,7 +153,7 @@ public class Tokens {
             this.curImageId = tokens.curImageId;
         }
 
-        public void restore(Tokens tokens) {
+        void restore(Tokens tokens) {
             tokens.images.entrySet().removeIf(e -> e.getValue() >= curImageId);
             tokens.curImageId = this.curImageId;
 
