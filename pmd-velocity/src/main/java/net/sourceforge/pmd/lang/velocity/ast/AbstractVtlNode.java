@@ -51,6 +51,7 @@ abstract class AbstractVtlNode extends AbstractJjtreeNode<AbstractVtlNode, VtlNo
     /*
      * see org.apache.velocity.runtime.parser.node.Node#literal()
      */
+    @Override
     public String literal() {
         // if we have only one string, just return it and avoid
         // buffer allocation. VELOCITY-606
