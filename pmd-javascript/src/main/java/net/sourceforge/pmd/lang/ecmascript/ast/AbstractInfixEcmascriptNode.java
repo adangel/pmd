@@ -14,7 +14,7 @@ abstract class AbstractInfixEcmascriptNode<T extends InfixExpression> extends Ab
         super(infixExpression);
     }
 
-    public String getOperator() {
+    String getOperator() {
         int operator = node.getOperator();
         if (operator == Token.ASSIGN_BITXOR) {
             return "^=";
@@ -24,11 +24,11 @@ abstract class AbstractInfixEcmascriptNode<T extends InfixExpression> extends Ab
         return "";
     }
 
-    public EcmascriptNode<?> getLeft() {
+    EcmascriptNode<?> getLeft() {
         return getChild(0);
     }
 
-    public EcmascriptNode<?> getRight() {
+    EcmascriptNode<?> getRight() {
         return getChild(1);
     }
 }

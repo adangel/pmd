@@ -191,7 +191,7 @@ final class EcmascriptTreeBuilder implements NodeVisitor {
         }
     }
 
-    public <T extends AstNode> EcmascriptNode<T> build(T astNode) {
+    <T extends AstNode> EcmascriptNode<T> build(T astNode) {
         EcmascriptNode<T> node = buildInternal(astNode);
 
         // Set all the trailing comma nodes

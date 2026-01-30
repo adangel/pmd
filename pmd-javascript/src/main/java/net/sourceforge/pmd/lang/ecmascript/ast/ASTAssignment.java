@@ -15,4 +15,19 @@ public final class ASTAssignment extends AbstractInfixEcmascriptNode<Assignment>
     protected <P, R> R acceptJsVisitor(EcmascriptVisitor<? super P, ? extends R> visitor, P data) {
         return visitor.visit(this, data);
     }
+
+    @Override
+    public String getOperator() {
+        return super.getOperator();
+    }
+
+    @Override
+    public EcmascriptNode<?> getLeft() {
+        return super.getLeft();
+    }
+
+    @Override
+    public EcmascriptNode<?> getRight() {
+        return super.getRight();
+    }
 }

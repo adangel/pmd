@@ -23,4 +23,19 @@ public final class ASTObjectProperty extends AbstractInfixEcmascriptNode<ObjectP
     public boolean isSetter() {
         return node.isSetterMethod();
     }
+
+    @Override
+    public String getOperator() {
+        return super.getOperator();
+    }
+
+    @Override
+    public EcmascriptNode<?> getLeft() {
+        return super.getLeft();
+    }
+
+    @Override
+    public EcmascriptNode<?> getRight() {
+        return super.getRight();
+    }
 }

@@ -12,19 +12,19 @@ abstract class AbstractFunctionCallNode<T extends FunctionCall> extends Abstract
         super(node);
     }
 
-    public EcmascriptNode<?> getTarget() {
+    EcmascriptNode<?> getTarget() {
         return (EcmascriptNode<?>) getChild(0);
     }
 
-    public int getNumArguments() {
+    int getNumArguments() {
         return node.getArguments().size();
     }
 
-    public EcmascriptNode<?> getArgument(int index) {
+    EcmascriptNode<?> getArgument(int index) {
         return (EcmascriptNode<?>) getChild(index + 1);
     }
 
-    public boolean hasArguments() {
+    boolean hasArguments() {
         return getNumArguments() != 0;
     }
 

@@ -60,24 +60,24 @@ abstract class TypeScriptLexerBase extends Lexer
         super(input);
     }
 
-    public boolean getStrictDefault() {
+    boolean getStrictDefault() {
         return useStrictDefault;
     }
 
-    public void setUseStrictDefault(boolean value) {
+    void setUseStrictDefault(boolean value) {
         useStrictDefault = value;
         useStrictCurrent = value;
     }
 
-    public boolean IsStrictMode() {
+    boolean IsStrictMode() {
         return useStrictCurrent;
     }
 
-    public void StartTemplateString() {
+    void StartTemplateString() {
         this.bracesDepth = 0;
     }
 
-    public boolean IsInTemplateString() {
+    boolean IsInTemplateString() {
         return this.templateDepth > 0 && this.bracesDepth == 0;
     }
 
