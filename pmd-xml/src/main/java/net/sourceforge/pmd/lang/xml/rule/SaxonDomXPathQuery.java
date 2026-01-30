@@ -124,7 +124,7 @@ final class SaxonDomXPathQuery {
         return xpath;
     }
 
-    public List<Node> evaluate(RootXmlNode root, PropertySource propertyValues) {
+    List<Node> evaluate(RootXmlNode root, PropertySource propertyValues) {
         DocumentWrapper wrapper = getSaxonDomWrapper(root);
 
         try {
