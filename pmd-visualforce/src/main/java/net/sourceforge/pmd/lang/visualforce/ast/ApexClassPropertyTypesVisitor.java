@@ -41,7 +41,7 @@ final class ApexClassPropertyTypesVisitor extends ApexVisitorBase<Void, Void> {
         this.variables = new ArrayList<>();
     }
 
-    public List<Pair<String, String>> getVariables() {
+    List<Pair<String, String>> getVariables() {
         return this.variables;
     }
 

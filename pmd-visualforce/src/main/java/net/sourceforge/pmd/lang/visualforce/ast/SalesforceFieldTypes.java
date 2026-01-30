@@ -47,7 +47,7 @@ abstract class SalesforceFieldTypes {
      *                            to {@code expression}
      * @return the DataType if it can be determined, else null
      */
-    public DataType getDataType(String expression, FileId vfFileName, List<String> metadataDirectories) {
+    DataType getDataType(String expression, FileId vfFileName, List<String> metadataDirectories) {
         String lowerExpression = expression.toLowerCase(Locale.ROOT);
         if (variableNameToVariableType.containsKey(lowerExpression)) {
             // The expression has been previously retrieved

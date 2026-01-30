@@ -48,7 +48,7 @@ import com.google.common.reflect.ClassPath;
 class ObjectFieldTypes extends SalesforceFieldTypes {
     private static final Logger LOG = LoggerFactory.getLogger(ObjectFieldTypes.class);
 
-    public static final String CUSTOM_OBJECT_SUFFIX = "__c";
+    private static final String CUSTOM_OBJECT_SUFFIX = "__c";
     private static final String FIELDS_DIRECTORY = "fields";
     private static final String MDAPI_OBJECT_FILE_SUFFIX = ".object";
     private static final String SFDX_FIELD_FILE_SUFFIX = ".field-meta.xml";
