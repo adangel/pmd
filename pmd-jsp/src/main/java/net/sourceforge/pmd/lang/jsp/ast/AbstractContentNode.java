@@ -4,7 +4,7 @@
 
 package net.sourceforge.pmd.lang.jsp.ast;
 
-abstract class AbstractContentNode extends AbstractJspNode {
+public abstract class AbstractContentNode extends AbstractJspNode {
 
     private String content;
 

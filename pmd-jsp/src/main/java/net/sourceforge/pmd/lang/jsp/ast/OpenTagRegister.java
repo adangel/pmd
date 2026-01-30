@@ -23,7 +23,7 @@ class OpenTagRegister {
 
     private List<ASTElement> tagList = new ArrayList<>();
 
-    public void openTag(ASTElement elm) {
+    void openTag(ASTElement elm) {
         if (elm == null || StringUtils.isBlank(elm.getName())) {
             throw new IllegalStateException("Tried to open a tag with empty name");
         }
@@ -37,7 +37,7 @@ class OpenTagRegister {
      * @return true if a matching tag was found. False if no tag with this name
      *         was ever opened ( or registered )
      */
-    public boolean closeTag(String closingTagName) {
+    boolean closeTag(String closingTagName) {
         if (StringUtils.isBlank(closingTagName)) {
             throw new IllegalStateException("Tried to close a tag with empty name");
         }
@@ -88,7 +88,7 @@ class OpenTagRegister {
         return matchingTagFound;
     }
 
-    public void closeTag(ASTElement z) {
+    void closeTag(ASTElement z) {
         closeTag(z.getName());
     }
 }
