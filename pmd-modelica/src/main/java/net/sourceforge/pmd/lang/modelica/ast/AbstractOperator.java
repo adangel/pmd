@@ -4,7 +4,7 @@
 
 package net.sourceforge.pmd.lang.modelica.ast;
 
-abstract class AbstractOperator extends AbstractModelicaNode {
+public abstract class AbstractOperator extends AbstractModelicaNode {
     protected String operator;
 
     AbstractOperator(int id) {
