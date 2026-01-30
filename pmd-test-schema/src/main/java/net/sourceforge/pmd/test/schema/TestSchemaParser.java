@@ -56,10 +56,10 @@ public class TestSchemaParser {
      * @throws XmlException If parsing throws this
      */
     public RuleTestCollection parse(Rule rule, InputSource inputSource) throws IOException, XmlException {
-        class ErrorHandler extends PrintStreamMessageHandler {
+        final class ErrorHandler extends PrintStreamMessageHandler {
             private boolean hasError = false;
 
-            ErrorHandler() {
+            private ErrorHandler() {
                 // note: need to explicitly specify the writer here, so that in unit tests
                 // System.err can be swapped out and in with SystemLambda.tapSystemErr
                 super(System.err);
@@ -71,7 +71,7 @@ public class TestSchemaParser {
                 hasError |= entry.getSeverity() == XmlSeverity.ERROR;
             }
 
-            public boolean hasError() {
+            private boolean hasError() {
                 return hasError;
             }
         }
@@ -164,12 +164,12 @@ public class TestSchemaParser {
             this.handler = handler;
         }
 
-        public void warn(String messageFormat, Object... args) {
+        void warn(String messageFormat, Object... args) {
             reportImpl(XmlSeverity.WARNING, MessageFormat.format(messageFormat, args));
 
         }
 
-        public void error(String messageFormat, Object... args) {
+        void error(String messageFormat, Object... args) {
             reportImpl(XmlSeverity.ERROR, MessageFormat.format(messageFormat, args));
         }
 

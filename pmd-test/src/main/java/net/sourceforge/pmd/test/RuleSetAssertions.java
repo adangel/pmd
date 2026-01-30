@@ -20,10 +20,10 @@ public final class RuleSetAssertions {
     }
 
     public static void assertNoWarnings(String rulesetFilename) {
-        class Reporter extends MessageReporterBase {
+        final class Reporter extends MessageReporterBase {
             private int warnings = 0;
 
-            Reporter() {
+            private Reporter() {
                 setLevel(Level.WARN);
             }
 
@@ -35,7 +35,7 @@ public final class RuleSetAssertions {
                 System.out.println(message);
             }
 
-            public int numWarnings() {
+            private int numWarnings() {
                 return warnings;
             }
         }

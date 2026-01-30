@@ -34,7 +34,7 @@ enum TestSchemaVersion {
         return parser;
     }
 
-    public Schema getSchema() {
+    Schema getSchema() {
         return schema;
     }
 

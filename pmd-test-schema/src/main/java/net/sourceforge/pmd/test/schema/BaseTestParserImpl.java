@@ -45,7 +45,7 @@ class BaseTestParserImpl {
 
     }
 
-    public RuleTestCollection parseDocument(Rule rule, PositionedXmlDoc positionedXmlDoc, PmdXmlReporter err) {
+    RuleTestCollection parseDocument(Rule rule, PositionedXmlDoc positionedXmlDoc, PmdXmlReporter err) {
         Document doc = positionedXmlDoc.getDocument();
         Element root = doc.getDocumentElement();
 

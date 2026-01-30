@@ -606,12 +606,12 @@ public abstract class AbstractRuleSetFactoryTest {
             schemaMapping.put("https://pmd.sourceforge.io/ruleset_2_0_0.dtd", "ruleset_2_0_0.dtd");
         }
 
-        public ValidateDefaultHandler resetValid() {
+        private ValidateDefaultHandler resetValid() {
             valid = true;
             return this;
         }
 
-        public boolean isValid() {
+        private boolean isValid() {
             return valid;
         }
 
