@@ -57,22 +57,39 @@ public class StdCyclomaticComplexityRule extends AbstractApexRule {
     private boolean showClassesComplexity = true;
     private boolean showMethodsComplexity = true;
 
+    /**
+     * @deprecated Since 7.22.0. This inner class is only used by this rule and should have been private. Don't use it.
+     */
+    @SuppressWarnings("PMD.PublicMemberInNonPublicType")
+    @Deprecated
     protected static final class Entry {
         private int decisionPoints = 1;
-        public int highestDecisionPoints;
-        public int methodCount;
+        private int highestDecisionPoints;
+        private int methodCount;
 
         private Entry() {
         }
 
+        /**
+         * @deprecated Since 7.22.0. This method should have been private.
+         */
+        @Deprecated
         public void bumpDecisionPoints() {
             decisionPoints++;
         }
 
+        /**
+         * @deprecated Since 7.22.0. This method should have been private.
+         */
+        @Deprecated
         public void bumpDecisionPoints(int size) {
             decisionPoints += size;
         }
 
+        /**
+         * @deprecated Since 7.22.0. This method should have been private.
+         */
+        @Deprecated
         public int getComplexityAverage() {
             return (double) methodCount == 0 ? 1 : (int) Math.rint((double) decisionPoints / (double) methodCount);
         }
