@@ -34,7 +34,7 @@ import net.sourceforge.pmd.lang.plsql.ast.PlsqlVisitorBase;
 class NPathComplexityVisitor extends PlsqlVisitorBase<Object, Object> {
 
 
-    public int compute(ExecutableCode root) {
+    int compute(ExecutableCode root) {
         return (int) root.acceptVisitor(this, null);
     }
 

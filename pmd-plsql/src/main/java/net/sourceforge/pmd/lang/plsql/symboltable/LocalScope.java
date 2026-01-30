@@ -5,6 +5,7 @@
 package net.sourceforge.pmd.lang.plsql.symboltable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.sourceforge.pmd.lang.ast.Node;
@@ -35,5 +36,15 @@ public class LocalScope extends MethodOrLocalScope {
     @Override
     public String toString() {
         return "LocalScope:" + getVariableDeclarations().keySet();
+    }
+
+    @Override
+    public Map<VariableNameDeclaration, List<NameOccurrence>> getVariableDeclarations() {
+        return super.getVariableDeclarations();
+    }
+
+    @Override
+    public Set<NameDeclaration> findVariableHere(PLSQLNameOccurrence occurrence) {
+        return super.findVariableHere(occurrence);
     }
 }

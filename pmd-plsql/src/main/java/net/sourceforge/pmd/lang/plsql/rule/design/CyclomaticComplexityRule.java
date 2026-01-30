@@ -67,18 +67,18 @@ public class CyclomaticComplexityRule extends AbstractPLSQLRule {
 
     private static final class Entry {
         private int decisionPoints = 1;
-        public int highestDecisionPoints;
-        public int methodCount;
+        private int highestDecisionPoints;
+        private int methodCount;
 
-        public void bumpDecisionPoints() {
+        private void bumpDecisionPoints() {
             decisionPoints++;
         }
 
-        public void bumpDecisionPoints(int size) {
+        private void bumpDecisionPoints(int size) {
             decisionPoints += size;
         }
 
-        public int getComplexityAverage() {
+        private int getComplexityAverage() {
             return (double) methodCount == 0 ? 1 : (int) Math.rint((double) decisionPoints / (double) methodCount);
         }
     }

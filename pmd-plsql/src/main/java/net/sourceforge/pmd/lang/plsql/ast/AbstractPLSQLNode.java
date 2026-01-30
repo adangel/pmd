@@ -27,7 +27,12 @@ abstract class AbstractPLSQLNode extends AbstractJjtreeNode<AbstractPLSQLNode, P
         this.value = value;
     }
 
-    public Object jjtGetValue() {
+    /**
+     * @deprecated Since 7.22.0. This method will be made protected in a future release.
+     * @return
+     */
+    @Deprecated
+    public Object jjtGetValue() { // NOPMD PublicMemberInNonPublicType
         return value;
     }
 

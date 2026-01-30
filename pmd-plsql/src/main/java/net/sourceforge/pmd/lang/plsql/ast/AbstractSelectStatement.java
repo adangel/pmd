@@ -14,27 +14,27 @@ abstract class AbstractSelectStatement extends AbstractPLSQLNode {
         super(i);
     }
 
-    protected void setDistinct(boolean distinct) {
+    void setDistinct(boolean distinct) {
         this.distinct = true;
     }
 
-    public boolean isDistinct() {
+    boolean isDistinct() {
         return distinct;
     }
 
-    protected void setUnique(boolean unique) {
+    void setUnique(boolean unique) {
         this.unique = unique;
     }
 
-    public boolean isUnique() {
+    boolean isUnique() {
         return unique;
     }
 
-    protected void setAll(boolean all) {
+    void setAll(boolean all) {
         this.all = all;
     }
 
-    public boolean isAll() {
+    boolean isAll() {
         return all;
     }
 

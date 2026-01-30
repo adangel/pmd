@@ -18,4 +18,19 @@ public final class ASTSelectStatement extends AbstractSelectStatement {
     public ASTFromClause getFromClause() {
         return firstChild(ASTFromClause.class);
     }
+
+    @Override
+    public boolean isDistinct() {
+        return super.isDistinct();
+    }
+
+    @Override
+    public boolean isUnique() {
+        return super.isUnique();
+    }
+
+    @Override
+    public boolean isAll() {
+        return super.isAll();
+    }
 }
