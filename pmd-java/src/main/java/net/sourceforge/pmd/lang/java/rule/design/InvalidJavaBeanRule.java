@@ -237,7 +237,7 @@ public class InvalidJavaBeanRule extends AbstractJavaRulechainRule {
                 || hasLombokImport(node) && node.isAnnotationPresent(LOMBOK_SETTER);
     }
 
-    private static class PropertyInfo {
+    private static final class PropertyInfo {
         private final String name;
         private ASTVariableId declaratorId;
         private boolean readonly;
@@ -246,59 +246,43 @@ public class InvalidJavaBeanRule extends AbstractJavaRulechainRule {
         private ASTMethodDeclaration setter;
         private ASTMethodDeclaration indexedSetter;
 
-        PropertyInfo(String name) {
+        private PropertyInfo(String name) {
             this.name = name;
         }
 
-        public String getName() {
+        private String getName() {
             return name;
         }
 
-        public ASTVariableId getDeclaratorId() {
+        private ASTVariableId getDeclaratorId() {
             return declaratorId;
         }
 
-        public void setDeclaratorId(ASTVariableId declaratorId) {
+        private void setDeclaratorId(ASTVariableId declaratorId) {
             this.declaratorId = declaratorId;
         }
 
-        public boolean isReadonly() {
-            return readonly;
-        }
-
-        public void setReadonly(boolean readonly) {
+        private void setReadonly(boolean readonly) {
             this.readonly = readonly;
         }
 
-        public ASTMethodDeclaration getGetter() {
+        private ASTMethodDeclaration getGetter() {
             return getter;
         }
 
-        public void setGetter(ASTMethodDeclaration getter) {
+        private void setGetter(ASTMethodDeclaration getter) {
             this.getter = getter;
         }
 
-        public ASTMethodDeclaration getIndexedGetter() {
-            return indexedGetter;
-        }
-
-        public void setIndexedGetter(ASTMethodDeclaration indexedGetter) {
+        private void setIndexedGetter(ASTMethodDeclaration indexedGetter) {
             this.indexedGetter = indexedGetter;
         }
 
-        public ASTMethodDeclaration getSetter() {
-            return setter;
-        }
-
-        public void setSetter(ASTMethodDeclaration setter) {
+        private void setSetter(ASTMethodDeclaration setter) {
             this.setter = setter;
         }
 
-        public ASTMethodDeclaration getIndexedSetter() {
-            return indexedSetter;
-        }
-
-        public void setIndexedSetter(ASTMethodDeclaration indexedSetter) {
+        private void setIndexedSetter(ASTMethodDeclaration indexedSetter) {
             this.indexedSetter = indexedSetter;
         }
 

@@ -48,7 +48,7 @@ abstract class BaseExprMirror<T extends JavaNode> implements ExprMirror {
         }
     }
 
-    public void setTypingContext(TypingContext typingCtx) {
+    void setTypingContext(TypingContext typingCtx) {
         this.typingContext = typingCtx;
     }
 

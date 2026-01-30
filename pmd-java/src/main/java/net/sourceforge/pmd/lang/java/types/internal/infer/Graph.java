@@ -188,7 +188,7 @@ class Graph<T> {
             this.data = new LinkedHashSet<>(data);
         }
 
-        public Set<T> getData() {
+        Set<T> getData() {
             return data;
         }
 

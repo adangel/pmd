@@ -123,7 +123,7 @@ final class PatternBindingsUtil {
         private final PSet<ASTVariableId> trueBindings;
         private final PSet<ASTVariableId> falseBindings;
 
-        public BindSet union(BindSet bindSet) {
+        BindSet union(BindSet bindSet) {
             if (this.isEmpty()) {
                 return bindSet;
             } else if (bindSet.isEmpty()) {
@@ -145,11 +145,11 @@ final class PatternBindingsUtil {
             this.falseBindings = falseBindings;
         }
 
-        public PSet<ASTVariableId> getTrueBindings() {
+        PSet<ASTVariableId> getTrueBindings() {
             return trueBindings;
         }
 
-        public PSet<ASTVariableId> getFalseBindings() {
+        PSet<ASTVariableId> getFalseBindings() {
             return falseBindings;
         }
 

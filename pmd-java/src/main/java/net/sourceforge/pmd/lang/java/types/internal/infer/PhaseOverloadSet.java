@@ -56,15 +56,15 @@ final class PhaseOverloadSet extends OverloadSet<MethodCtDecl> {
         this.site = site;
     }
 
-    public MethodResolutionPhase getPhase() {
+    MethodResolutionPhase getPhase() {
         return phase;
     }
 
-    public MethodCallSite getSite() {
+    MethodCallSite getSite() {
         return site;
     }
 
-    public Infer getInfer() {
+    Infer getInfer() {
         return infer;
     }
 
@@ -78,7 +78,7 @@ final class PhaseOverloadSet extends OverloadSet<MethodCtDecl> {
         super.add(sig);
     }
 
-    public @NonNull MethodCtDecl getMostSpecificOrLogAmbiguity(TypeInferenceLogger logger) {
+    @NonNull MethodCtDecl getMostSpecificOrLogAmbiguity(TypeInferenceLogger logger) {
         assert nonEmpty();
         List<MethodCtDecl> overloads = getOverloadsMutable();
         MethodCtDecl main = overloads.get(0);

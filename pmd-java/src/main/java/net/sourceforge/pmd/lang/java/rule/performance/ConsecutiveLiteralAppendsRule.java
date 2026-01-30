@@ -281,31 +281,31 @@ public class ConsecutiveLiteralAppendsRule extends AbstractJavaRulechainRule {
         private int counter;
         private Node reportNode;
 
-        public void initThreshold(int threshold) {
+        private void initThreshold(int threshold) {
             this.threshold = threshold;
         }
 
-        public void count(Node node) {
+        private void count(Node node) {
             if (counter == 0) {
                 reportNode = node;
             }
             counter++;
         }
 
-        public void reset() {
+        private void reset() {
             counter = 0;
             reportNode = null;
         }
 
-        public boolean isViolation() {
+        private boolean isViolation() {
             return counter > threshold;
         }
 
-        public int getCounter() {
+        private int getCounter() {
             return counter;
         }
 
-        public Node getReportNode() {
+        private Node getReportNode() {
             return reportNode;
         }
 

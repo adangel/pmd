@@ -26,7 +26,7 @@ abstract class MapFunction<T, R> implements Function<T, R> {
         return map;
     }
 
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return map.isEmpty();
     }
 

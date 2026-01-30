@@ -448,7 +448,7 @@ final class ClassStub implements JClassSymbol, AsmStub, AnnotationOwner {
 
     // <editor-fold  defaultstate="collapsed" desc="Names">
 
-    public String getInternalName() {
+    String getInternalName() {
         return getNames().internalName;
     }
 
@@ -653,7 +653,7 @@ final class ClassStub implements JClassSymbol, AsmStub, AnnotationOwner {
             }
         }
 
-        public void finishOuterClass() {
+        void finishOuterClass() {
             int packageEnd = internalName.lastIndexOf('/');
             this.simpleName = binaryName.substring(packageEnd + 1); // if -1, start from 0
             this.canonicalName = binaryName;
@@ -680,11 +680,11 @@ final class ClassStub implements JClassSymbol, AsmStub, AnnotationOwner {
             return isLocalOrAnon;
         }
 
-        public @Nullable JClassSymbol getEnclosingClass() {
+        @Nullable JClassSymbol getEnclosingClass() {
             return stub;
         }
 
-        public @Nullable MethodStub getEnclosingMethod() {
+        @Nullable MethodStub getEnclosingMethod() {
             if (stub instanceof ClassStub && methodName != null) {
                 ClassStub stub1 = (ClassStub) stub;
                 stub1.parseLock.ensureParsed();

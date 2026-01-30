@@ -46,4 +46,8 @@ public final class LexicalScope extends MapFunction<String, @Nullable JTypeVar> 
         return new LexicalScope(associateByTo(new HashMap<>(getMap()), vars, JTypeVar::getName));
     }
 
+    @Override
+    public boolean isEmpty() {
+        return super.isEmpty();
+    }
 }

@@ -53,7 +53,7 @@ final class AstDisambiguationPass {
      * for the worst kind of ambiguity
      * </ul>
      */
-    public static void disambigWithCtx(NodeStream<? extends JavaNode> nodes, ReferenceCtx ctx) {
+    static void disambigWithCtx(NodeStream<? extends JavaNode> nodes, ReferenceCtx ctx) {
         assert ctx != null : "Null context";
         nodes.forEach(it -> it.acceptVisitor(DisambigVisitor.INSTANCE, ctx));
     }
@@ -79,7 +79,7 @@ final class AstDisambiguationPass {
 
     private static final class DisambigVisitor extends JavaVisitorBase<ReferenceCtx, Void> {
 
-        public static final DisambigVisitor INSTANCE = new DisambigVisitor();
+        private static final DisambigVisitor INSTANCE = new DisambigVisitor();
 
 
         @Override

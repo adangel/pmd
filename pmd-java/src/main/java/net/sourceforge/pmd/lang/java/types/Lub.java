@@ -267,8 +267,8 @@ final class Lub {
     /** Simple record type for a pair of types. */
     private static final class TypePair {
 
-        public final JTypeMirror left;
-        public final JTypeMirror right;
+        private final JTypeMirror left;
+        private final JTypeMirror right;
 
         TypePair(JTypeMirror left, JTypeMirror right) {
             this.left = left;

@@ -34,27 +34,31 @@ final class MostlySingularMultimap<K, V> {
         this.map = map;
     }
 
+    /**
+     * @deprecated Since 7.22.0. Will be made package-private.
+     */
+    @Deprecated
     @FunctionalInterface
-    public interface MapMaker<K> {
+    public interface MapMaker<K> { //NOPMD PublicMemberInNonPublicType
 
         /** Produce a new mutable map with the contents of the given map. */
         <V> Map<K, V> copy(Map<K, V> m);
     }
 
-    public @NonNull List<V> get(K k) {
+    @NonNull List<V> get(K k) {
         Object vs = map.get(k);
         return interpretValue(vs);
     }
 
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return map.isEmpty();
     }
 
-    public Set<K> keySet() {
+    Set<K> keySet() {
         return map.keySet();
     }
 
-    public boolean containsKey(Object v) {
+    boolean containsKey(Object v) {
         return map.containsKey(v);
     }
 
@@ -63,7 +67,7 @@ final class MostlySingularMultimap<K, V> {
         return map.toString();
     }
 
-    public void processValuesOneByOne(BiConsumer<K, V> consumer) {
+    void processValuesOneByOne(BiConsumer<K, V> consumer) {
         for (Entry<K, Object> entry : map.entrySet()) {
             K k = entry.getKey();
             Object vs = entry.getValue();
@@ -90,11 +94,11 @@ final class MostlySingularMultimap<K, V> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <K, V> MostlySingularMultimap<K, V> empty() {
+    static <K, V> MostlySingularMultimap<K, V> empty() {
         return EMPTY;
     }
 
-    public static <K, V> Builder<K, V> newBuilder(MapMaker<K> mapMaker) {
+    static <K, V> Builder<K, V> newBuilder(MapMaker<K> mapMaker) {
         return new Builder<>(mapMaker);
     }
 
@@ -110,8 +114,10 @@ final class MostlySingularMultimap<K, V> {
 
     /**
      * Builder for a multimap. Can only be used once.
+     * @deprecated Since 7.22.0. Will be made package-private.
      */
-    public static final class Builder<K, V> {
+    @Deprecated
+    public static final class Builder<K, V> { //NOPMD PublicMemberInNonPublicType
 
         private final MapMaker<K> mapMaker;
         private @Nullable Map<K, Object> map;
@@ -132,21 +138,37 @@ final class MostlySingularMultimap<K, V> {
         }
 
 
-        public void replaceValue(K key, V v) {
+        /**
+         * @deprecated Since 7.22.0. Will be made package-private.
+         */
+        @Deprecated
+        public void replaceValue(K key, V v) { //NOPMD PublicMemberInNonPublicType
             checkKeyValue(key, v);
             getMapInternal().put(key, v);
         }
 
-        public void addUnlessKeyExists(K key, V v) {
+        /**
+         * @deprecated Since 7.22.0. Will be made package-private.
+         */
+        @Deprecated
+        public void addUnlessKeyExists(K key, V v) { //NOPMD PublicMemberInNonPublicType
             checkKeyValue(key, v);
             getMapInternal().putIfAbsent(key, v);
         }
 
-        public void appendValue(K key, V v) {
+        /**
+         * @deprecated Since 7.22.0. Will be made package-private.
+         */
+        @Deprecated
+        public void appendValue(K key, V v) { //NOPMD PublicMemberInNonPublicType
             appendValue(key, v, false);
         }
 
-        public void appendValue(K key, V v, boolean noDuplicate) {
+        /**
+         * @deprecated Since 7.22.0. Will be made package-private.
+         */
+        @Deprecated
+        public void appendValue(K key, V v, boolean noDuplicate) { //NOPMD PublicMemberInNonPublicType
             checkKeyValue(key, v);
 
             getMapInternal().compute(key, (k, oldV) -> {
@@ -160,14 +182,22 @@ final class MostlySingularMultimap<K, V> {
             AssertionUtil.requireParamNotNull("key", key);
         }
 
-        public Builder<K, V> groupBy(Iterable<? extends V> values,
+        /**
+         * @deprecated Since 7.22.0. Will be made package-private.
+         */
+        @Deprecated
+        public Builder<K, V> groupBy(Iterable<? extends V> values, //NOPMD PublicMemberInNonPublicType
                                      Function<? super V, ? extends K> keyExtractor) {
             ensureOpen();
             return groupBy(values, keyExtractor, Function.identity());
         }
 
 
-        public <I> Builder<K, V> groupBy(Iterable<? extends I> values,
+        /**
+         * @deprecated Since 7.22.0. Will be made package-private.
+         */
+        @Deprecated
+        public <I> Builder<K, V> groupBy(Iterable<? extends I> values, //NOPMD PublicMemberInNonPublicType
                                          Function<? super I, ? extends K> keyExtractor,
                                          Function<? super I, ? extends V> valueExtractor) {
             ensureOpen();
@@ -177,8 +207,12 @@ final class MostlySingularMultimap<K, V> {
             return this;
         }
 
+        /**
+         * @deprecated Since 7.22.0. Will be made package-private.
+         */
+        @Deprecated
         // no duplicates
-        public Builder<K, V> absorb(Builder<K, V> other) {
+        public Builder<K, V> absorb(Builder<K, V> other) { //NOPMD PublicMemberInNonPublicType
             ensureOpen();
             other.ensureOpen();
 
@@ -233,12 +267,20 @@ final class MostlySingularMultimap<K, V> {
             }
         }
 
-        public MostlySingularMultimap<K, V> build() {
+        /**
+         * @deprecated Since 7.22.0. Will be made package-private.
+         */
+        @Deprecated
+        public MostlySingularMultimap<K, V> build() { //NOPMD PublicMemberInNonPublicType
             consume();
             return isEmpty() ? empty() : new MostlySingularMultimap<>(getMapInternal());
         }
 
-        public @Nullable Map<K, V> buildAsSingular() {
+        /**
+         * @deprecated Since 7.22.0. Will be made package-private.
+         */
+        @Deprecated
+        public @Nullable Map<K, V> buildAsSingular() { //NOPMD PublicMemberInNonPublicType
             consume();
             if (!isSingular) {
                 return null; // NOPMD: returning null as in the spec (Nullable)
@@ -256,11 +298,19 @@ final class MostlySingularMultimap<K, V> {
             Validate.isTrue(!consumed, "Builder was already consumed");
         }
 
-        public boolean isSingular() {
+        /**
+         * @deprecated Since 7.22.0. Will be made package-private.
+         */
+        @Deprecated
+        public boolean isSingular() { //NOPMD PublicMemberInNonPublicType
             return isSingular;
         }
 
-        public Map<K, List<V>> getMutableMap() {
+        /**
+         * @deprecated Since 7.22.0. Will be made package-private.
+         */
+        @Deprecated
+        public Map<K, List<V>> getMutableMap() { //NOPMD PublicMemberInNonPublicType
             Map<K, List<V>> mutable = mapMaker.copy(Collections.emptyMap());
             for (Entry<K, Object> entry : getMapInternal().entrySet()) {
                 mutable.put(entry.getKey(), interpretValue(entry.getValue()));
@@ -268,7 +318,11 @@ final class MostlySingularMultimap<K, V> {
             return mutable;
         }
 
-        public boolean isEmpty() {
+        /**
+         * @deprecated Since 7.22.0. Will be made package-private.
+         */
+        @Deprecated
+        public boolean isEmpty() { //NOPMD PublicMemberInNonPublicType
             return map == null || map.isEmpty();
         }
 

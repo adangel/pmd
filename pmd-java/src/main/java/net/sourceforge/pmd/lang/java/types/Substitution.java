@@ -97,6 +97,11 @@ public final class Substitution extends MapFunction<@NonNull SubstVar, @NonNull 
         return new Substitution(CollectionUtil.plus(getMap(), from, to));
     }
 
+    @Override
+    public boolean isEmpty() {
+        return super.isEmpty();
+    }
+
     /**
      * Builds a substitution where the mapping from vars to types is
      * defined by the correspondence between the two lists.

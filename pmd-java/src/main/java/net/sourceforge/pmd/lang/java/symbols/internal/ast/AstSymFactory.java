@@ -46,7 +46,7 @@ final class AstSymFactory {
         return (JClassType) ts.declaration(annotationSym());
     }
 
-    public TypeSystem types() {
+    TypeSystem types() {
         return ts;
     }
 

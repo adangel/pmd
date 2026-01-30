@@ -39,7 +39,7 @@ final class CommentAssignmentPass {
         node.enlargeLeft(comment.getToken());
     }
 
-    public static void assignCommentsToDeclarations(ASTCompilationUnit root) {
+    static void assignCommentsToDeclarations(ASTCompilationUnit root) {
         final List<JavadocComment> comments = root.getComments()
                 .stream()
                 .filter(JavadocComment.class::isInstance)

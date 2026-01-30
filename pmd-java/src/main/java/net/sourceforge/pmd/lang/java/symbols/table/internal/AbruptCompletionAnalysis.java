@@ -325,42 +325,42 @@ final class AbruptCompletionAnalysis {
      * state instances forward events to their parent (as these events
      * are part of the subtree of their parents).
      */
-    private static class SubtreeState {
+    private static final class SubtreeState {
 
         private final @Nullable SubtreeState parent;
-        public boolean ignoreBreaksAndContinues;
+        private boolean ignoreBreaksAndContinues;
         private Set<JavaNode> breakTargets = Collections.emptySet();
         private Set<ASTStatement> continueTargets = Collections.emptySet();
 
         private final Function<? super ASTStatement, VisitResult> shouldContinue;
 
-        SubtreeState(Function<? super ASTStatement, VisitResult> shouldContinue) {
+        private SubtreeState(Function<? super ASTStatement, VisitResult> shouldContinue) {
             this.parent = null;
             this.shouldContinue = shouldContinue;
         }
 
-        SubtreeState(SubtreeState parent) {
+        private SubtreeState(SubtreeState parent) {
             this.parent = parent;
             this.shouldContinue = parent.shouldContinue;
         }
 
-        public boolean isIgnoreBreaksAndContinues() {
+        private boolean isIgnoreBreaksAndContinues() {
             return ignoreBreaksAndContinues || parent != null && parent.isIgnoreBreaksAndContinues();
         }
 
-        boolean containsBreak(ASTStatement stmt) {
+        private boolean containsBreak(ASTStatement stmt) {
             return breakTargets.contains(stmt);
         }
 
-        boolean containsContinue(ASTStatement stmt) {
+        private boolean containsContinue(ASTStatement stmt) {
             return continueTargets.contains(stmt);
         }
 
-        void addBreak(ASTBreakStatement breakStatement) {
+        private void addBreak(ASTBreakStatement breakStatement) {
             addBreakImpl(breakStatement.getTarget());
         }
 
-        void addYield(ASTYieldStatement yieldStmt) {
+        private void addYield(ASTYieldStatement yieldStmt) {
             addBreakImpl(yieldStmt.getYieldTarget());
         }
 
@@ -378,7 +378,7 @@ final class AbruptCompletionAnalysis {
             }
         }
 
-        void addContinue(ASTContinueStatement continueStatement) {
+        private void addContinue(ASTContinueStatement continueStatement) {
             if (isIgnoreBreaksAndContinues()) {
                 return;
             }

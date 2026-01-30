@@ -144,7 +144,7 @@ enum ReductionStep {
     /**
      * Can the inference variable be instantiated using this step?
      */
-    public boolean accepts(InferenceVar t, InferenceContext infCtx) {
+    boolean accepts(InferenceVar t, InferenceContext infCtx) {
         return !t.isCaptured() && !filterBounds(t, infCtx).isEmpty();
     }
 

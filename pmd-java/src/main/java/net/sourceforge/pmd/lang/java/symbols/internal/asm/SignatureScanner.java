@@ -37,26 +37,26 @@ class SignatureScanner {
     }
 
 
-    public char charAt(int off) {
+    char charAt(int off) {
         return off < end ? chars.charAt(off) : 0;
     }
 
-    public void dumpChars(int start, int end, StringBuilder builder) {
+    void dumpChars(int start, int end, StringBuilder builder) {
         builder.append(chars, start, end);
     }
 
-    public int consumeChar(int start, char l, String s) {
+    int consumeChar(int start, char l, String s) {
         if (charAt(start) != l) {
             throw expected(s, start);
         }
         return start + 1;
     }
 
-    public int consumeChar(int start, char l) {
+    int consumeChar(int start, char l) {
         return consumeChar(start, l, "" + l);
     }
 
-    public int nextIndexOf(final int start, char stop) {
+    int nextIndexOf(final int start, char stop) {
         int cur = start;
         while (cur < end && charAt(cur) != stop) {
             cur++;
@@ -64,7 +64,7 @@ class SignatureScanner {
         return cur;
     }
 
-    public int nextIndexOfAny(final int start, char stop, char stop2) {
+    int nextIndexOfAny(final int start, char stop, char stop2) {
         int cur = start;
         while (cur < end) {
             char c = charAt(cur);
@@ -77,7 +77,7 @@ class SignatureScanner {
     }
 
 
-    public RuntimeException expected(String expectedWhat, int pos) {
+    RuntimeException expected(String expectedWhat, int pos) {
         final String indent = "    ";
         String sb = "Expected " + expectedWhat + ":\n"
             + indent + bufferToString() + "\n"
@@ -85,15 +85,15 @@ class SignatureScanner {
         return new InvalidTypeSignatureException(sb);
     }
 
-    public void expectEoI(int e) {
+    void expectEoI(int e) {
         consumeChar(e, (char) 0, "end of input");
     }
 
-    public String bufferToString() {
+    String bufferToString() {
         return bufferToString(start, end);
     }
 
-    public String bufferToString(int start, int end) {
+    String bufferToString(int start, int end) {
         if (start == end) {
             return "";
         }

@@ -276,7 +276,7 @@ public final class PrettyPrintingUtil {
     static class ExprPrinter extends JavaVisitorBase<StringBuilder, Void> {
 
         private static final int MAX_ARG_LENGTH = 20;
-        public static final String BLOCK_PLACEHOLDER = "{ ... }";
+        private static final String BLOCK_PLACEHOLDER = "{ ... }";
 
         @Override
         public Void visitJavaNode(JavaNode node, StringBuilder data) {

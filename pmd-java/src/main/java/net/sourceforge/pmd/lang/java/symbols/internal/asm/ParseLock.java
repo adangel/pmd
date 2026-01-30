@@ -25,7 +25,7 @@ abstract class ParseLock {
         this.name = name;
     }
 
-    public void ensureParsed() {
+    void ensureParsed() {
         getFinalStatus();
     }
 
@@ -87,11 +87,11 @@ abstract class ParseLock {
         return status;
     }
 
-    public boolean isFailed() {
+    boolean isFailed() {
         return getFinalStatus() == ParseStatus.FAILED;
     }
 
-    public boolean isNotParsed() {
+    boolean isNotParsed() {
         return status == ParseStatus.NOT_PARSED;
     }
 

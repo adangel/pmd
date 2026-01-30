@@ -65,18 +65,18 @@ public class InsufficientStringBufferDeclarationRule extends AbstractJavaRulecha
         }
 
 
-        public void addAnticipatedLength(int length) {
+        private void addAnticipatedLength(int length) {
             this.anticipatedLength += length;
         }
 
 
-        public boolean isInsufficient() {
+        private boolean isInsufficient() {
             processBranches();
             return capacity >= 0 && anticipatedLength > capacity;
         }
 
 
-        public Object[] getParamsForViolation() {
+        private Object[] getParamsForViolation() {
             return new String[] { getTypeName(variable), String.valueOf(capacity), String.valueOf(anticipatedLength) };
         }
 
@@ -86,7 +86,7 @@ public class InsufficientStringBufferDeclarationRule extends AbstractJavaRulecha
         }
 
 
-        public void addBranch(Node node, int counter) {
+        private void addBranch(Node node, int counter) {
             Node parent = node.ancestors(ASTIfStatement.class).last();
             if (parent == null) {
                 parent = node.ancestors(ASTSwitchStatement.class).last();

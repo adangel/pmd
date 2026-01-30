@@ -155,7 +155,7 @@ final class AstClassSym
                                : HashTreePSet.empty();
     }
 
-    public void processLombok(JavaAstProcessor processor) {
+    void processLombok(JavaAstProcessor processor) {
         if (node.isAnnotationPresent("lombok.extern.slf4j.Slf4j")) {
             declaredFields.add(ImplicitMemberSymbols.lombokSlf4jLoggerField(this, processor));
         }

@@ -113,17 +113,6 @@ final class JavaAnnotationSuppressor extends AbstractAnnotationSuppressor<ASTAnn
         return null;
     }
 
-    @SuppressWarnings("unused")
-    public static void foo1(int i) {
-        i = 2;
-        foo2(i);
-    }
-
-    @SuppressWarnings("unused")
-    private static void foo2(int i) {
-        System.out.println("i = " + i);
-    }
-
     private static OptionalBool hasUnusedWarning(JavaNode node) {
         if (node == null) {
             return OptionalBool.UNKNOWN;

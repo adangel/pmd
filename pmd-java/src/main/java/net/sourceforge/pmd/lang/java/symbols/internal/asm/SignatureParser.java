@@ -39,20 +39,20 @@ class SignatureParser {
         return loader.getTypeSystem();
     }
 
-    public JTypeMirror parseFieldType(LexicalScope scope, String signature) {
+    JTypeMirror parseFieldType(LexicalScope scope, String signature) {
         TypeScanner b = new MyTypeBuilder(scope, signature);
         parseFully(b, TypeSigParser::typeSignature);
         return b.pop();
     }
 
 
-    public JTypeMirror parseTypeVarBound(LexicalScope scope, String boundSig) {
+    JTypeMirror parseTypeVarBound(LexicalScope scope, String boundSig) {
         MyTypeBuilder b = new MyTypeBuilder(scope, boundSig);
         parseFully(b, TypeSigParser::typeVarBound);
         return b.pop();
     }
 
-    public void parseClassSignature(LazyClassSignature type, String genericSig) {
+    void parseClassSignature(LazyClassSignature type, String genericSig) {
         TypeScanner b = typeParamsWrapper(type, genericSig);
         parseFully(b, TypeSigParser::classHeader);
         type.setSuperInterfaces((List) b.popList());
@@ -60,7 +60,7 @@ class SignatureParser {
     }
 
 
-    public void parseMethodType(LazyMethodType type, String genericSig) {
+    void parseMethodType(LazyMethodType type, String genericSig) {
         TypeScanner b = typeParamsWrapper(type, genericSig);
         int eof = TypeSigParser.methodType(type, b.start, b);
         b.expectEoI(eof);

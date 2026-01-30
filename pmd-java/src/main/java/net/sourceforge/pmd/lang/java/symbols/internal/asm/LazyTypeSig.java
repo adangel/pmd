@@ -51,7 +51,7 @@ class LazyTypeSig {
         return sig;
     }
 
-    public void addTypeAnnotation(@Nullable TypePath path, SymAnnot annot) {
+    void addTypeAnnotation(@Nullable TypePath path, SymAnnot annot) {
         if (parsed != null) {
             throw new IllegalStateException("Must add annotations before the field type is parsed.");
         }

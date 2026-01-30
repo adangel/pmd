@@ -326,7 +326,7 @@ public class AvoidReassigningLoopVariablesRule extends AbstractJavaRulechainRule
             return getDisplayName();
         }
 
-        public String getDisplayName() {
+        private String getDisplayName() {
             return CaseConvention.SCREAMING_SNAKE_CASE.convertTo(CaseConvention.CAMEL_CASE, name());
         }
     }

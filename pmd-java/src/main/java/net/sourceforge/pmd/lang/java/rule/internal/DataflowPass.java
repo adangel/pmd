@@ -1479,7 +1479,7 @@ public final class DataflowPass {
          * of `this`. So the analysis may show some false positives, which
          * hopefully should be rare enough.
          */
-        public void recordThisLeak(JClassSymbol enclosingClassSym, JavaNode escapingNode) {
+        private void recordThisLeak(JClassSymbol enclosingClassSym, JavaNode escapingNode) {
             // all reaching defs to fields until now may be observed
             for (JFieldSymbol field : enclosingClassSym.getDeclaredFields()) {
                 if (!field.isStatic()) {

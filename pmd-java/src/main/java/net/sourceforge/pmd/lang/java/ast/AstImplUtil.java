@@ -19,19 +19,19 @@ final class AstImplUtil {
 
     }
 
-    public static String getLastSegment(String nameWithDots, char sep) {
+    static String getLastSegment(String nameWithDots, char sep) {
         assert nameWithDots != null;
         int lastIdx = nameWithDots.lastIndexOf(sep);
         return lastIdx < 0 ? nameWithDots : nameWithDots.substring(lastIdx + 1);
     }
 
-    public static String getFirstSegment(String nameWithDots, char sep) {
+    static String getFirstSegment(String nameWithDots, char sep) {
         assert nameWithDots != null;
         int lastIdx = nameWithDots.indexOf(sep);
         return lastIdx < 0 ? nameWithDots : nameWithDots.substring(0, lastIdx);
     }
 
-    public static <T extends Node> @Nullable T getChildAs(JavaNode javaNode, int idx, Class<T> type) {
+    static <T extends Node> @Nullable T getChildAs(JavaNode javaNode, int idx, Class<T> type) {
         if (javaNode.getNumChildren() <= idx || idx < 0) {
             return null;
         }

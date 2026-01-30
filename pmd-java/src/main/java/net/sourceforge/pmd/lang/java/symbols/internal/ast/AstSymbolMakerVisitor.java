@@ -54,7 +54,7 @@ final class AstSymbolMakerVisitor extends JavaVisitorBase<AstSymFactory, Void> {
         packageName = node.getPackageName();
     }
 
-    public SymbolResolver makeKnownSymbolResolver() {
+    SymbolResolver makeKnownSymbolResolver() {
         return new MapSymResolver(byCanonicalName, byBinaryName);
     }
 

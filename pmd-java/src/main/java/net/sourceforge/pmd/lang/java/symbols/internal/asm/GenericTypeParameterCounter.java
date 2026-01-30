@@ -19,7 +19,7 @@ class GenericTypeParameterCounter extends SignatureVisitor {
         count++;
     }
 
-    public int getCount() {
+    int getCount() {
         return count;
     }
 

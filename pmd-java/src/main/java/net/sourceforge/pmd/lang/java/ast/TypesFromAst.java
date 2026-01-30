@@ -34,7 +34,7 @@ final class TypesFromAst {
         // utility class
     }
 
-    public static List<JTypeMirror> fromAst(TypeSystem ts, Substitution subst, List<ASTType> reflected) {
+    static List<JTypeMirror> fromAst(TypeSystem ts, Substitution subst, List<ASTType> reflected) {
         return CollectionUtil.map(reflected, it -> fromAst(ts, subst, it));
     }
 
@@ -44,7 +44,7 @@ final class TypesFromAst {
      * @param lexicalSubst A substitution to apply to type variables
      * @param node         An ast node
      */
-    public static JTypeMirror fromAst(TypeSystem ts, Substitution lexicalSubst, ASTType node) {
+    static JTypeMirror fromAst(TypeSystem ts, Substitution lexicalSubst, ASTType node) {
         if (node == null) {
             return null;
         }

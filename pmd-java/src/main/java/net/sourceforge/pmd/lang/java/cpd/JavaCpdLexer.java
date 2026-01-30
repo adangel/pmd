@@ -196,7 +196,7 @@ public class JavaCpdLexer extends JavaccCpdLexer {
             classMembersIndentations = new LinkedList<>();
         }
 
-        public void processToken(JavaccToken currentToken) {
+        private void processToken(JavaccToken currentToken) {
             if (!ignoreIdentifiers) {
                 return;
             }
@@ -256,7 +256,7 @@ public class JavaCpdLexer extends JavaccCpdLexer {
             storeNextIdentifier = true;
         }
 
-        public void restoreConstructorToken(TokenFactory tokenEntries, JavaccToken currentToken) {
+        private void restoreConstructorToken(TokenFactory tokenEntries, JavaccToken currentToken) {
             if (!ignoreIdentifiers) {
                 return;
             }

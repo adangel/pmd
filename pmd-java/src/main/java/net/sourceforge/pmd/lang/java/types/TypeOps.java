@@ -1783,7 +1783,7 @@ public final class TypeOps {
             return firstResult(target, t.getComponents());
         }
 
-        public @Nullable JTypeMirror firstResult(JClassSymbol target, Iterable<? extends JTypeMirror> components) {
+        private @Nullable JTypeMirror firstResult(JClassSymbol target, Iterable<? extends JTypeMirror> components) {
             for (JTypeMirror ci : components) {
                 @Nullable JTypeMirror sup = ci.acceptVisitor(this, target);
                 if (sup != null) {

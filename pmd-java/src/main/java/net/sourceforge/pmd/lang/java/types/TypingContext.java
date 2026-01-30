@@ -66,6 +66,11 @@ public final class TypingContext extends MapFunction<JVariableSymbol, @Nullable 
         return this.andThen(newMap);
     }
 
+    @Override
+    public boolean isEmpty() {
+        return super.isEmpty();
+    }
+
     public static TypingContext zip(List<JVariableSymbol> symbols, List<JTypeMirror> types) {
         return DEFAULT.andThenZip(symbols, types);
     }

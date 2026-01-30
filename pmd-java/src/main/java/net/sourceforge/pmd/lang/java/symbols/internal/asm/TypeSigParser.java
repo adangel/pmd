@@ -331,10 +331,10 @@ final class TypeSigParser {
          * non-null, if the symbol is not found (linkage error) then return
          * an unresolved symbol.
          */
-        public abstract @NonNull JClassSymbol makeClassSymbol(String internalName, int observedArity);
+        abstract @NonNull JClassSymbol makeClassSymbol(String internalName, int observedArity);
 
 
-        public JTypeMirror getBaseType(char baseType) {
+        JTypeMirror getBaseType(char baseType) {
             switch (baseType) {
             case 'V': return ts.NO_TYPE;
             case 'Z': return ts.BOOLEAN;
@@ -349,7 +349,7 @@ final class TypeSigParser {
             }
         }
 
-        public JTypeMirror lookupTvar(String name) {
+        JTypeMirror lookupTvar(String name) {
             @Nullable SubstVar mapped = lexicalScope.apply(name);
             if (mapped == null) {
                 throw new IllegalArgumentException(
@@ -359,11 +359,11 @@ final class TypeSigParser {
             return mapped;
         }
 
-        public JClassType makeClassType(String internalName, List<JTypeMirror> targs) {
+        JClassType makeClassType(String internalName, List<JTypeMirror> targs) {
             return (JClassType) ts.parameterise(makeClassSymbol(internalName, targs.size()), targs);
         }
 
-        public JClassType parameterize(JClassType owner, String internalName, List<JTypeMirror> targs) {
+        JClassType parameterize(JClassType owner, String internalName, List<JTypeMirror> targs) {
             return owner.selectInner(makeClassSymbol(internalName, targs.size()), targs);
         }
 

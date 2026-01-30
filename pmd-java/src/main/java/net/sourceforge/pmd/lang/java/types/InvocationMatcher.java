@@ -292,7 +292,7 @@ public final class InvocationMatcher {
     private static final class TypeMatcher {
 
         /** Matches any type. */
-        public static final TypeMatcher ANY = new TypeMatcher(null);
+        private static final TypeMatcher ANY = new TypeMatcher(null);
 
         final @Nullable String name;
 

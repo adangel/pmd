@@ -24,7 +24,7 @@ final class TokenUtils {
 
     }
 
-    public static <T extends GenericToken<T>> T nthFollower(T token, int n) {
+    static <T extends GenericToken<T>> T nthFollower(T token, int n) {
         if (n < 0) {
             throw new IllegalArgumentException("Negative index?");
         }
@@ -54,7 +54,7 @@ final class TokenUtils {
      * @throws NoSuchElementException If there's less than n tokens to the left of the anchor.
      */
     // test only
-    public static <T extends GenericToken<T>> T nthPrevious(T startHint, T anchor, int n) {
+    static <T extends GenericToken<T>> T nthPrevious(T startHint, T anchor, int n) {
         if (startHint.compareTo(anchor) >= 0) {
             throw new IllegalStateException("Wrong left hint, possibly not left enough");
         }
@@ -85,7 +85,7 @@ final class TokenUtils {
         return target;
     }
 
-    public static void expectKind(JavaccToken token, int kind) {
+    static void expectKind(JavaccToken token, int kind) {
         assert token.kind == kind : "Expected " + token.getDocument().describeKind(kind) + ", got " + token;
     }
 

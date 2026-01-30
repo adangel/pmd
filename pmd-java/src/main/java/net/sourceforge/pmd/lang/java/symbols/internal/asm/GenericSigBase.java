@@ -103,17 +103,17 @@ abstract class GenericSigBase<T extends JTypeParameterOwnerSymbol & AsmStub> {
         return getTypeParameterCount() > 0;
     }
 
-    public void setTypeParams(List<JTypeVar> tvars) {
+    void setTypeParams(List<JTypeVar> tvars) {
         assert this.typeParameters == null : "Type params were already parsed for " + this;
         this.typeParameters = tvars;
     }
 
-    public List<JTypeVar> getTypeParams() {
+    List<JTypeVar> getTypeParams() {
         ensureParsed();
         return typeParameters;
     }
 
-    public SignatureParser typeLoader() {
+    SignatureParser typeLoader() {
         return ctx.sigParser();
     }
 
@@ -199,21 +199,21 @@ abstract class GenericSigBase<T extends JTypeParameterOwnerSymbol & AsmStub> {
             this.superType = sup;
         }
 
-        public JClassType getSuperType(Substitution subst) {
+        JClassType getSuperType(Substitution subst) {
             ensureParsed();
             return superType == null ? null : superType.subst(subst);
         }
 
-        public List<JClassType> getSuperItfs(Substitution subst) {
+        List<JClassType> getSuperItfs(Substitution subst) {
             ensureParsed();
             return TypeOps.substClasses(superItfs, subst);
         }
 
-        public @Nullable JClassSymbol getRawSuper() {
+        @Nullable JClassSymbol getRawSuper() {
             return rawSuper;
         }
 
-        public List<JClassSymbol> getRawItfs() {
+        List<JClassSymbol> getRawItfs() {
             return rawItfs;
         }
 
@@ -293,7 +293,7 @@ abstract class GenericSigBase<T extends JTypeParameterOwnerSymbol & AsmStub> {
 
         }
 
-        public JTypeMirror applyReceiverAnnotations(JTypeMirror typeMirror) {
+        JTypeMirror applyReceiverAnnotations(JTypeMirror typeMirror) {
             if (receiverAnnotations == null) {
                 return typeMirror;
             }
@@ -328,17 +328,17 @@ abstract class GenericSigBase<T extends JTypeParameterOwnerSymbol & AsmStub> {
             this.returnType = returnType;
         }
 
-        public List<JTypeMirror> getParameterTypes() {
+        List<JTypeMirror> getParameterTypes() {
             ensureParsed();
             return parameterTypes;
         }
 
-        public List<JTypeMirror> getExceptionTypes() {
+        List<JTypeMirror> getExceptionTypes() {
             ensureParsed();
             return exceptionTypes;
         }
 
-        public JTypeMirror getReturnType() {
+        JTypeMirror getReturnType() {
             ensureParsed();
             return returnType;
         }

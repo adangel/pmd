@@ -35,11 +35,11 @@ final class ResolutionFailedException extends RuntimeException {
 
     }
 
-    public ResolutionFailure getFailure() {
+    ResolutionFailure getFailure() {
         return failure;
     }
 
-    public void setFailure(ResolutionFailure location) {
+    void setFailure(ResolutionFailure location) {
         this.failure = location;
     }
 

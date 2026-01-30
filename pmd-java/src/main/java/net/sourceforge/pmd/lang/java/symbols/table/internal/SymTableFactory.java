@@ -99,7 +99,7 @@ final class SymTableFactory {
     // <editor-fold defaultstate="collapsed" desc="Utilities for classloading">
 
 
-    public void disambig(NodeStream<? extends JavaNode> nodes, ReferenceCtx context) {
+    void disambig(NodeStream<? extends JavaNode> nodes, ReferenceCtx context) {
         InternalApiBridge.disambigWithCtx(nodes, context);
     }
 

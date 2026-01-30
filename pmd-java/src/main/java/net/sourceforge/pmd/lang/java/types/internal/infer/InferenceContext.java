@@ -143,7 +143,7 @@ final class InferenceContext {
      * the variables without executing listeners. Instantiation listeners
      * are not copied, and parent contexts are not copied.
      */
-    public InferenceContext shallowCopy() {
+    InferenceContext shallowCopy() {
         final InferenceContext copy = new InferenceContext(ts, supertypeCheckCache, Collections.emptyList(), logger);
         copy.freeVars.addAll(this.freeVars);
         copy.inferenceVars.addAll(this.inferenceVars);
@@ -154,7 +154,7 @@ final class InferenceContext {
         return copy;
     }
 
-    public int getId() {
+    int getId() {
         return id;
     }
 
@@ -295,7 +295,7 @@ final class InferenceContext {
         return t.subst(finalGroundSubst());
     }
 
-    public static Function<SubstVar, JTypeMirror> finalGroundSubst() {
+    static Function<SubstVar, JTypeMirror> finalGroundSubst() {
         return s -> {
             if (!(s instanceof InferenceVar)) {
                 return s;
@@ -579,7 +579,7 @@ final class InferenceContext {
         return false;
     }
 
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return inferenceVars.isEmpty();
     }
 
@@ -599,7 +599,7 @@ final class InferenceContext {
     }
 
     /** A callback called when a set of variables have been solved. */
-    public interface InstantiationListener {
+    interface InstantiationListener {
 
         /**
          * Called when the set of dependencies provided to {@link #addInstantiationListener(Set, InstantiationListener)}
