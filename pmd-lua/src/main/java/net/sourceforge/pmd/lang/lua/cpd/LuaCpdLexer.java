@@ -172,7 +172,7 @@ public class LuaCpdLexer extends AntlrCpdLexer {
             return null;
         }
 
-        public boolean isDiscardingLiterals() {
+        private boolean isDiscardingLiterals() {
             return discardingLiteralsUntil != null;
         }
 
