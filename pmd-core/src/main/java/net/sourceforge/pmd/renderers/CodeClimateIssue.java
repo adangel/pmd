@@ -8,6 +8,7 @@ package net.sourceforge.pmd.renderers;
  * Structure for the Code Climate Issue spec
  * (https://github.com/codeclimate/spec/blob/master/SPEC.md#issues)
  */
+@SuppressWarnings("PMD.FieldNamingConventions")
 public class CodeClimateIssue {
     public String type;
     public String check_name; // SUPPRESS CHECKSTYLE underscore is required per codeclimate format

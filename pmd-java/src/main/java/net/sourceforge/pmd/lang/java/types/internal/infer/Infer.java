@@ -49,15 +49,15 @@ public final class Infer {
 
     final ExprOps exprOps;
 
-    public final TypeInferenceLogger LOG; // SUPPRESS CHECKSTYLE just easier to read I think
+    public final TypeInferenceLogger LOG; // NOPMD SUPPRESS CHECKSTYLE FieldNamingConventions, easier to read
 
     private final boolean isPreJava8;
     private final TypeSystem ts;
 
-    private final MethodCtDecl NO_CTDECL; // SUPPRESS CHECKSTYLE same
+    private final MethodCtDecl NO_CTDECL; // NOPMD SUPPRESS CHECKSTYLE FieldNamingConventions, easier to read
 
     /** This is a sentinel for when the CTDecl was resolved, but invocation failed. */
-    final MethodCtDecl FAILED_INVOCATION; // SUPPRESS CHECKSTYLE same
+    final MethodCtDecl FAILED_INVOCATION; // NOPMD SUPPRESS CHECKSTYLE FieldNamingConventions, easier to read
 
     private final SupertypeCheckCache supertypeCheckCache = new SupertypeCheckCache();
 

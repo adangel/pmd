@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
  *
  * See https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_field_types.htm#meta_type_fieldtype
  */
+@SuppressWarnings("PMD.FieldNamingConventions")
 public enum DataType {
     AutoNumber(false),
     Checkbox(false, "Boolean"),
