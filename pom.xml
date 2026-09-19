@@ -345,6 +345,13 @@
                     <version>${surefire.version}</version>
                     <configuration>
                         <runOrder>alphabetical</runOrder>
+                        <!--
+                             Run the tests on the classpath, not on the module path. The test
+                             classes are not part of the modules: test-only service providers are
+                             registered via META-INF/services, which a named module ignores in
+                             favour of the `provides` directives of its module descriptor.
+                        -->
+                        <useModulePath>false</useModulePath>
                         <systemPropertyVariables>
                             <!-- used by pmd-lang-test::net.sourceforge.pmd.lang.test.BaseTextComparisonTest -->
                             <mvn.project.src.test.resources>${project.build.testResources[0].directory}</mvn.project.src.test.resources>
