@@ -277,6 +277,10 @@
                         <failOnWarning>true</failOnWarning>
                         <compilerArgs>
                             <arg>-Xlint:-options</arg> <!-- allow &dash;&dash;release 8 flag -->
+                            <!-- allow qualified exports name modules that are not observable;
+                                 e.g. pmd-core exports internal packages to pmd-ant, ... - but pmd-ant is only built later
+                            -->
+                            <arg>-Xlint:-module</arg>
                         </compilerArgs>
                     </configuration>
                     <executions>
