@@ -302,6 +302,12 @@
                             <goals>
                                 <goal>compile</goal>
                             </goals>
+                            <configuration>
+                                <!-- module-info.java needs release 9, it is compiled by the compile-java9 execution -->
+                                <excludes>
+                                    <exclude>module-info.java</exclude>
+                                </excludes>
+                            </configuration>
                         </execution>
                         <execution>
                             <id>java-test-compile</id>
@@ -593,6 +599,8 @@
                                 </rulesets>
                                 <excludeRoots>
                                     <excludeRoot>${project.basedir}/src/main/java</excludeRoot>
+                                    <!-- module-info.java can't be parsed with targetJdk 1.8 -->
+                                    <excludeRoot>${project.basedir}/src/main/java9</excludeRoot>
                                     <excludeRoot>${project.basedir}/src/main/resources</excludeRoot>
                                     <excludeRoot>${javacc.outputDirectory}</excludeRoot>
                                     <excludeRoot>${antlr4.outputDirectory}</excludeRoot>
