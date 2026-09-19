@@ -39,7 +39,12 @@
                             <compileSourceRoots>
                                 <compileSourceRoot>${project.basedir}/src/main/java9</compileSourceRoot>
                             </compileSourceRoots>
-                            <multiReleaseOutput>true</multiReleaseOutput>
+                            <compilerArgs combine.children="append">
+                                <!-- the module's classes are compiled by the java-compile execution;
+                                     patch them in, so that the exports clauses resolve -->
+                                <arg>--patch-module</arg>
+                                <arg>net.sourceforge.pmd.core=${project.build.outputDirectory}</arg>
+                            </compilerArgs>
                         </configuration>
                     </execution>
                 </executions>
@@ -78,13 +83,6 @@
                 <!-- package test sources for use by other submodules -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Multi-Release>true</Multi-Release>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>

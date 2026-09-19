@@ -30,21 +30,15 @@
                             <compileSourceRoots>
                                 <compileSourceRoot>${project.basedir}/src/main/java9</compileSourceRoot>
                             </compileSourceRoots>
-                            <multiReleaseOutput>true</multiReleaseOutput>
+                            <compilerArgs combine.children="append">
+                                <!-- the module's classes are compiled by the java-compile execution;
+                                     patch them in, so that the exports clauses resolve -->
+                                <arg>--patch-module</arg>
+                                <arg>net.sourceforge.pmd.ant=${project.build.outputDirectory}</arg>
+                            </compilerArgs>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Multi-Release>true</Multi-Release>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
