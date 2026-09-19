@@ -271,7 +271,9 @@
                     <configuration>
                         <failOnWarning>true</failOnWarning>
                         <compilerArgs>
-                            <arg>-Xlint:-options</arg> <!-- allow &dash;&dash;release 8 flag -->
+                            <!-- allow &dash;&dash;release 8 flag:
+                                 Java 21 warns that version 8 is deprecated and will be removed -->
+                            <arg>-Xlint:-options</arg>
                             <!-- Enable the warning: "deprecated item is not annotated with @Deprecated".
                                  This is enabled by default when compiling for java9+ -->
                             <arg>-Xlint:dep-ann</arg>
