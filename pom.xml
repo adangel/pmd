@@ -276,7 +276,9 @@
                     <configuration>
                         <failOnWarning>true</failOnWarning>
                         <compilerArgs>
-                            <arg>-Xlint:-options</arg> <!-- allow &dash;&dash;release 8 flag -->
+                            <!-- allow &dash;&dash;release 8 flag:
+                                 Java 21 warns that version 8 is deprecated and will be removed -->
+                            <arg>-Xlint:-options</arg>
                             <!-- allow qualified exports name modules that are not observable;
                                  e.g. pmd-core exports internal packages to pmd-ant, ... - but pmd-ant is only built later
                             -->
