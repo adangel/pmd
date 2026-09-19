@@ -275,6 +275,10 @@
                             <!-- Enable the warning: "deprecated item is not annotated with @Deprecated".
                                  This is enabled by default when compiling for java9+ -->
                             <arg>-Xlint:dep-ann</arg>
+                            <!-- allow qualified exports name modules that are not observable;
+                                 e.g. pmd-core exports internal packages to pmd-ant, ... - but pmd-ant is only built later
+                            -->
+                            <arg>-Xlint:-module</arg>
                         </compilerArgs>
                     </configuration>
                     <executions>

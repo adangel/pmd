@@ -29,6 +29,9 @@ module net.sourceforge.pmd.core {
     exports net.sourceforge.pmd.util.log;
     exports net.sourceforge.pmd.util.treeexport;
 
+    exports net.sourceforge.pmd.internal to net.sourceforge.pmd.ant;
+    exports net.sourceforge.pmd.internal.util to net.sourceforge.pmd.ant;
+
     requires org.slf4j;
     requires org.checkerframework.checker.qual;
     requires org.apache.commons.lang3;
