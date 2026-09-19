@@ -18,6 +18,23 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-java9-source-dir</id>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.basedir}/src/main/java9</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <executions>
@@ -27,9 +44,9 @@
                         <goals><goal>compile</goal></goals>
                         <configuration>
                             <release>9</release>
-                            <compileSourceRoots>
-                                <compileSourceRoot>${project.basedir}/src/main/java9</compileSourceRoot>
-                            </compileSourceRoots>
+                            <includes>
+                                <include>module-info.java</include>
+                            </includes>
                             <compilerArgs combine.children="append">
                                 <!-- the module's classes are compiled by the java-compile execution;
                                      patch them in, so that the exports clauses resolve -->
