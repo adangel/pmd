@@ -29,48 +29,31 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>add-java9-source-dir</id>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${project.basedir}/src/main/java9</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
             </plugin>
+            <!--
+                 pmd-apex intentionally has no module-info.java. Its apex-ls dependency, and 16 of the
+                 17 scala jars in that dependency's closure, have file names whose derived automatic
+                 module name is invalid: apex-ls_2.13-6.2.0.jar yields "apex.ls.2.13", and '2' is not
+                 a Java identifier. None of them ships an Automatic-Module-Name either. Such a jar on
+                 the module path aborts the JVM at boot layer init, even if nothing requires it, so
+                 they can only live on the classpath - and a *named* module cannot read the unnamed
+                 module.
+                 As an automatic module, pmd-apex reads the classpath and works on the module path.
+                 Keep this name identical to the descriptor we would otherwise ship, so that a real
+                 module-info.java stays a drop-in replacement once the upstream jars are fixed.
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>compile-java9</id>
-                        <phase>compile</phase>
-                        <goals><goal>compile</goal></goals>
-                        <configuration>
-                            <release>9</release>
-                            <includes>
-                                <include>module-info.java</include>
-                            </includes>
-                            <compilerArgs combine.children="append">
-                                <!-- the module's classes are compiled by the java-compile execution;
-                                     patch them in, so that the exports clauses resolve -->
-                                <arg>--patch-module</arg>
-                                <arg>net.sourceforge.pmd.lang.apex=${project.build.outputDirectory}</arg>
-                            </compilerArgs>
-                        </configuration>
-                    </execution>
-                </executions>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>net.sourceforge.pmd.lang.apex</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
