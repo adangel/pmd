@@ -6,12 +6,14 @@ module net.sourceforge.pmd.core {
     exports net.sourceforge.pmd;
     exports net.sourceforge.pmd.annotation;
     exports net.sourceforge.pmd.benchmark;
-    //exports net.sourceforge.pmd.cache; // it's emtpy right now
+    //exports net.sourceforge.pmd.cache; // it's empty right now
     exports net.sourceforge.pmd.cpd;
     exports net.sourceforge.pmd.cpd.impl;
     exports net.sourceforge.pmd.lang;
     exports net.sourceforge.pmd.lang.ast;
     exports net.sourceforge.pmd.lang.ast.impl;
+    exports net.sourceforge.pmd.lang.ast.impl.antlr4;
+    exports net.sourceforge.pmd.lang.ast.impl.javacc;
     exports net.sourceforge.pmd.lang.document;
     exports net.sourceforge.pmd.lang.impl;
     exports net.sourceforge.pmd.lang.metrics;
@@ -30,7 +32,8 @@ module net.sourceforge.pmd.core {
     exports net.sourceforge.pmd.util.treeexport;
 
     exports net.sourceforge.pmd.internal to net.sourceforge.pmd.ant, net.sourceforge.pmd.test;
-    exports net.sourceforge.pmd.internal.util to net.sourceforge.pmd.ant, net.sourceforge.pmd.test, net.sourceforge.pmd.lang.test;
+    exports net.sourceforge.pmd.internal.util to net.sourceforge.pmd.ant, net.sourceforge.pmd.test, net.sourceforge.pmd.lang.test, net.sourceforge.pmd.lang.apex;
+    exports net.sourceforge.pmd.lang.rule.internal to net.sourceforge.pmd.lang.apex;
     exports net.sourceforge.pmd.util.internal to net.sourceforge.pmd.test, net.sourceforge.pmd.lang.test;
     exports net.sourceforge.pmd.util.log.internal to net.sourceforge.pmd.test;
 

@@ -73,6 +73,27 @@ This is a {{ site.pmd.release_type }} release.
     These changes affect `ASTExpression.getConstValue()`, `isCompileTimeConstant()`, and the XPath attribute
     `@CompileTimeConstant`; custom Java and XPath rules relying on them may report different results.
 
+#### Java Platform Module System
+
+`pmd-apex` now declares `Automatic-Module-Name: net.sourceforge.pmd.lang.apex` in its jar manifest
+instead of shipping a module descriptor (`module-info.java`). It is therefore an *automatic* module,
+not a named one.
+
+This is a workaround for its Apex parser dependency: `io.github.apex-dev-tools:apex-ls_2.13` and 16
+of the 17 scala jars it pulls in have file names from which no valid automatic module name can be
+derived (`apex-ls_2.13-6.2.0.jar` yields `apex.ls.2.13`, and `2` is not a Java identifier), and none
+of them provides an `Automatic-Module-Name`. A jar like that on `--module-path` makes the JVM fail at
+startup with `FindException: Unable to derive module descriptor`, even when no module requires it.
+
+For users this means:
+
+* You can use `requires net.sourceforge.pmd.lang.apex;` from your own named module.
+* **apex-ls and its scala dependencies must be on the classpath, not on the module path.** As an
+  automatic module, `pmd-apex` can read them there; a named module could not.
+
+Once the upstream artifacts are fixed, `pmd-apex` can switch to a real module descriptor under the
+same module name, without affecting consumers.
+
 ### ✨️ Merged pull requests
 <!-- content will be automatically generated, see /do-release.sh -->
 
