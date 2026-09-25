@@ -29,8 +29,10 @@ module net.sourceforge.pmd.core {
     exports net.sourceforge.pmd.util.log;
     exports net.sourceforge.pmd.util.treeexport;
 
-    exports net.sourceforge.pmd.internal to net.sourceforge.pmd.ant;
-    exports net.sourceforge.pmd.internal.util to net.sourceforge.pmd.ant;
+    exports net.sourceforge.pmd.internal to net.sourceforge.pmd.ant, net.sourceforge.pmd.test;
+    exports net.sourceforge.pmd.internal.util to net.sourceforge.pmd.ant, net.sourceforge.pmd.test;
+    exports net.sourceforge.pmd.util.internal to net.sourceforge.pmd.test;
+    exports net.sourceforge.pmd.util.log.internal to net.sourceforge.pmd.test;
 
     requires org.slf4j;
     requires org.checkerframework.checker.qual;
