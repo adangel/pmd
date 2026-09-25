@@ -51,4 +51,6 @@ module net.sourceforge.pmd.core {
     requires nice.xml.messages;
     requires jul.to.slf4j;
     requires Saxon.HE;
+
+    uses net.sourceforge.pmd.lang.Language;
 }
