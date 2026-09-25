@@ -30,8 +30,8 @@ module net.sourceforge.pmd.core {
     exports net.sourceforge.pmd.util.treeexport;
 
     exports net.sourceforge.pmd.internal to net.sourceforge.pmd.ant, net.sourceforge.pmd.test;
-    exports net.sourceforge.pmd.internal.util to net.sourceforge.pmd.ant, net.sourceforge.pmd.test;
-    exports net.sourceforge.pmd.util.internal to net.sourceforge.pmd.test;
+    exports net.sourceforge.pmd.internal.util to net.sourceforge.pmd.ant, net.sourceforge.pmd.test, net.sourceforge.pmd.lang.test;
+    exports net.sourceforge.pmd.util.internal to net.sourceforge.pmd.test, net.sourceforge.pmd.lang.test;
     exports net.sourceforge.pmd.util.log.internal to net.sourceforge.pmd.test;
 
     requires org.slf4j;
@@ -42,6 +42,7 @@ module net.sourceforge.pmd.core {
     requires com.google.gson;
     requires org.objectweb.asm;
 
+    // TODO: java.desktop static (optional)?
     requires java.desktop;
     requires java.sql;
     requires java.xml;
