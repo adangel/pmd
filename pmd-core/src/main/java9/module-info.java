@@ -31,6 +31,7 @@ module net.sourceforge.pmd.core {
     exports net.sourceforge.pmd.util.log;
     exports net.sourceforge.pmd.util.treeexport;
 
+    exports net.sourceforge.pmd.cpd.internal to net.sourceforge.pmd.lang.cpp;
     exports net.sourceforge.pmd.internal to net.sourceforge.pmd.ant, net.sourceforge.pmd.test;
     exports net.sourceforge.pmd.internal.util to net.sourceforge.pmd.ant, net.sourceforge.pmd.test, net.sourceforge.pmd.lang.test, net.sourceforge.pmd.lang.apex;
     exports net.sourceforge.pmd.lang.rule.internal to net.sourceforge.pmd.lang.apex;
