@@ -51,6 +51,17 @@
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>add-java9-source-dir</id>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.basedir}/src/main/java9</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>add-javacc-generated-sources</id>
                         <goals>
                             <goal>add-source</goal>
@@ -74,6 +85,46 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compile-java9</id>
+                        <phase>compile</phase>
+                        <goals><goal>compile</goal></goals>
+                        <configuration>
+                            <release>9</release>
+                            <includes>
+                                <include>module-info.java</include>
+                            </includes>
+                            <compilerArgs combine.children="append">
+                                <!-- the module's classes are compiled by the java-compile execution;
+                                     patch them in, so that the exports clauses resolve -->
+                                <arg>--patch-module</arg>
+                                <arg>net.sourceforge.pmd.lang.java=${project.build.outputDirectory}</arg>
+                            </compilerArgs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>java-test-compile</id>
+                        <!-- Have test-compile produce parameter metadata for reflection tests -->
+                        <configuration>
+                            <parameters>true</parameters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <!-- override the inherited maven.compiler.release=8 -->
+                    <release>9</release>
+                    <!-- both roots on the sourcepath so javadoc runs in single-module mode -->
+                    <sourcepath>${project.basedir}/src/main/java${path.separator}${project.basedir}/src/main/java9</sourcepath>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>
@@ -90,20 +141,6 @@
                                 <sourceDir>${project.basedir}/src/test/java</sourceDir>
                                 <sourceDir>${project.basedir}/src/test/java-resources</sourceDir>
                             </sourceDirs>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>java-test-compile</id>
-                        <!-- Have test-compile produce parameter metadata for reflection tests -->
-                        <configuration>
-                            <parameters>true</parameters>
                         </configuration>
                     </execution>
                 </executions>
