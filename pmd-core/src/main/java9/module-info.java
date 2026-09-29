@@ -33,10 +33,11 @@ module net.sourceforge.pmd.core {
 
     exports net.sourceforge.pmd.cpd.internal to net.sourceforge.pmd.lang.cpp;
     exports net.sourceforge.pmd.internal to net.sourceforge.pmd.ant, net.sourceforge.pmd.test;
-    exports net.sourceforge.pmd.internal.util to net.sourceforge.pmd.ant, net.sourceforge.pmd.test, net.sourceforge.pmd.lang.test, net.sourceforge.pmd.lang.apex;
-    exports net.sourceforge.pmd.lang.rule.internal to net.sourceforge.pmd.lang.apex;
-    exports net.sourceforge.pmd.util.internal to net.sourceforge.pmd.test, net.sourceforge.pmd.lang.test;
-    exports net.sourceforge.pmd.util.log.internal to net.sourceforge.pmd.test;
+    exports net.sourceforge.pmd.internal.util to net.sourceforge.pmd.ant, net.sourceforge.pmd.test, net.sourceforge.pmd.lang.test, net.sourceforge.pmd.lang.apex, net.sourceforge.pmd.lang.java;
+    exports net.sourceforge.pmd.lang.rule.internal to net.sourceforge.pmd.lang.apex, net.sourceforge.pmd.lang.java;
+    exports net.sourceforge.pmd.properties.internal to net.sourceforge.pmd.lang.java;
+    exports net.sourceforge.pmd.util.internal to net.sourceforge.pmd.test, net.sourceforge.pmd.lang.test, net.sourceforge.pmd.lang.java;
+    exports net.sourceforge.pmd.util.log.internal to net.sourceforge.pmd.test, net.sourceforge.pmd.lang.java;
 
     requires org.slf4j;
     requires org.checkerframework.checker.qual;
