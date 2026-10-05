@@ -127,6 +127,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline-terminal</artifactId>
+            <version>3.29.0</version>
+        </dependency>
 
         <dependency>
             <groupId>net.sourceforge.pmd</groupId>
