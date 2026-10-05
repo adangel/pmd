@@ -17,4 +17,5 @@ module net.sourceforge.pmd.cli {
 
     // automatic names
     requires pmd.designer;
+    requires org.jline.terminal;
 }
