@@ -78,6 +78,7 @@
                 <configuration>
                     <parameter>
                         <excludes combine.children="append">
+                            <exclude>me.tongfei.progressbar</exclude>
                             <exclude>net.sourceforge.pmd.cli.internal</exclude>
                             <exclude>net.sourceforge.pmd.cli.commands.internal</exclude>
                             <exclude>net.sourceforge.pmd.cli.commands.mixins.internal</exclude>
@@ -125,6 +126,11 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline-terminal</artifactId>
+            <version>3.29.0</version>
         </dependency>
 
         <dependency>
