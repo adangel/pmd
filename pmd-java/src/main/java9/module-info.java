@@ -24,6 +24,9 @@ module net.sourceforge.pmd.lang.java {
     exports net.sourceforge.pmd.lang.java.types;
     exports net.sourceforge.pmd.lang.java.types.ast;
 
+    opens category.java;
+    opens rulesets.java;
+
     requires net.sourceforge.pmd.core;
 
     requires org.objectweb.asm;
