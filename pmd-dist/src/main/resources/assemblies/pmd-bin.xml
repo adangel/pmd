@@ -69,8 +69,72 @@
             <scope>runtime</scope>
             <excludes>
                 <exclude>net.sourceforge.pmd:pmd-languages-deps:pom</exclude>
+
+                <!-- exclude dependencies not ready for module path yet -->
+                <exclude>io.github.apex-dev-tools:apex-ls_2.13</exclude>
+                <exclude>com.github.pathikrit:better-files_2.13</exclude>
+                <exclude>org.scalameta:common_2.13</exclude>
+                <exclude>org.scalameta:common2_2.13</exclude>
+                <exclude>io.methvin:directory-watcher-better-files_2.13</exclude>
+                <exclude>com.lihaoyi:geny_2.13</exclude>
+                <exclude>org.scalameta:io_2.13</exclude>
+                <exclude>com.lihaoyi:mainargs_2.13</exclude>
+                <exclude>io.github.apex-dev-tools:outline-parser_2.13</exclude>
+                <exclude>org.scalameta:parsers_2.13</exclude>
+                <exclude>org.portable-scala:portable-scala-reflect_2.13</exclude>
+                <exclude>org.scala-lang.modules:scala-collection-compat_2.13</exclude>
+                <exclude>com.github.nawforce:scala-json-rpc_2.13</exclude>
+                <exclude>com.github.nawforce:scala-json-rpc-upickle-json-serializer_2.13</exclude>
+                <exclude>org.scala-js:scalajs-stubs_2.13</exclude>
+                <exclude>org.scala-lang.modules:scala-parallel-collections_2.13</exclude>
+                <exclude>org.scala-lang.modules:scala-xml_2.13</exclude>
+                <exclude>com.lihaoyi:sourcecode_2.13</exclude>
+                <exclude>org.scalameta:trees_2.13</exclude>
+                <exclude>org.scalameta:trees2_2.13</exclude>
+                <exclude>com.lihaoyi:ujson_2.13</exclude>
+                <exclude>com.lihaoyi:upack_2.13</exclude>
+                <exclude>com.lihaoyi:upickle_2.13</exclude>
+                <exclude>com.lihaoyi:upickle-core_2.13</exclude>
+                <exclude>com.lihaoyi:upickle-implicits_2.13</exclude>
             </excludes>
             <outputDirectory>lib</outputDirectory>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0644</fileMode>
+            <useProjectArtifact>false</useProjectArtifact>
+        </dependencySet>
+
+        <!-- jar dependencies go to libcp/ -->
+        <dependencySet>
+            <scope>runtime</scope>
+            <includes>
+                <!-- dependencies not ready for module path yet -->
+                <include>io.github.apex-dev-tools:apex-ls_2.13</include>
+                <include>com.github.pathikrit:better-files_2.13</include>
+                <include>org.scalameta:common_2.13</include>
+                <include>org.scalameta:common2_2.13</include>
+                <include>io.methvin:directory-watcher-better-files_2.13</include>
+                <include>com.lihaoyi:geny_2.13</include>
+                <include>org.scalameta:io_2.13</include>
+                <include>com.lihaoyi:mainargs_2.13</include>
+                <include>io.github.apex-dev-tools:outline-parser_2.13</include>
+                <include>org.scalameta:parsers_2.13</include>
+                <include>org.portable-scala:portable-scala-reflect_2.13</include>
+                <include>org.scala-lang.modules:scala-collection-compat_2.13</include>
+                <include>com.github.nawforce:scala-json-rpc_2.13</include>
+                <include>com.github.nawforce:scala-json-rpc-upickle-json-serializer_2.13</include>
+                <include>org.scala-js:scalajs-stubs_2.13</include>
+                <include>org.scala-lang.modules:scala-parallel-collections_2.13</include>
+                <include>org.scala-lang.modules:scala-xml_2.13</include>
+                <include>com.lihaoyi:sourcecode_2.13</include>
+                <include>org.scalameta:trees_2.13</include>
+                <include>org.scalameta:trees2_2.13</include>
+                <include>com.lihaoyi:ujson_2.13</include>
+                <include>com.lihaoyi:upack_2.13</include>
+                <include>com.lihaoyi:upickle_2.13</include>
+                <include>com.lihaoyi:upickle-core_2.13</include>
+                <include>com.lihaoyi:upickle-implicits_2.13</include>
+            </includes>
+            <outputDirectory>libcp</outputDirectory>
             <directoryMode>0755</directoryMode>
             <fileMode>0644</fileMode>
             <useProjectArtifact>false</useProjectArtifact>
