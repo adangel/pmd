@@ -59,7 +59,7 @@ set_pmd_home_dir() {
 
 set_lib_dir() {
   if [ -z "$LIB_DIR" ]; then
-    LIB_DIR="$PMD_HOME/lib"
+    LIB_DIR="$PMD_HOME/libcp"
   fi
 }
 
@@ -254,4 +254,5 @@ exec java \
   $PMD_JAVA_OPTS $PMD_ADDITIONAL_JAVA_OPTS \
   ${PMD_OPENJFX_MODULE_PATH:+--module-path "$PMD_OPENJFX_MODULE_PATH" --add-modules javafx.controls,javafx.fxml} \
   -cp "$CLASSPATH" \
-  net.sourceforge.pmd.cli.PmdCli "$@"
+  --module-path "$PMD_HOME/lib" \
+  --module net.sourceforge.pmd.cli/net.sourceforge.pmd.cli.PmdCli "$@"
