@@ -6,9 +6,9 @@ module net.sourceforge.pmd.cli {
     exports net.sourceforge.pmd.cli;
     // exports net.sourceforge.pmd.cli.commands; // empty
 
-    exports net.sourceforge.pmd.cli.commands.internal to info.picocli;
-    exports net.sourceforge.pmd.cli.commands.typesupport.internal to info.picocli;
-    exports net.sourceforge.pmd.cli.commands.mixins.internal to info.picocli;
+    opens net.sourceforge.pmd.cli.commands.internal to info.picocli;
+    opens net.sourceforge.pmd.cli.commands.typesupport.internal to info.picocli;
+    opens net.sourceforge.pmd.cli.commands.mixins.internal to info.picocli;
 
     requires net.sourceforge.pmd.core;
 
