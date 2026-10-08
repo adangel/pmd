@@ -14,12 +14,14 @@ module net.sourceforge.pmd.test {
     requires org.junit.jupiter.api;
     requires org.junit.jupiter.params;
     requires org.junit.platform.launcher;
+    requires org.slf4j;
     requires org.slf4j.simple;
     requires org.apache.commons.lang3;
+    requires org.apache.commons.io;
 
     requires java.xml;
 
     // automatic names
-    requires system.lambda;
+    requires system.stubs.core;
     requires ant;
 }
