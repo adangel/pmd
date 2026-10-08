@@ -13,6 +13,9 @@ module net.sourceforge.pmd.lang.javascript {
     exports net.sourceforge.pmd.lang.typescript.ast;
     exports net.sourceforge.pmd.lang.typescript.cpd;
 
+    // TODO: consider moving the ruleset files to /META-INF/pmd/category/<lang>/...
+    opens category.ecmascript;
+
     requires net.sourceforge.pmd.core;
 
     requires org.antlr.antlr4.runtime;

@@ -10,6 +10,9 @@ module net.sourceforge.pmd.lang.kotlin {
     exports net.sourceforge.pmd.lang.kotlin.rule.errorprone;
     exports net.sourceforge.pmd.lang.kotlin.types;
 
+    // TODO: consider moving the ruleset files to /META-INF/pmd/category/<lang>/...
+    opens category.kotlin;
+
     requires net.sourceforge.pmd.core;
 
     requires org.antlr.antlr4.runtime;

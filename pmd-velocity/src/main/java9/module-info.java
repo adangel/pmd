@@ -11,6 +11,9 @@ module net.sourceforge.pmd.lang.velocity {
     exports net.sourceforge.pmd.lang.velocity.rule.design;
     exports net.sourceforge.pmd.lang.velocity.rule.errorprone;
 
+    // TODO: consider moving the ruleset files to /META-INF/pmd/category/<lang>/...
+    opens category.velocity;
+
     requires net.sourceforge.pmd.core;
 
     requires org.apache.commons.lang3;

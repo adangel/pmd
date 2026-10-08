@@ -12,6 +12,12 @@ module net.sourceforge.pmd.lang.xml {
     exports net.sourceforge.pmd.lang.xml.wsdl;
     exports net.sourceforge.pmd.lang.xml.xsl;
 
+    // TODO: consider moving the ruleset files to /META-INF/pmd/category/<lang>/...
+    opens category.pom;
+    opens category.wsdl;
+    opens category.xml;
+    opens category.xsl;
+
     requires net.sourceforge.pmd.core;
 
     requires org.antlr.antlr4.runtime;

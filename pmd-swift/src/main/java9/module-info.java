@@ -9,6 +9,10 @@ module net.sourceforge.pmd.lang.swift {
     exports net.sourceforge.pmd.lang.swift.rule;
     exports net.sourceforge.pmd.lang.swift.rule.bestpractices;
 
+    // TODO: consider moving the ruleset files to /META-INF/pmd/category/<lang>/...
+    opens category.swift;
+    opens rulesets.swift;
+
     requires net.sourceforge.pmd.core;
 
     requires org.antlr.antlr4.runtime;
