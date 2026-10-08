@@ -18,8 +18,12 @@ module net.sourceforge.pmd.lang.visualforce {
     requires org.apache.commons.lang3;
     requires org.checkerframework.checker.qual;
     requires com.google.common;
+    requires org.slf4j;
 
     requires java.xml;
+
+    // automatic names
+    requires sobject.types;
 
     provides net.sourceforge.pmd.lang.Language with net.sourceforge.pmd.lang.visualforce.VfLanguageModule;
 }
