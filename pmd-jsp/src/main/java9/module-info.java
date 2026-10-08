@@ -11,6 +11,9 @@ module net.sourceforge.pmd.lang.jsp {
     exports net.sourceforge.pmd.lang.jsp.rule.design;
     exports net.sourceforge.pmd.lang.jsp.rule.security;
 
+    // TODO: consider moving the ruleset files to /META-INF/pmd/category/<lang>/...
+    opens category.jsp;
+
     requires net.sourceforge.pmd.core;
 
     requires org.apache.commons.lang3;

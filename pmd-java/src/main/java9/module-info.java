@@ -24,6 +24,7 @@ module net.sourceforge.pmd.lang.java {
     exports net.sourceforge.pmd.lang.java.types;
     exports net.sourceforge.pmd.lang.java.types.ast;
 
+    // TODO: consider moving the ruleset files to /META-INF/pmd/category/<lang>/...
     opens category.java;
     opens rulesets.java;
 
