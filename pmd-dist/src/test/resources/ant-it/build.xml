@@ -1,9 +1,7 @@
 <project name="ant-it" default="pmd">
 
     <path id="pmd.classpath">
-        <fileset dir="${pmd.home}/lib">
-            <include name="*.jar"/>
-        </fileset>
+        <fileset dir="${pmd.home}/lib" includes="modules/*.jar classpath/*.jar"/>
     </path>
     <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="pmd.classpath"/>
 
