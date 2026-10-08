@@ -22,6 +22,7 @@ module net.sourceforge.pmd.lang.xml {
 
     requires org.antlr.antlr4.runtime;
     requires org.apache.commons.lang3;
+    requires org.checkerframework.checker.qual;
 
     requires java.xml;
 
