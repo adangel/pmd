@@ -9,6 +9,9 @@ module net.sourceforge.pmd.lang.visualforce {
     exports net.sourceforge.pmd.lang.visualforce.rule;
     exports net.sourceforge.pmd.lang.visualforce.rule.security;
 
+    // TODO: consider moving the ruleset files to /META-INF/pmd/category/<lang>/...
+    opens category.visualforce;
+
     requires net.sourceforge.pmd.core;
     requires net.sourceforge.pmd.lang.apex;
 
