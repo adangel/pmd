@@ -255,4 +255,5 @@ exec java \
   ${PMD_OPENJFX_MODULE_PATH:+--module-path "$PMD_OPENJFX_MODULE_PATH" --add-modules javafx.controls,javafx.fxml} \
   -cp "$CLASSPATH" \
   --module-path "$PMD_HOME/lib" \
+  --add-modules kotlin.stdlib \
   --module net.sourceforge.pmd.cli/net.sourceforge.pmd.cli.PmdCli "$@"
