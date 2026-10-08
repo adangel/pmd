@@ -617,7 +617,7 @@
                             <include>**/*.xml</include>
                         </includes>
                         <linkXRef>false</linkXRef>
-                        <targetJdk>1.${java.version}</targetJdk>
+                        <targetJdk>${java.version}</targetJdk>
                         <skipPmdError>false</skipPmdError>
                         <failurePriority>2</failurePriority>
                         <failOnViolation>true</failOnViolation>
