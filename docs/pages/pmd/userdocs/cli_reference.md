@@ -238,7 +238,7 @@ Just set the environment variable `PMD_JAVA_OPTS` before executing PMD, e.g.
 ## Additional runtime classpath
 
 If you develop custom rules and package them as a jar file, you need to add it to PMD's runtime classpath.
-You can either copy the jar file into the `lib/` subfolder alongside the other jar files, that are in PMD's
+You can either copy the jar file into the `lib/classpath/` subfolder alongside the other jar files that are in PMD's
 standard distribution.
 
 Or you can set the environment variable `CLASSPATH` before starting PMD, e.g.
