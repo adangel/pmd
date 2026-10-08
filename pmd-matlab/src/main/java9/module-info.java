@@ -8,5 +8,7 @@ module net.sourceforge.pmd.lang.matlab {
 
     requires net.sourceforge.pmd.core;
 
+    requires org.checkerframework.checker.qual;
+
     provides net.sourceforge.pmd.lang.Language with net.sourceforge.pmd.lang.matlab.MatlabLanguageModule;
 }
