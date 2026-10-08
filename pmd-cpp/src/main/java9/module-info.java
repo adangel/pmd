@@ -9,6 +9,7 @@ module net.sourceforge.pmd.lang.cpp {
     requires net.sourceforge.pmd.core;
 
     requires org.apache.commons.lang3;
+    requires org.checkerframework.checker.qual;
 
     provides net.sourceforge.pmd.lang.Language with net.sourceforge.pmd.lang.cpp.CppLanguageModule;
 }
