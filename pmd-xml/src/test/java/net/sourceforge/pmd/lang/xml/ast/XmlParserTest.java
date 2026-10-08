@@ -4,6 +4,12 @@
 
 package net.sourceforge.pmd.lang.xml.ast;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.junit.jupiter.api.Test;
 
@@ -41,6 +47,24 @@ class XmlParserTest extends BaseTreeDumpTest {
         doTest("bug1518");
     }
 
+
+    @Test
+    void testRootNodeAndGetRoot() {
+        XmlRootNode root = XmlParsingHelper.XML.parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><child/></root>");
+        assertSame(root, root.getRoot());
+        XmlNode child = root.getFirstChild();
+        assertNotNull(child);
+        assertSame(root, child.getRoot());
+        assertEquals("UTF-8", root.getXmlEncoding());
+        assertEquals("1.0", root.getXmlVersion());
+        assertFalse(root.isXmlStandalone());
+    }
+
+    @Test
+    void testRootNodeStandalone() {
+        XmlRootNode root = XmlParsingHelper.XML.parse("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><child/></root>");
+        assertTrue(root.isXmlStandalone());
+    }
 
     @Test
     void dtdIsNotLookedUp() {
