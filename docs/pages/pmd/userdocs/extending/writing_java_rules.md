@@ -38,7 +38,11 @@ To write a rule in Java you'll have to:
 language implementation provides a base rule class to ease your pain,
 e.g. {% jdoc jrule::AbstractJavaRule %}.
 2. Compile this class, linking it to PMD APIs (e.g. using PMD as a Maven dependency)
-3. Bundle this into a JAR and add it to the execution classpath of PMD
+3. Bundle this into a JAR and add it to the execution classpath of PMD:
+   - copy the jar file into the `lib/classpath/` subfolder alongside the other jar files that are in PMD's
+     standard distribution.
+   - or, set the environment variable `CLASSPATH` before starting PMD
+   - or, add the jar file to the classpath of your build tool (e.g. Maven PMD Plugin)
 4. Declare the rule in your ruleset XML
 
 ## Rule execution
