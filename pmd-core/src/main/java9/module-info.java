@@ -38,7 +38,7 @@ module net.sourceforge.pmd.core {
     exports net.sourceforge.pmd.lang.rule.xpath.internal to net.sourceforge.pmd.lang.xml;
     exports net.sourceforge.pmd.properties.internal to net.sourceforge.pmd.lang.java, net.sourceforge.pmd.doc;
     exports net.sourceforge.pmd.util.internal to net.sourceforge.pmd.test, net.sourceforge.pmd.lang.test, net.sourceforge.pmd.lang.java, net.sourceforge.pmd.cli;
-    exports net.sourceforge.pmd.util.internal.xml to net.sourceforge.pmd.lang.xml;
+    exports net.sourceforge.pmd.util.internal.xml to net.sourceforge.pmd.test, net.sourceforge.pmd.lang.xml;
     exports net.sourceforge.pmd.util.log.internal to net.sourceforge.pmd.test, net.sourceforge.pmd.lang.java, net.sourceforge.pmd.cli;
 
     requires org.slf4j;
