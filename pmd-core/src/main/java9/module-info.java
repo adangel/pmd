@@ -43,6 +43,7 @@ module net.sourceforge.pmd.core {
     requires org.slf4j;
     requires org.checkerframework.checker.qual;
     requires org.apache.commons.lang3;
+    requires org.apache.commons.io;
     requires org.pcollections;
     requires org.antlr.antlr4.runtime;
     requires com.google.gson;
