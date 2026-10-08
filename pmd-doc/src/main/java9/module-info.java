@@ -10,4 +10,5 @@ module net.sourceforge.pmd.doc {
     requires org.apache.commons.lang3;
     requires org.apache.commons.text;
     requires org.yaml.snakeyaml;
+    requires org.slf4j;
 }
