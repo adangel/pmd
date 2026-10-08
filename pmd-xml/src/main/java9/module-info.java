@@ -25,6 +25,9 @@ module net.sourceforge.pmd.lang.xml {
 
     requires java.xml;
 
+    // automatic names
+    requires Saxon.HE;
+
     provides net.sourceforge.pmd.lang.Language with
             net.sourceforge.pmd.lang.xml.XmlLanguageModule,
             net.sourceforge.pmd.lang.xml.xsl.XslDialectModule,
