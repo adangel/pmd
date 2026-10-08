@@ -7,6 +7,7 @@ module net.sourceforge.pmd.lang.test {
 
     requires net.sourceforge.pmd.core;
     requires org.apache.commons.lang3;
+    requires org.apache.commons.io;
     requires org.jetbrains.annotations;
     requires org.hamcrest;
     requires kotlin.stdlib;
