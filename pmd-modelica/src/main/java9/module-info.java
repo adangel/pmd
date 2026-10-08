@@ -10,6 +10,9 @@ module net.sourceforge.pmd.lang.modelica {
     exports net.sourceforge.pmd.lang.modelica.rule;
     exports net.sourceforge.pmd.lang.modelica.rule.bestpractices;
 
+    // TODO: consider moving the ruleset files to /META-INF/pmd/category/<lang>/...
+    opens category.modelica;
+
     requires net.sourceforge.pmd.core;
 
     provides net.sourceforge.pmd.lang.Language with net.sourceforge.pmd.lang.modelica.ModelicaLanguageModule;

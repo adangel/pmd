@@ -12,6 +12,9 @@ module net.sourceforge.pmd.lang.plsql {
     exports net.sourceforge.pmd.lang.plsql.rule.design;
     exports net.sourceforge.pmd.lang.plsql.symboltable;
 
+    // TODO: consider moving the ruleset files to /META-INF/pmd/category/<lang>/...
+    opens category.plsql;
+
     requires net.sourceforge.pmd.core;
 
     requires org.apache.commons.lang3;

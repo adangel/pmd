@@ -9,6 +9,9 @@ module net.sourceforge.pmd.lang.html {
     exports net.sourceforge.pmd.lang.html.rule;
     exports net.sourceforge.pmd.lang.html.rule.bestpractices;
 
+    // TODO: consider moving the ruleset files to /META-INF/pmd/category/<lang>/...
+    opens category.html;
+
     requires net.sourceforge.pmd.core;
 
     requires org.jsoup; // provides a modules-info.java only for Java 11+
