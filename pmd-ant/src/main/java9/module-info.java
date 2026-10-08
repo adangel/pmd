@@ -8,6 +8,7 @@ module net.sourceforge.pmd.ant {
     requires net.sourceforge.pmd.core;
 
     requires org.apache.commons.lang3;
+    requires org.apache.commons.io;
     requires org.checkerframework.checker.qual;
 
     // automatic names
