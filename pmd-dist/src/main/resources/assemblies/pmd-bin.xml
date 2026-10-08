@@ -64,11 +64,16 @@
     </fileSets>
 
     <dependencySets>
-        <!-- jar dependencies go to lib/ -->
+        <!-- jar dependencies that are valid modules (named or automatic) go to lib/modules/ -->
         <dependencySet>
             <scope>runtime</scope>
             <excludes>
                 <exclude>net.sourceforge.pmd:pmd-languages-deps:pom</exclude>
+
+                <!-- exclude pmd-ant. While it is a module, it won't work, because its dependencies
+                     ant.jar/ant-launcher.jar are missing
+                -->
+                <exclude>net.sourceforge.pmd:pmd-ant</exclude>
 
                 <!-- exclude dependencies not ready for module path yet -->
                 <exclude>io.github.apex-dev-tools:apex-ls_2.13</exclude>
@@ -97,17 +102,20 @@
                 <exclude>com.lihaoyi:upickle-core_2.13</exclude>
                 <exclude>com.lihaoyi:upickle-implicits_2.13</exclude>
             </excludes>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>lib/modules</outputDirectory>
             <directoryMode>0755</directoryMode>
             <fileMode>0644</fileMode>
             <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>
 
-        <!-- jar dependencies go to libcp/ -->
+        <!-- jar dependencies go to lib/classpath into the unnamed module -->
         <dependencySet>
             <scope>runtime</scope>
             <includes>
-                <!-- dependencies not ready for module path yet -->
+                <!-- pmd-ant stays on the classpath, see above -->
+                <include>net.sourceforge.pmd:pmd-ant</include>
+
+                <!-- include only dependencies not ready for module path yet -->
                 <include>io.github.apex-dev-tools:apex-ls_2.13</include>
                 <include>com.github.pathikrit:better-files_2.13</include>
                 <include>org.scalameta:common_2.13</include>
@@ -134,7 +142,7 @@
                 <include>com.lihaoyi:upickle-core_2.13</include>
                 <include>com.lihaoyi:upickle-implicits_2.13</include>
             </includes>
-            <outputDirectory>libcp</outputDirectory>
+            <outputDirectory>lib/classpath</outputDirectory>
             <directoryMode>0755</directoryMode>
             <fileMode>0644</fileMode>
             <useProjectArtifact>false</useProjectArtifact>

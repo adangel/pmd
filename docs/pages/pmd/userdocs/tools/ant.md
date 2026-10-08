@@ -39,9 +39,7 @@ then you can make use of the PMD Task like this:
 Alternatively, a path can be defined and used via `classpathref`:
 
     <path id="pmd.classpath">
-        <fileset dir="/home/joe/pmd-bin-{{site.pmd.version}}/lib">
-            <include name="*.jar"/>
-        </fileset>
+        <fileset dir="/home/joe/pmd-bin-{{site.pmd.version}}/lib" includes="modules/*.jar classpath/*.jar" />
     </path>
     <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="pmd.classpath" />
 
