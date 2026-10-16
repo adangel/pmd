@@ -11,6 +11,7 @@ module net.sourceforge.pmd.cli {
     opens net.sourceforge.pmd.cli.commands.mixins.internal to info.picocli;
 
     requires net.sourceforge.pmd.core;
+    requires net.sourceforge.pmd.util.fxdesigner;
 
     requires org.slf4j;
     requires org.slf4j.simple;
@@ -20,6 +21,5 @@ module net.sourceforge.pmd.cli {
     requires org.apache.commons.lang3;
 
     // automatic names
-    requires pmd.designer;
     requires org.jline.terminal;
 }
