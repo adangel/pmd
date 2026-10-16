@@ -43,10 +43,16 @@ set_pmd_home_dir() {
     exit 1
   fi
 
-  # Allow for symlinks to this script
-  if [ -L "$script_real_loc" ]; then
-    script_real_loc=$(readlink "$script_real_loc")
-  fi
+  # Allow for symlinks to this script, including relative and chained symlinks.
+  # Cyclic symlinks don't pass the "-e" check above, so this loop terminates.
+  while [ -L "$script_real_loc" ]; do
+    link_target=$(readlink "$script_real_loc")
+    case "$link_target" in
+      /*) script_real_loc="$link_target" ;;
+      # relative targets are relative to the directory containing the symlink
+      *) script_real_loc="$(dirname "$script_real_loc")/$link_target" ;;
+    esac
+  done
 
   # use the directory of the script (which is ..../bin)
   script_real_loc=$(dirname "$script_real_loc")
