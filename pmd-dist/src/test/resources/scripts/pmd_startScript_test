@@ -1,0 +1,361 @@
+#!/bin/sh
+# BSD-style license; for more info see http://pmd.sourceforge.net/license.html
+
+#
+# Simple manual test script for the unix start script "scripts/pmd"
+# - the real start script (src/main/resources/scripts/pmd) is copied into a temporary
+#   PMD_HOME, whose path contains spaces
+# - a fake java executable is used, which mocks "java -version" and
+#   "java -XshowSettings:properties" and otherwise just records the arguments
+#   it has been called with
+# - just run it with "./pmd_startScript_test" and look at the output
+#   optionally the path to the start script can be given as first argument
+# - test cases are at the end of this script
+#
+
+export LANG=en_US.UTF-8
+
+TEST_DIR="$(cd "$(dirname "$0")" && pwd)"
+PMD_SCRIPT="${1:-$TEST_DIR/../../../main/resources/scripts/pmd}"
+
+if [ ! -f "$PMD_SCRIPT" ]; then
+  echo "Start script [$PMD_SCRIPT] not found"
+  exit 1
+fi
+
+# don't let the environment of the caller influence the tests
+unset CLASSPATH JAVAFX_HOME PMD_JAVA_OPTS
+
+TMP_DIR="$(cd "$(mktemp -d)" && pwd -P)"
+trap 'rm -rf "$TMP_DIR"' EXIT
+
+# a PMD installation with spaces in the path
+PMD_HOME_DIR="$TMP_DIR/pmd home with spaces"
+mkdir -p "$PMD_HOME_DIR/bin" "$PMD_HOME_DIR/conf" "$PMD_HOME_DIR/lib/classpath" "$PMD_HOME_DIR/lib/modules"
+cp "$PMD_SCRIPT" "$PMD_HOME_DIR/bin/pmd"
+chmod +x "$PMD_HOME_DIR/bin/pmd"
+
+# java homes with and without bundled JavaFX. We only check for the existence of a javafx.properties file
+# at lib/ or jre/lib. java.home sometimes points already to jre (oracle), but openjdk
+# builds don't have a jre folder anymore. Anyway, both should work.
+JAVA_HOME_WITH_FX="$TMP_DIR/java home with fx"
+mkdir -p "$JAVA_HOME_WITH_FX/jre/lib"
+touch "$JAVA_HOME_WITH_FX/jre/lib/javafx.properties"
+JAVA_HOME_WITH_FX2="$TMP_DIR/java home with fx/jre"
+JAVA_HOME_WITHOUT_FX="$TMP_DIR/java home without fx"
+mkdir -p "$JAVA_HOME_WITHOUT_FX/lib"
+
+# a separate OpenJFX installation
+OPENJFX_HOME="$TMP_DIR/open jfx"
+mkdir -p "$OPENJFX_HOME/lib"
+
+# the fake java executable
+FAKE_JAVA_DIR="$TMP_DIR/fake java bin"
+mkdir -p "$FAKE_JAVA_DIR"
+cat > "$FAKE_JAVA_DIR/java" <<'EOF'
+#!/bin/sh
+case "$1" in
+  -version)
+    echo "fake java version \"$FAKE_JAVA_VERSION\"" >&2
+    exit 0
+    ;;
+  -XshowSettings:properties)
+    printf 'Property settings:\n    java.home = %s\n    java.version = %s\n    java.version.date = 2025-01-01\n    some.other.property = value\n\n' \
+      "$FAKE_JAVA_HOME" "$FAKE_JAVA_VERSION" >&2
+    exit 0
+    ;;
+esac
+printf '%s\n' "$@" > "$FAKE_JAVA_ARGS_FILE"
+EOF
+chmod +x "$FAKE_JAVA_DIR/java"
+PATH="$FAKE_JAVA_DIR:$PATH"
+export PATH
+
+FAKE_JAVA_ARGS_FILE="$TMP_DIR/java-args.txt"
+FAKE_JAVA_STDERR_FILE="$TMP_DIR/stderr.txt"
+export FAKE_JAVA_ARGS_FILE
+
+FAILURES=0
+
+pass() {
+  printf "\033[32mOK\033[0m%s\n" "$1"
+}
+
+fail() {
+  printf "\033[31mFAILED\033[0m %s\n" "$1"
+  FAILURES=$((FAILURES + 1))
+}
+
+# run_pmd <java version> <java home> <command...>
+# Runs the given command (which should call the start script) with the fake java.
+# Use "env VAR=value ..." as command to set additional environment variables.
+run_pmd() {
+  run_pmd_in "$TMP_DIR" "$@"
+}
+
+# run_pmd_in <working dir> <java version> <java home> <command...>
+run_pmd_in() {
+  FAKE_JAVA_VERSION="$2"
+  FAKE_JAVA_HOME="$3"
+  export FAKE_JAVA_VERSION FAKE_JAVA_HOME
+  run_dir="$1"
+  shift 3
+  rm -f "$FAKE_JAVA_ARGS_FILE"
+  (cd "$run_dir" && "$@") 2> "$FAKE_JAVA_STDERR_FILE"
+  exit_code=$?
+}
+
+# expect_args <arg...>
+# Verifies that java has been called with exactly the given arguments.
+expect_args() {
+  expected="$(printf '%s\n' "$@")"
+  actual="$(cat "$FAKE_JAVA_ARGS_FILE" 2>/dev/null)"
+  if [ "$exit_code" = 0 ] && [ "$expected" = "$actual" ]; then
+    pass
+  else
+    fail "(exit code: $exit_code)"
+    echo "  expected:"; printf '    [%s]\n' "$@"
+    echo "  actual:"; printf '%s\n' "$actual" | sed -e 's/^/    [/' -e 's/$/]/'
+    sed -e 's/^/  stderr: /' "$FAKE_JAVA_STDERR_FILE"
+  fi
+}
+
+# expect_arg_value <option> <value>
+# Verifies that java has been called with the option directly followed by the value.
+expect_arg_value() {
+  actual="$(sed -n -e "/^$1\$/{n;p;q;}" "$FAKE_JAVA_ARGS_FILE" 2>/dev/null)"
+  if [ "$exit_code" = 0 ] && [ "$2" = "$actual" ]; then
+    pass " $1 [$2]"
+  else
+    fail "$1: expected [$2], actual [$actual] (exit code: $exit_code)"
+  fi
+}
+
+# expect_arg <arg>
+expect_arg() {
+  if [ "$exit_code" = 0 ] && grep -q -x -F -e "$1" "$FAKE_JAVA_ARGS_FILE" 2>/dev/null; then
+    pass " [$1]"
+  else
+    fail "missing argument [$1] (exit code: $exit_code)"
+  fi
+}
+
+# expect_no_arg <arg>
+expect_no_arg() {
+  if [ "$exit_code" = 0 ] && ! grep -q -x -F -e "$1" "$FAKE_JAVA_ARGS_FILE" 2>/dev/null; then
+    pass " no [$1]"
+  else
+    fail "unexpected argument [$1] (exit code: $exit_code)"
+  fi
+}
+
+# expect_error <exit code> <message part>
+expect_error() {
+  if [ "$exit_code" = "$1" ] && [ ! -e "$FAKE_JAVA_ARGS_FILE" ] && grep -q -F -e "$2" "$FAKE_JAVA_STDERR_FILE"; then
+    pass " exit code $1: $2"
+  else
+    fail "expected exit code $1 and message [$2], actual exit code: $exit_code"
+    sed -e 's/^/  stderr: /' "$FAKE_JAVA_STDERR_FILE"
+  fi
+}
+
+H="$PMD_HOME_DIR"
+PMD_CLI_MODULE="net.sourceforge.pmd.cli/net.sourceforge.pmd.cli.PmdCli"
+
+echo "Testing start script: $PMD_SCRIPT"
+echo "PMD_HOME: $H"
+echo
+
+
+echo "Test: java 21, absolute path, arguments with spaces"
+run_pmd "21.0.2" "$JAVA_HOME_WITHOUT_FX" "$H/bin/pmd" check -d "src dir/with spaces" -R "my rules.xml"
+expect_args -classpath "$H/conf:$H/lib/classpath/*" \
+  --module-path "$H/lib/modules" --add-modules kotlin.stdlib \
+  --module "$PMD_CLI_MODULE" check -d "src dir/with spaces" -R "my rules.xml"
+
+echo "Test: java 8, only classpath"
+run_pmd "1.8.0_442" "$JAVA_HOME_WITHOUT_FX" "$H/bin/pmd" check -d "src dir"
+expect_args -classpath "$H/conf:$H/lib/classpath/*:$H/lib/modules/*" \
+  net.sourceforge.pmd.cli.PmdCli check -d "src dir"
+
+echo "Test: java 11, --illegal-access=warn"
+run_pmd "11.0.20" "$JAVA_HOME_WITHOUT_FX" "$H/bin/pmd" check
+expect_args --illegal-access=warn -classpath "$H/conf:$H/lib/classpath/*" \
+  --module-path "$H/lib/modules" --add-modules kotlin.stdlib \
+  --module "$PMD_CLI_MODULE" check
+
+echo "Test: CLASSPATH with spaces is prepended"
+run_pmd "21" "$JAVA_HOME_WITHOUT_FX" env CLASSPATH="/some dir/a.jar:/other dir/classes" "$H/bin/pmd" check
+expect_arg_value -classpath "/some dir/a.jar:/other dir/classes:$H/conf:$H/lib/classpath/*"
+
+echo "Test: PMD_JAVA_OPTS are split into words"
+run_pmd "21" "$JAVA_HOME_WITHOUT_FX" env PMD_JAVA_OPTS="-Xmx1g -Dfoo=bar" "$H/bin/pmd" check
+expect_args -Xmx1g -Dfoo=bar -classpath "$H/conf:$H/lib/classpath/*" \
+  --module-path "$H/lib/modules" --add-modules kotlin.stdlib \
+  --module "$PMD_CLI_MODULE" check
+
+# test_java_version <java version> <expected feature version>
+# Verifies the effects of the determined java version: classpath vs. module path,
+# --illegal-access (java 9-16) and --enable-native-access for the designer (java 24+).
+test_java_version() {
+  echo "Test: java version '$1' is detected as java $2"
+  run_pmd "$1" "$JAVA_HOME_WITHOUT_FX" "$H/bin/pmd" check
+  if [ "$2" -eq 8 ]; then
+    expect_arg net.sourceforge.pmd.cli.PmdCli
+    expect_no_arg --module-path
+  else
+    expect_arg_value --module "$PMD_CLI_MODULE"
+  fi
+  if [ "$2" -ge 9 ] && [ "$2" -le 16 ]; then
+    expect_arg --illegal-access=warn
+  else
+    expect_no_arg --illegal-access=warn
+  fi
+
+  if [ "$2" -ge 10 ]; then
+    run_pmd "$1" "$JAVA_HOME_WITHOUT_FX" env JAVAFX_HOME="$OPENJFX_HOME" "$H/bin/pmd" designer
+    if [ "$2" -ge 24 ]; then
+      expect_arg --enable-native-access=javafx.graphics
+    else
+      expect_no_arg --enable-native-access=javafx.graphics
+    fi
+  fi
+}
+
+# See also
+# https://openjdk.org/jeps/223 JEP 223: New Version-String Scheme (Since Java 9)
+# https://openjdk.org/jeps/322 JEP 322: Time-Based Release Versioning (Since Java 10)
+test_java_version "1.8.0_271" 8
+test_java_version "1.8.0_345" 8
+test_java_version "9.0.4"     9
+test_java_version "10.0.2"   10
+test_java_version "11.0.6"   11
+test_java_version "11.0.6.1" 11
+test_java_version "11.0.13"  11
+test_java_version "16.0.2"   16
+test_java_version "17.0.4"   17
+test_java_version "17.0.4.1" 17
+test_java_version "18.0.2.1" 18
+test_java_version "19-ea"    19
+test_java_version "23.0.2"   23
+test_java_version "24"       24
+test_java_version "25"       25
+test_java_version "25.0.1"   25
+test_java_version "26-ea"    26
+
+echo "Test: relative path, called from within PMD_HOME"
+run_pmd_in "$H" "21" "$JAVA_HOME_WITHOUT_FX" ./bin/pmd check
+expect_arg_value --module-path "$H/lib/modules"
+
+echo "Test: relative path, called from within bin with sh"
+run_pmd_in "$H/bin" "21" "$JAVA_HOME_WITHOUT_FX" sh pmd check
+expect_arg_value --module-path "$H/lib/modules"
+
+echo "Test: called as 'bash pmd' with pmd on the PATH (#4723)"
+# Note: only bash searches the PATH for the script, dash/sh don't
+if command -v bash >/dev/null 2>&1; then
+  run_pmd "21" "$JAVA_HOME_WITHOUT_FX" env PATH="$H/bin:$PATH" bash pmd check
+  expect_arg_value --module-path "$H/lib/modules"
+else
+  echo "Skipped - no bash available"
+fi
+
+LINK_DIR="$TMP_DIR/link dir with spaces"
+mkdir -p "$LINK_DIR"
+
+echo "Test: absolute symlink with spaces"
+ln -s "$H/bin/pmd" "$LINK_DIR/pmd abs link"
+run_pmd "21" "$JAVA_HOME_WITHOUT_FX" "$LINK_DIR/pmd abs link" check
+expect_arg_value --module-path "$H/lib/modules"
+
+echo "Test: absolute symlink on the PATH"
+run_pmd "21" "$JAVA_HOME_WITHOUT_FX" env PATH="$LINK_DIR:$PATH" "pmd abs link" check
+expect_arg_value --module-path "$H/lib/modules"
+
+echo "Test: relative symlink with spaces, called from a different directory"
+(cd "$LINK_DIR" && ln -s "../pmd home with spaces/bin/pmd" "pmd rel link")
+run_pmd "21" "$JAVA_HOME_WITHOUT_FX" "$LINK_DIR/pmd rel link" check
+expect_arg_value --module-path "$H/lib/modules"
+
+echo "Test: symlink to symlink"
+ln -s "$LINK_DIR/pmd abs link" "$TMP_DIR/pmd link to link"
+run_pmd "21" "$JAVA_HOME_WITHOUT_FX" "$TMP_DIR/pmd link to link" check
+expect_arg_value --module-path "$H/lib/modules"
+
+echo "Test: symlinked PMD_HOME directory"
+ln -s "$H" "$TMP_DIR/pmd home link"
+run_pmd "21" "$JAVA_HOME_WITHOUT_FX" "$TMP_DIR/pmd home link/bin/pmd" check
+expect_arg_value --module-path "$TMP_DIR/pmd home link/lib/modules"
+
+echo "Test: designer, java 21 with OpenJFX (JAVAFX_HOME with spaces)"
+run_pmd "21.0.2" "$JAVA_HOME_WITHOUT_FX" env JAVAFX_HOME="$OPENJFX_HOME" "$H/bin/pmd" designer
+expect_arg_value -classpath "$H/conf:$H/lib/classpath/*"
+expect_arg_value --module-path "$H/lib/modules:$OPENJFX_HOME/lib"
+expect_arg_value --add-modules "kotlin.stdlib,javafx.controls,javafx.fxml"
+expect_arg_value --module "$PMD_CLI_MODULE"
+expect_arg "javafx.controls/javafx.scene.control.skin=pmd.designer,ALL-UNNAMED"
+expect_no_arg "--enable-native-access=javafx.graphics"
+expect_no_arg "--illegal-access=warn"
+
+echo "Test: designer, java 25 with OpenJFX"
+run_pmd "25" "$JAVA_HOME_WITHOUT_FX" env JAVAFX_HOME="$OPENJFX_HOME" "$H/bin/pmd" designer
+expect_arg_value --module-path "$H/lib/modules:$OPENJFX_HOME/lib"
+expect_arg "--enable-native-access=javafx.graphics"
+expect_arg "--sun-misc-unsafe-memory-access=allow"
+
+echo "Test: designer, java 17 with bundled JavaFX (java.home with spaces)"
+run_pmd "17.0.10" "$JAVA_HOME_WITH_FX" env JAVAFX_HOME="$OPENJFX_HOME" "$H/bin/pmd" designer
+expect_arg_value --module-path "$H/lib/modules"
+expect_arg_value --add-modules "kotlin.stdlib"
+expect_arg "javafx.controls/javafx.scene.control.skin=pmd.designer,ALL-UNNAMED"
+
+echo "Test: designer, java 8 with bundled JavaFX"
+run_pmd "1.8.0_441" "$JAVA_HOME_WITH_FX" "$H/bin/pmd" designer
+expect_args -classpath "$H/conf:$H/lib/classpath/*:$H/lib/modules/*" \
+  net.sourceforge.pmd.cli.PmdCli designer
+
+echo "Test: designer, java 8 with bundled JavaFX, java.home pointing to jre"
+run_pmd "1.8.0_471" "$JAVA_HOME_WITH_FX2" "$H/bin/pmd" designer
+expect_args -classpath "$H/conf:$H/lib/classpath/*:$H/lib/modules/*" \
+  net.sourceforge.pmd.cli.PmdCli designer
+
+echo "Test: designer, java 21 with bundled JavaFX, java.home pointing to jre"
+run_pmd "21.0.5" "$JAVA_HOME_WITH_FX2" "$H/bin/pmd" designer
+expect_arg_value --module-path "$H/lib/modules"
+expect_arg_value --add-modules "kotlin.stdlib"
+
+echo "Test: designer, java 8u451 without JavaFX"
+run_pmd "1.8.0_451" "$JAVA_HOME_WITHOUT_FX" "$H/bin/pmd" designer
+expect_error 2 "JavaFX has been removed from Oracle Java 8 since Java 8u451"
+
+echo "Test: designer, java 8u450 without JavaFX"
+run_pmd "1.8.0_450" "$JAVA_HOME_WITHOUT_FX" "$H/bin/pmd" designer
+expect_error 2 "For OpenJFX at least Java 10 is required"
+
+echo "Test: designer, java 9 without JavaFX"
+run_pmd "9.0.4" "$JAVA_HOME_WITHOUT_FX" env JAVAFX_HOME="$OPENJFX_HOME" "$H/bin/pmd" designer
+expect_error 2 "For OpenJFX at least Java 10 is required"
+
+echo "Test: designer, java 21 without JavaFX and without JAVAFX_HOME"
+run_pmd "21" "$JAVA_HOME_WITHOUT_FX" "$H/bin/pmd" designer
+expect_error 2 "The environment variable JAVAFX_HOME is missing"
+
+echo "Test: missing lib/modules directory"
+mv "$H/lib/modules" "$H/lib/modules.bak"
+run_pmd "21" "$JAVA_HOME_WITHOUT_FX" "$H/bin/pmd" check
+expect_error 2 "The module path directory [$H/lib/modules] does not exist"
+mv "$H/lib/modules.bak" "$H/lib/modules"
+
+echo "Test: missing conf directory"
+mv "$H/conf" "$H/conf.bak"
+run_pmd "21" "$JAVA_HOME_WITHOUT_FX" "$H/bin/pmd" check
+expect_error 2 "The configuration directory [$H/conf] does not exist"
+mv "$H/conf.bak" "$H/conf"
+
+echo
+if [ "$FAILURES" -eq 0 ]; then
+  pass " All tests passed. ✔️"
+else
+  fail "$FAILURES test(s) failed."
+  exit 1
+fi
