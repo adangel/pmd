@@ -8,29 +8,31 @@ SETLOCAL EnableDelayedExpansion
 rem use unicode codepage to properly support UTF-8
 chcp 65001>nul
 
-SET "APPNAME=%1"
+SET "APPNAME=%~1"
 CALL :check_java
 IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
+CALL :determine_java_version
 
 CALL :set_pmd_home_dir
-CALL :set_lib_dir
-CALL :check_lib_dir
-IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
-CALL :set_conf_dir
-CALL :check_conf_dir
+CALL :check_pmd_home_dir
 IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
 
-CALL :add_pmd_classpath
-CALL :determine_java_version
-CALL :add_openjfx_classpath
+CALL :set_pmd_classpath_or_module_path
+CALL :add_openjfx_module_path
 IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
 CALL :determine_additional_java_opts
 
+SET PMD_MODULE_ARGS=
+IF DEFINED PMD_MODULE_PATH SET PMD_MODULE_ARGS=--module-path "%PMD_MODULE_PATH%"
+IF DEFINED PMD_ADD_MODULES SET PMD_MODULE_ARGS=%PMD_MODULE_ARGS% --add-modules %PMD_ADD_MODULES%
+
+SETLOCAL DisableDelayedExpansion
+
 java ^
   %PMD_JAVA_OPTS% %PMD_ADDITIONAL_JAVA_OPTS% ^
-  %PMD_OPENJFX_MODULE_PATH% ^
-  -cp "%CLASSPATH%" ^
-  net.sourceforge.pmd.cli.PmdCli %*
+  -cp "%PMD_CLASSPATH%" ^
+  %PMD_MODULE_ARGS% ^
+  %PMD_MAIN_CLASS% %*
 ENDLOCAL
 EXIT /B %ERRORLEVEL%
 
@@ -40,47 +42,47 @@ EXIT /B %ERRORLEVEL%
 :check_java
 rem check whether java is available at all
 java -version > nul 2>&1 || (
-  echo No java executable found in PATH
+  echo No java executable found in PATH 1>&2
   EXIT /B 2
 )
 EXIT /B
 
 :set_pmd_home_dir
-SET "PMD_HOME=%~dp0.."
+FOR %%i IN ("%~dp0..") DO SET "PMD_HOME=%%~fi"
 EXIT /B
 
-:set_lib_dir
-SET "LIB_DIR=%PMD_HOME%/lib"
-EXIT /B
-
-:check_lib_dir
-IF NOT EXIST "%LIB_DIR%" (
-  echo The jar directory [%LIB_DIR%] does not exist
+:check_pmd_home_dir
+IF NOT EXIST "%PMD_HOME%/lib/classpath" (
+  echo The classpath directory [!PMD_HOME!/lib/classpath] does not exist 1>&2
+  EXIT /B 2
+)
+IF NOT EXIST "%PMD_HOME%/lib/modules" (
+  echo The module path directory [!PMD_HOME!/lib/modules] does not exist 1>&2
+  EXIT /B 2
+)
+IF NOT EXIST "%PMD_HOME%/conf" (
+  echo The configuration directory [!PMD_HOME!/conf] does not exist 1>&2
   EXIT /B 2
 )
 EXIT /B
 
-:set_conf_dir
-SET "CONF_DIR=%PMD_HOME%/conf"
-EXIT /B
-
-:check_conf_dir
-IF NOT EXIST "%CONF_DIR%" (
-  echo The configuration directory [%CONF_DIR%] does not exist
-  EXIT /B 2
-)
-EXIT /B
-
-:append_classpath
-IF DEFINED CLASSPATH (
-  SET "CLASSPATH=%CLASSPATH%;%~1"
+:set_pmd_classpath_or_module_path
+SET "PMD_MAIN_CLASS="
+SET "PMD_CLASSPATH="
+SET "PMD_MODULE_PATH="
+SET "PMD_ADD_MODULES="
+IF %java_version_feature% EQU 8 (
+  rem java8 - only classpath
+  SET "PMD_CLASSPATH=%PMD_HOME%/conf;%PMD_HOME%/lib/classpath/*;%PMD_HOME%/lib/modules/*"
+  SET "PMD_MAIN_CLASS=net.sourceforge.pmd.cli.PmdCli"
 ) ELSE (
-  SET "CLASSPATH=%~1"
+  rem java9+ - modulepath + classpath
+  SET "PMD_CLASSPATH=%PMD_HOME%/conf;%PMD_HOME%/lib/classpath/*"
+  SET "PMD_MODULE_PATH=%PMD_HOME%/lib/modules"
+  SET "PMD_ADD_MODULES=kotlin.stdlib"
+  SET "PMD_MAIN_CLASS=--module net.sourceforge.pmd.cli/net.sourceforge.pmd.cli.PmdCli"
 )
-EXIT /B
-
-:add_pmd_classpath
-CALL :append_classpath "%CONF_DIR%;%LIB_DIR%/*"
+IF DEFINED CLASSPATH SET "PMD_CLASSPATH=%CLASSPATH%;%PMD_CLASSPATH%"
 EXIT /B
 
 :determine_java_version
@@ -89,9 +91,9 @@ rem sets the java_version_update variable. This is the update release counter: e
 
 set java_version_prop=
 set java_home_property=
-FOR /F tokens^=1^,3^  %%j IN ('java -XshowSettings:properties 2^>^&1') DO (
-    IF "%%j" == "java.version" set java_version_prop=%%k
-    IF "%%j" == "java.home" set java_home_property=%%k
+FOR /F "tokens=1,2,*"  %%j IN ('java -XshowSettings:properties 2^>^&1') DO (
+    IF "%%j" == "java.version" set java_version_prop=%%l
+    IF "%%j" == "java.home" set java_home_property=%%l
 )
 
 set java_version_feature=
@@ -117,51 +119,58 @@ IF EXIST "%java_home_property%/jre/lib/javafx.properties" (
 )
 EXIT /B
 
-:add_openjfx_classpath
-SET "PMD_OPENJFX_MODULE_PATH="
-IF [%APPNAME%] == [designer] (
+:add_openjfx_module_path
+IF "%APPNAME%" == "designer" (
   IF %java_has_javafx% EQU 1 (
     rem No additional options needed as JavaFX is bundled.
     rem We are running either an old Oracle Java < 8u451 or an OpenJDK 8 Build from Azul/Bellsoft which
     rem have JavaFX bundled as modules.
-    SET "PMD_OPENJFX_MODULE_PATH="
   ) ELSE (
 
     IF %java_version_feature% EQU 8 (
       IF %java_version_update% GEQ 451 (
-        echo.
-        echo    JavaFX has been removed from Oracle Java 8 since Java 8u451.
-        echo    See https://www.oracle.com/javase/javafx.
-        echo    Use Java 11 or later with OpenJFX separately from https://openjfx.io/.
-        echo    Alternatively use an OpenJDK build from Azul with JavaFX bundled ^(JDK FX^)
-        echo    or from Bellsoft with JavaFX bundled ^(Full JDK^).
+        echo. 1>&2
+        echo    JavaFX has been removed from Oracle Java 8 since Java 8u451. 1>&2
+        echo    See https://www.oracle.com/javase/javafx. 1>&2
+        echo    Use Java 11 or later with OpenJFX separately from https://openjfx.io/. 1>&2
+        echo    Alternatively use an OpenJDK build from Azul with JavaFX bundled ^(JDK FX^) 1>&2
+        echo    or from Bellsoft with JavaFX bundled ^(Full JDK^). 1>&2
         EXIT /B 2
       )
     )
 
     IF %java_version_feature% LSS 10 (
-      echo.
-      echo    For OpenJFX at least Java 10 is required. Newer OpenJFX version
-      echo    might require newer Java versions.
+      echo. 1>&2
+      echo    For OpenJFX at least Java 10 is required. Newer OpenJFX version 1>&2
+      echo    might require newer Java versions. 1>&2
       EXIT /B 2
     )
 
     rem openjfx is required for any openjdk builds which don't include JavaFX
     IF NOT DEFINED JAVAFX_HOME (
-      echo    The environment variable JAVAFX_HOME is missing.
-      echo    See https://docs.pmd-code.org/latest/pmd_userdocs_extending_designer_reference.html#installing-running-updating
-      echo    for instructions.
+      echo    The environment variable JAVAFX_HOME is missing. 1>&2
+      echo    See https://docs.pmd-code.org/latest/pmd_userdocs_extending_designer_reference.html#installing-running-updating 1>&2
+      echo    for instructions. 1>&2
       EXIT /B 2
     )
 
-    SET "PMD_OPENJFX_MODULE_PATH=--module-path "%JAVAFX_HOME%/lib" --add-modules javafx.controls,javafx.fxml"
+    IF DEFINED PMD_MODULE_PATH (
+      SET "PMD_MODULE_PATH=!PMD_MODULE_PATH!;!JAVAFX_HOME!/lib"
+    ) ELSE (
+      SET "PMD_MODULE_PATH=!JAVAFX_HOME!/lib"
+    )
+    IF DEFINED PMD_ADD_MODULES (
+      SET "PMD_ADD_MODULES=!PMD_ADD_MODULES!,javafx.controls,javafx.fxml"
+    ) ELSE (
+      SET "PMD_ADD_MODULES=javafx.controls,javafx.fxml"
+    )
   )
 )
 EXIT /B
 
 :determine_additional_java_opts
 SET "PMD_ADDITIONAL_JAVA_OPTS="
-IF [%APPNAME%] == [designer] (
+IF "%APPNAME%" == "designer" (
   IF %java_version_feature% GEQ 9 (
     rem Since Java 9, Java uses the module system. If JavaFX is bundled, this is also
     rem included as modules. PMD however is run on the classpath and will run as the
@@ -178,21 +187,23 @@ IF [%APPNAME%] == [designer] (
     rem
     rem Reflective access used by PMD Designer
     rem in net.sourceforge.pmd.util.fxdesigner.util.controls.TreeViewWrapper.getVirtualFlow
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.controls/javafx.scene.control.skin=ALL-UNNAMED"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.controls/javafx.scene.control.skin=pmd.designer,ALL-UNNAMED"
     rem in net.sourceforge.pmd.util.fxdesigner.util.DesignerUtil.customBuilderFactory
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.fxml/com.sun.javafx.fxml.builder=ALL-UNNAMED"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.fxml/com.sun.javafx.fxml.builder=pmd.designer,ALL-UNNAMED"
     rem
     rem Reflective access used by RichtextFX
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/javafx.scene.text=ALL-UNNAMED"
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.scene.text=ALL-UNNAMED"
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.text=ALL-UNNAMED"
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.geom=ALL-UNNAMED"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/javafx.scene.text=pmd.designer,ALL-UNNAMED"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.scene.text=pmd.designer,ALL-UNNAMED"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.text=pmd.designer,ALL-UNNAMED"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.geom=pmd.designer,ALL-UNNAMED"
     rem
     rem Reflective access used by controlsfx
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED"
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.base/com.sun.javafx.runtime=ALL-UNNAMED"
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.base/com.sun.javafx.event=ALL-UNNAMED"
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.scene.traversal=ALL-UNNAMED"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.scene=pmd.designer,ALL-UNNAMED"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.base/com.sun.javafx.runtime=pmd.designer,ALL-UNNAMED"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.base/com.sun.javafx.event=pmd.designer,ALL-UNNAMED"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.scene.traversal=pmd.designer,ALL-UNNAMED"
+
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens net.sourceforge.pmd.core/net.sourceforge.pmd.properties.internal=pmd.designer"
   )
 )
 
@@ -203,7 +214,7 @@ IF %java_version_feature% GEQ 9 (
     SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --illegal-access=warn"
   )
 )
-IF [%APPNAME%] == [designer] (
+IF "%APPNAME%" == "designer" (
   IF %java_version_feature% GEQ 24 (
     rem Allow native access to javafx.graphics
     SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --enable-native-access=javafx.graphics"

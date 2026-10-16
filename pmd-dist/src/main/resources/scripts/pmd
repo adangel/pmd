@@ -17,8 +17,6 @@ is_cygwin() {
 cygwin_paths() {
     # For Cygwin, switch paths to Windows format before running java
     if [ "$cygwin" = true ] ; then
-        [ -n "$JAVAFX_HOME" ] && JAVAFX_HOME=$(cygpath --windows "$JAVAFX_HOME")
-        [ -n "$CLASSPATH" ] && CLASSPATH=$(cygpath --path --windows "$CLASSPATH")
         [ -n "$PMD_CLASSPATH" ] && PMD_CLASSPATH=$(cygpath --path --windows "$PMD_CLASSPATH")
         [ -n "$PMD_MODULE_PATH" ] && PMD_MODULE_PATH=$(cygpath --path --windows "$PMD_MODULE_PATH")
     fi
@@ -170,15 +168,20 @@ set_pmd_classpath_or_module_path() {
 
   if [ "$java_version_feature" -eq 8 ]
   then
-    # java8 -> only classpath
+    # java8 - only classpath
     PMD_CLASSPATH="$PMD_HOME/conf:$PMD_HOME/lib/classpath/*:$PMD_HOME/lib/modules/*"
     PMD_MAIN_CLASS="net.sourceforge.pmd.cli.PmdCli"
   else
-    # java9+ -> modulepath + classpath
+    # java9+ - modulepath + classpath
     PMD_CLASSPATH="$PMD_HOME/conf:$PMD_HOME/lib/classpath/*"
     PMD_MODULE_PATH="$PMD_HOME/lib/modules"
-    PMD_ADD_MODULES="${PMD_ADD_MODULES:+${PMD_ADD_MODULES},}kotlin.stdlib"
+    PMD_ADD_MODULES="kotlin.stdlib"
     PMD_MAIN_CLASS="--module net.sourceforge.pmd.cli/net.sourceforge.pmd.cli.PmdCli"
+  fi
+
+  if [ -n "$CLASSPATH" ]
+  then
+    PMD_CLASSPATH="$CLASSPATH:$PMD_CLASSPATH"
   fi
 }
 
@@ -247,11 +250,12 @@ determine_additional_java_opts
 cygwin_paths
 
 # Note: we want word-splitting happening on PMD_JAVA_OPTS, PMD_ADDITIONAL_JAVA_OPTS
-# and PMD_OPENJFX_MODULE_PATH. That's why we explicitly don't use quotes.
+# and PMD_MAIN_CLASS.
+# That's why we explicitly don't use quotes.
 # shellcheck disable=SC2046,SC2086
 exec java \
   $PMD_JAVA_OPTS $PMD_ADDITIONAL_JAVA_OPTS \
-  -classpath "${CLASSPATH:+${CLASSPATH}:}$PMD_CLASSPATH" \
+  -classpath "$PMD_CLASSPATH" \
   ${PMD_MODULE_PATH:+--module-path "$PMD_MODULE_PATH"} \
   ${PMD_ADD_MODULES:+--add-modules "$PMD_ADD_MODULES"} \
-  ${PMD_MAIN_CLASS} "$@"
+  $PMD_MAIN_CLASS "$@"
