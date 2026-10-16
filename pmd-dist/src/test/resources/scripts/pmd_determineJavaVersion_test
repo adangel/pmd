@@ -3,7 +3,7 @@
 
 #
 # Simple manual test script
-# - code is copied from run.sh to be tested here (so please check, it might be out of sync)
+# - code is copied from scripts/pmd to be tested here (so please check, it might be out of sync)
 # - only the function "determine_java_version" is tested here
 # - just run it with "./runtest.sh" and look at the output
 # - test cases are at the end of this script

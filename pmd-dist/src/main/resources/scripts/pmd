@@ -19,7 +19,8 @@ cygwin_paths() {
     if [ "$cygwin" = true ] ; then
         [ -n "$JAVAFX_HOME" ] && JAVAFX_HOME=$(cygpath --windows "$JAVAFX_HOME")
         [ -n "$CLASSPATH" ] && CLASSPATH=$(cygpath --path --windows "$CLASSPATH")
-        [ -n "$PMD_OPENJFX_MODULE_PATH" ] && PMD_OPENJFX_MODULE_PATH=$(cygpath --path --windows "$PMD_OPENJFX_MODULE_PATH")
+        [ -n "$PMD_CLASSPATH" ] && PMD_CLASSPATH=$(cygpath --path --windows "$PMD_CLASSPATH")
+        [ -n "$PMD_MODULE_PATH" ] && PMD_MODULE_PATH=$(cygpath --path --windows "$PMD_MODULE_PATH")
     fi
 }
 
@@ -59,25 +60,14 @@ set_pmd_home_dir() {
 
 check_dir_exists() {
   if [ ! -e "$PMD_HOME/$1" ]; then
-    script_exit "The directory [$PMD_HOME/$1] does not exist"
+    script_exit "The $2 directory [$PMD_HOME/$1] does not exist"
   fi
 }
 
 check_pmd_home_dir() {
-  check_dir_exists "lib/classpath"
-  check_dir_exists "lib/modules"
-}
-
-set_conf_dir() {
-  if [ -z "$CONF_DIR" ]; then
-    CONF_DIR="$PMD_HOME/conf"
-  fi
-}
-
-check_conf_dir() {
-  if [ ! -e "$CONF_DIR" ]; then
-    script_exit "The configuration directory [$CONF_DIR] does not exist"
-  fi
+  check_dir_exists "lib/classpath" "classpath"
+  check_dir_exists "lib/modules" "module path"
+  check_dir_exists "conf" "configuration"
 }
 
 script_exit() {
@@ -91,6 +81,9 @@ check_java() {
   fi
 }
 
+# See also
+# https://openjdk.org/jeps/223 JEP 223: New Version-String Scheme (Since Java 9)
+# https://openjdk.org/jeps/322 JEP 322: Time-Based Release Versioning (Since Java 10)
 determine_java_version() {
     all_props=$(java -XshowSettings:properties 2>&1)
     java_ver_normalized=$(echo "$all_props" | grep "java.version" | sed -n -e '{
@@ -135,21 +128,23 @@ determine_additional_java_opts() {
     #
     # Reflective access used by PMD Designer
     # in net.sourceforge.pmd.util.fxdesigner.util.controls.TreeViewWrapper.getVirtualFlow
-    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.controls/javafx.scene.control.skin=ALL-UNNAMED"
+    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.controls/javafx.scene.control.skin=pmd.designer,ALL-UNNAMED"
     # in net.sourceforge.pmd.util.fxdesigner.util.DesignerUtil.customBuilderFactory
-    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.fxml/com.sun.javafx.fxml.builder=ALL-UNNAMED"
+    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.fxml/com.sun.javafx.fxml.builder=pmd.designer,ALL-UNNAMED"
     #
     # Reflective access used by RichtextFX
-    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.graphics/javafx.scene.text=ALL-UNNAMED"
-    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.graphics/com.sun.javafx.scene.text=ALL-UNNAMED"
-    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.graphics/com.sun.javafx.text=ALL-UNNAMED"
-    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.graphics/com.sun.javafx.geom=ALL-UNNAMED"
+    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.graphics/javafx.scene.text=pmd.designer,ALL-UNNAMED"
+    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.graphics/com.sun.javafx.scene.text=pmd.designer,ALL-UNNAMED"
+    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.graphics/com.sun.javafx.text=pmd.designer,ALL-UNNAMED"
+    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.graphics/com.sun.javafx.geom=pmd.designer,ALL-UNNAMED"
     #
     # Reflective access used by controlsfx
-    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED"
-    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.base/com.sun.javafx.runtime=ALL-UNNAMED"
-    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.base/com.sun.javafx.event=ALL-UNNAMED"
-    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.graphics/com.sun.javafx.scene.traversal=ALL-UNNAMED"
+    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.graphics/com.sun.javafx.scene=pmd.designer,ALL-UNNAMED"
+    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.base/com.sun.javafx.runtime=pmd.designer,ALL-UNNAMED"
+    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.base/com.sun.javafx.event=pmd.designer,ALL-UNNAMED"
+    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens javafx.graphics/com.sun.javafx.scene.traversal=pmd.designer,ALL-UNNAMED"
+
+    PMD_ADDITIONAL_JAVA_OPTS="$PMD_ADDITIONAL_JAVA_OPTS --add-opens net.sourceforge.pmd.core/net.sourceforge.pmd.properties.internal=pmd.designer"
   fi
 
   if [ "$java_version_feature" -ge 9 ] && [ "$java_version_feature" -le 16 ]
@@ -167,19 +162,38 @@ determine_additional_java_opts() {
   fi
 }
 
-add_openjfx_classpath() {
-  PMD_OPENJFX_MODULE_PATH=""
+set_pmd_classpath_or_module_path() {
+  PMD_MAIN_CLASS=""
+  PMD_CLASSPATH=""
+  PMD_MODULE_PATH=""
+  PMD_ADD_MODULES=""
+
+  if [ "$java_version_feature" -eq 8 ]
+  then
+    # java8 -> only classpath
+    PMD_CLASSPATH="$PMD_HOME/conf:$PMD_HOME/lib/classpath/*:$PMD_HOME/lib/modules/*"
+    PMD_MAIN_CLASS="net.sourceforge.pmd.cli.PmdCli"
+  else
+    # java9+ -> modulepath + classpath
+    PMD_CLASSPATH="$PMD_HOME/conf:$PMD_HOME/lib/classpath/*"
+    PMD_MODULE_PATH="$PMD_HOME/lib/modules"
+    PMD_ADD_MODULES="${PMD_ADD_MODULES:+${PMD_ADD_MODULES},}kotlin.stdlib"
+    PMD_MAIN_CLASS="--module net.sourceforge.pmd.cli/net.sourceforge.pmd.cli.PmdCli"
+  fi
+}
+
+add_openjfx_module_path() {
   if [ "$APPNAME" = "designer" ]
   then
     if [ $java_has_javafx = 1 ]
     then
-      # No additional options needed as JavaFX is bundled.
+      # No additional modulepath is needed as JavaFX is bundled.
       # We are running either an old Oracle Java < 8u451 or an OpenJDK 8 Build from Azul/Bellsoft which
       # have JavaFX bundled as modules.
-      PMD_OPENJFX_MODULE_PATH=""
+      :
     else
 
-      if [ "$java_version_feature" = "8" ] && [ "$java_version_update" -ge 451 ]
+      if [ "$java_version_feature" -eq 8 ] && [ "$java_version_update" -ge 451 ]
       then
         script_exit "
           JavaFX has been removed from Oracle Java 8 since Java 8u451.
@@ -208,7 +222,8 @@ add_openjfx_classpath() {
         "
       fi
 
-      PMD_OPENJFX_MODULE_PATH="$JAVAFX_HOME/lib"
+      PMD_MODULE_PATH="${PMD_MODULE_PATH:+${PMD_MODULE_PATH}:}$JAVAFX_HOME/lib"
+      PMD_ADD_MODULES="${PMD_ADD_MODULES:+${PMD_ADD_MODULES},}javafx.controls,javafx.fxml"
     fi
   fi
 }
@@ -218,17 +233,15 @@ APPNAME="$1"
 is_cygwin
 
 check_java
+determine_java_version
 
 set_pmd_home_dir
 check_pmd_home_dir
-set_conf_dir
-check_conf_dir
 
 convert_cygwin_vars
 
-add_pmd_classpath
-determine_java_version
-add_openjfx_classpath
+set_pmd_classpath_or_module_path
+add_openjfx_module_path
 determine_additional_java_opts
 
 cygwin_paths
@@ -238,8 +251,7 @@ cygwin_paths
 # shellcheck disable=SC2046,SC2086
 exec java \
   $PMD_JAVA_OPTS $PMD_ADDITIONAL_JAVA_OPTS \
-  ${PMD_OPENJFX_MODULE_PATH:+--module-path "$PMD_OPENJFX_MODULE_PATH" --add-modules javafx.controls,javafx.fxml} \
-  -classpath "${CLASSPATH:+${CLASSPATH}:}$CONF_DIR:$PMD_HOME/lib/classpath/*" \
-  --module-path "$PMD_HOME/lib/modules" \
-  --add-modules kotlin.stdlib \
-  --module net.sourceforge.pmd.cli/net.sourceforge.pmd.cli.PmdCli "$@"
+  -classpath "${CLASSPATH:+${CLASSPATH}:}$PMD_CLASSPATH" \
+  ${PMD_MODULE_PATH:+--module-path "$PMD_MODULE_PATH"} \
+  ${PMD_ADD_MODULES:+--add-modules "$PMD_ADD_MODULES"} \
+  ${PMD_MAIN_CLASS} "$@"
