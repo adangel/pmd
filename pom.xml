@@ -597,7 +597,7 @@
                                 </rulesets>
                                 <excludeRoots>
                                     <excludeRoot>${project.basedir}/src/main/java</excludeRoot>
-                                    <!-- module-info.java can't be parsed with targetJdk 1.8 -->
+                                    <!-- module-info.java can't be parsed with targetJdk 8 -->
                                     <excludeRoot>${project.basedir}/src/main/java9</excludeRoot>
                                     <excludeRoot>${project.basedir}/src/main/resources</excludeRoot>
                                     <excludeRoot>${javacc.outputDirectory}</excludeRoot>
@@ -824,6 +824,8 @@
                                         <!-- pmd-kotlin uses kotlin-type-mapper which requires at least java 17 -->
                                         <exclude>nl.stokpop.typemapper:kotlin-type-mapper-model</exclude>
                                         <exclude>nl.stokpop.typemapper:kotlin-type-mapper-analyzer</exclude>
+                                        <!-- pmd-dist ships both controlsfx 8 and 11 -->
+                                        <exclude>org.controlsfx:controlsfx</exclude>
                                     </excludes>
                                     <ignoreClasses>
                                         <!-- asm dependency contains a java9 module-info.class -->

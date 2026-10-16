@@ -167,12 +167,12 @@ set_pmd_classpath_or_module_path() {
   if [ "$java_version_feature" -eq 8 ]
   then
     # java8 - only classpath
-    PMD_CLASSPATH="$PMD_HOME/conf:$PMD_HOME/lib/classpath/*:$PMD_HOME/lib/modules/*"
+    PMD_CLASSPATH="$PMD_HOME/conf:$PMD_HOME/lib/classpath/*:$PMD_HOME/lib/modules/*:$PMD_HOME/lib/controlsfx-java8/*"
     PMD_MAIN_CLASS="net.sourceforge.pmd.cli.PmdCli"
   else
     # java9+ - modulepath + classpath
     PMD_CLASSPATH="$PMD_HOME/conf:$PMD_HOME/lib/classpath/*"
-    PMD_MODULE_PATH="$PMD_HOME/lib/modules"
+    PMD_MODULE_PATH="$PMD_HOME/lib/modules:$PMD_HOME/lib/controlsfx-java11"
     PMD_ADD_MODULES="kotlin.stdlib"
     PMD_MAIN_CLASS="--module net.sourceforge.pmd.cli/net.sourceforge.pmd.cli.PmdCli"
   fi

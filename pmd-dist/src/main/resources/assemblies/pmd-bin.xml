@@ -61,6 +61,11 @@
             <directory>target</directory>
             <outputDirectory>sbom</outputDirectory>
         </fileSet>
+
+        <fileSet>
+            <directory>${project.build.directory}/controlsfx-java8</directory>
+            <outputDirectory>lib/controlsfx-java8</outputDirectory>
+        </fileSet>
     </fileSets>
 
     <dependencySets>
@@ -74,6 +79,9 @@
                      ant.jar/ant-launcher.jar are missing
                 -->
                 <exclude>net.sourceforge.pmd:pmd-ant</exclude>
+
+                <!-- we need two versions of controlsfx: java8 and java11 -->
+                <exclude>org.controlsfx:controlsfx</exclude>
 
                 <!-- exclude dependencies not ready for module path yet -->
                 <exclude>io.github.apex-dev-tools:apex-ls_2.13</exclude>
@@ -146,6 +154,16 @@
             <directoryMode>0755</directoryMode>
             <fileMode>0644</fileMode>
             <useProjectArtifact>false</useProjectArtifact>
+        </dependencySet>
+
+        <dependencySet>
+            <scope>runtime</scope>
+            <includes>
+                <include>org.controlsfx:controlsfx</include>
+            </includes>
+            <outputDirectory>lib/controlsfx-java11</outputDirectory>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0644</fileMode>
         </dependencySet>
     </dependencySets>
 </assembly>
