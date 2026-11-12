@@ -233,7 +233,7 @@
                                 <configuration>
                                     <environmentVariables>
                                         <JAVA_HOME>${java8.home}</JAVA_HOME>
-                                        <PATH>${java8.home}/bin:${env.PATH}</PATH>
+                                        <PATH>${java8.home}/bin${path.separator}${env.PATH}</PATH>
                                     </environmentVariables>
                                 </configuration>
                             </execution>
@@ -264,7 +264,7 @@
                                 <configuration>
                                     <environmentVariables>
                                         <JAVA_HOME>${java11.home}</JAVA_HOME>
-                                        <PATH>${java11.home}/bin:${env.PATH}</PATH>
+                                        <PATH>${java11.home}/bin${path.separator}${env.PATH}</PATH>
                                     </environmentVariables>
                                 </configuration>
                             </execution>
@@ -295,7 +295,7 @@
                                 <configuration>
                                     <environmentVariables>
                                         <JAVA_HOME>${java17.home}</JAVA_HOME>
-                                        <PATH>${java17.home}/bin:${env.PATH}</PATH>
+                                        <PATH>${java17.home}/bin${path.separator}${env.PATH}</PATH>
                                     </environmentVariables>
                                 </configuration>
                             </execution>
@@ -326,7 +326,7 @@
                                 <configuration>
                                     <environmentVariables>
                                         <JAVA_HOME>${java25.home}</JAVA_HOME>
-                                        <PATH>${java25.home}/bin:${env.PATH}</PATH>
+                                        <PATH>${java25.home}/bin${path.separator}${env.PATH}</PATH>
                                     </environmentVariables>
                                 </configuration>
                             </execution>
