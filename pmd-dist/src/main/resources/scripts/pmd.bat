@@ -80,6 +80,8 @@ IF %java_version_feature% EQU 8 (
   SET "PMD_CLASSPATH=%PMD_HOME%/conf;%PMD_HOME%/lib/classpath/*"
   SET "PMD_MODULE_PATH=%PMD_HOME%/lib/modules"
   SET "PMD_ADD_MODULES=kotlin.stdlib"
+  rem the designer module is only required for the designer, the other commands should work without JavaFX
+  IF "%APPNAME%" == "designer" SET "PMD_ADD_MODULES=!PMD_ADD_MODULES!,net.sourceforge.pmd.util.fxdesigner"
   SET "PMD_MAIN_CLASS=--module net.sourceforge.pmd.cli/net.sourceforge.pmd.cli.PmdCli"
 )
 IF DEFINED CLASSPATH SET "PMD_CLASSPATH=%CLASSPATH%;%PMD_CLASSPATH%"

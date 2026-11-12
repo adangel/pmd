@@ -161,6 +161,11 @@ expect_error() {
 
 H="$PMD_HOME_DIR"
 PMD_CLI_MODULE="net.sourceforge.pmd.cli/net.sourceforge.pmd.cli.PmdCli"
+PMD_DESIGNER_MODULE="net.sourceforge.pmd.util.fxdesigner"
+# module path for java 9+
+MP="$H/lib/modules"
+# classpath for java 8
+CP8="$H/conf:$H/lib/classpath/*:$H/lib/modules/*"
 
 echo "Testing start script: $PMD_SCRIPT"
 echo "PMD_HOME: $H"
@@ -170,18 +175,18 @@ echo
 echo "Test: java 21, absolute path, arguments with spaces"
 run_pmd "21.0.2" "$JAVA_HOME_WITHOUT_FX" "$H/bin/pmd" check -d "src dir/with spaces" -R "my rules.xml"
 expect_args -classpath "$H/conf:$H/lib/classpath/*" \
-  --module-path "$H/lib/modules" --add-modules kotlin.stdlib \
+  --module-path "$MP" --add-modules kotlin.stdlib \
   --module "$PMD_CLI_MODULE" check -d "src dir/with spaces" -R "my rules.xml"
 
 echo "Test: java 8, only classpath"
 run_pmd "1.8.0_442" "$JAVA_HOME_WITHOUT_FX" "$H/bin/pmd" check -d "src dir"
-expect_args -classpath "$H/conf:$H/lib/classpath/*:$H/lib/modules/*" \
+expect_args -classpath "$CP8" \
   net.sourceforge.pmd.cli.PmdCli check -d "src dir"
 
 echo "Test: java 11, --illegal-access=warn"
 run_pmd "11.0.20" "$JAVA_HOME_WITHOUT_FX" "$H/bin/pmd" check
 expect_args --illegal-access=warn -classpath "$H/conf:$H/lib/classpath/*" \
-  --module-path "$H/lib/modules" --add-modules kotlin.stdlib \
+  --module-path "$MP" --add-modules kotlin.stdlib \
   --module "$PMD_CLI_MODULE" check
 
 echo "Test: CLASSPATH with spaces is prepended"
@@ -191,7 +196,7 @@ expect_arg_value -classpath "/some dir/a.jar:/other dir/classes:$H/conf:$H/lib/c
 echo "Test: PMD_JAVA_OPTS are split into words"
 run_pmd "21" "$JAVA_HOME_WITHOUT_FX" env PMD_JAVA_OPTS="-Xmx1g -Dfoo=bar" "$H/bin/pmd" check
 expect_args -Xmx1g -Dfoo=bar -classpath "$H/conf:$H/lib/classpath/*" \
-  --module-path "$H/lib/modules" --add-modules kotlin.stdlib \
+  --module-path "$MP" --add-modules kotlin.stdlib \
   --module "$PMD_CLI_MODULE" check
 
 # test_java_version <java version> <expected feature version>
@@ -245,17 +250,17 @@ test_java_version "26-ea"    26
 
 echo "Test: relative path, called from within PMD_HOME"
 run_pmd_in "$H" "21" "$JAVA_HOME_WITHOUT_FX" ./bin/pmd check
-expect_arg_value --module-path "$H/lib/modules"
+expect_arg_value --module-path "$MP"
 
 echo "Test: relative path, called from within bin with sh"
 run_pmd_in "$H/bin" "21" "$JAVA_HOME_WITHOUT_FX" sh pmd check
-expect_arg_value --module-path "$H/lib/modules"
+expect_arg_value --module-path "$MP"
 
 echo "Test: called as 'bash pmd' with pmd on the PATH (#4723)"
 # Note: only bash searches the PATH for the script, dash/sh don't
 if command -v bash >/dev/null 2>&1; then
   run_pmd "21" "$JAVA_HOME_WITHOUT_FX" env PATH="$H/bin:$PATH" bash pmd check
-  expect_arg_value --module-path "$H/lib/modules"
+  expect_arg_value --module-path "$MP"
 else
   echo "Skipped - no bash available"
 fi
@@ -266,21 +271,21 @@ mkdir -p "$LINK_DIR"
 echo "Test: absolute symlink with spaces"
 ln -s "$H/bin/pmd" "$LINK_DIR/pmd abs link"
 run_pmd "21" "$JAVA_HOME_WITHOUT_FX" "$LINK_DIR/pmd abs link" check
-expect_arg_value --module-path "$H/lib/modules"
+expect_arg_value --module-path "$MP"
 
 echo "Test: absolute symlink on the PATH"
 run_pmd "21" "$JAVA_HOME_WITHOUT_FX" env PATH="$LINK_DIR:$PATH" "pmd abs link" check
-expect_arg_value --module-path "$H/lib/modules"
+expect_arg_value --module-path "$MP"
 
 echo "Test: relative symlink with spaces, called from a different directory"
 (cd "$LINK_DIR" && ln -s "../pmd home with spaces/bin/pmd" "pmd rel link")
 run_pmd "21" "$JAVA_HOME_WITHOUT_FX" "$LINK_DIR/pmd rel link" check
-expect_arg_value --module-path "$H/lib/modules"
+expect_arg_value --module-path "$MP"
 
 echo "Test: symlink to symlink"
 ln -s "$LINK_DIR/pmd abs link" "$TMP_DIR/pmd link to link"
 run_pmd "21" "$JAVA_HOME_WITHOUT_FX" "$TMP_DIR/pmd link to link" check
-expect_arg_value --module-path "$H/lib/modules"
+expect_arg_value --module-path "$MP"
 
 echo "Test: symlinked PMD_HOME directory"
 ln -s "$H" "$TMP_DIR/pmd home link"
@@ -290,39 +295,39 @@ expect_arg_value --module-path "$TMP_DIR/pmd home link/lib/modules"
 echo "Test: designer, java 21 with OpenJFX (JAVAFX_HOME with spaces)"
 run_pmd "21.0.2" "$JAVA_HOME_WITHOUT_FX" env JAVAFX_HOME="$OPENJFX_HOME" "$H/bin/pmd" designer
 expect_arg_value -classpath "$H/conf:$H/lib/classpath/*"
-expect_arg_value --module-path "$H/lib/modules:$OPENJFX_HOME/lib"
-expect_arg_value --add-modules "kotlin.stdlib,javafx.controls,javafx.fxml"
+expect_arg_value --module-path "$MP:$OPENJFX_HOME/lib"
+expect_arg_value --add-modules "kotlin.stdlib,$PMD_DESIGNER_MODULE,javafx.controls,javafx.fxml"
 expect_arg_value --module "$PMD_CLI_MODULE"
-expect_arg "javafx.controls/javafx.scene.control.skin=pmd.designer,ALL-UNNAMED"
+expect_arg "javafx.controls/javafx.scene.control.skin=org.apache.commons.lang3"
 expect_no_arg "--enable-native-access=javafx.graphics"
 expect_no_arg "--illegal-access=warn"
 
 echo "Test: designer, java 25 with OpenJFX"
 run_pmd "25" "$JAVA_HOME_WITHOUT_FX" env JAVAFX_HOME="$OPENJFX_HOME" "$H/bin/pmd" designer
-expect_arg_value --module-path "$H/lib/modules:$OPENJFX_HOME/lib"
+expect_arg_value --module-path "$MP:$OPENJFX_HOME/lib"
 expect_arg "--enable-native-access=javafx.graphics"
 expect_arg "--sun-misc-unsafe-memory-access=allow"
 
 echo "Test: designer, java 17 with bundled JavaFX (java.home with spaces)"
 run_pmd "17.0.10" "$JAVA_HOME_WITH_FX" env JAVAFX_HOME="$OPENJFX_HOME" "$H/bin/pmd" designer
-expect_arg_value --module-path "$H/lib/modules"
-expect_arg_value --add-modules "kotlin.stdlib"
-expect_arg "javafx.controls/javafx.scene.control.skin=pmd.designer,ALL-UNNAMED"
+expect_arg_value --module-path "$MP"
+expect_arg_value --add-modules "kotlin.stdlib,$PMD_DESIGNER_MODULE"
+expect_arg "javafx.controls/javafx.scene.control.skin=org.apache.commons.lang3"
 
 echo "Test: designer, java 8 with bundled JavaFX"
 run_pmd "1.8.0_441" "$JAVA_HOME_WITH_FX" "$H/bin/pmd" designer
-expect_args -classpath "$H/conf:$H/lib/classpath/*:$H/lib/modules/*" \
+expect_args -classpath "$CP8" \
   net.sourceforge.pmd.cli.PmdCli designer
 
 echo "Test: designer, java 8 with bundled JavaFX, java.home pointing to jre"
 run_pmd "1.8.0_471" "$JAVA_HOME_WITH_FX2" "$H/bin/pmd" designer
-expect_args -classpath "$H/conf:$H/lib/classpath/*:$H/lib/modules/*" \
+expect_args -classpath "$CP8" \
   net.sourceforge.pmd.cli.PmdCli designer
 
 echo "Test: designer, java 21 with bundled JavaFX, java.home pointing to jre"
 run_pmd "21.0.5" "$JAVA_HOME_WITH_FX2" "$H/bin/pmd" designer
-expect_arg_value --module-path "$H/lib/modules"
-expect_arg_value --add-modules "kotlin.stdlib"
+expect_arg_value --module-path "$MP"
+expect_arg_value --add-modules "kotlin.stdlib,$PMD_DESIGNER_MODULE"
 
 echo "Test: designer, java 8u451 without JavaFX"
 run_pmd "1.8.0_451" "$JAVA_HOME_WITHOUT_FX" "$H/bin/pmd" designer

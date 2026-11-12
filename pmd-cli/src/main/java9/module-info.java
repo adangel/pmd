@@ -11,7 +11,9 @@ module net.sourceforge.pmd.cli {
     opens net.sourceforge.pmd.cli.commands.mixins.internal to info.picocli;
 
     requires net.sourceforge.pmd.core;
-    requires net.sourceforge.pmd.util.fxdesigner;
+    // optional at runtime: only resolved when starting the designer (--add-modules net.sourceforge.pmd.util.fxdesigner),
+    // so that the CLI works without JavaFX.
+    requires static net.sourceforge.pmd.util.fxdesigner;
 
     requires org.slf4j;
     requires org.slf4j.simple;
