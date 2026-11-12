@@ -189,23 +189,15 @@ IF "%APPNAME%" == "designer" (
     rem
     rem Reflective access used by PMD Designer
     rem in net.sourceforge.pmd.util.fxdesigner.util.controls.TreeViewWrapper.getVirtualFlow
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.controls/javafx.scene.control.skin=pmd.designer,ALL-UNNAMED"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.controls/javafx.scene.control.skin=org.apache.commons.lang3"
     rem in net.sourceforge.pmd.util.fxdesigner.util.DesignerUtil.customBuilderFactory
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.fxml/com.sun.javafx.fxml.builder=pmd.designer,ALL-UNNAMED"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.fxml/com.sun.javafx.fxml.builder=net.sourceforge.pmd.util.fxdesigner"
     rem
     rem Reflective access used by RichtextFX
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/javafx.scene.text=pmd.designer,ALL-UNNAMED"
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.scene.text=pmd.designer,ALL-UNNAMED"
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.text=pmd.designer,ALL-UNNAMED"
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.geom=pmd.designer,ALL-UNNAMED"
-    rem
-    rem Reflective access used by controlsfx
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.scene=pmd.designer,ALL-UNNAMED"
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.base/com.sun.javafx.runtime=pmd.designer,ALL-UNNAMED"
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.base/com.sun.javafx.event=pmd.designer,ALL-UNNAMED"
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.scene.traversal=pmd.designer,ALL-UNNAMED"
-
-    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens net.sourceforge.pmd.core/net.sourceforge.pmd.properties.internal=pmd.designer"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/javafx.scene.text=richtextfx"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.scene.text=richtextfx"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.text=richtextfx"
+    SET "PMD_ADDITIONAL_JAVA_OPTS=!PMD_ADDITIONAL_JAVA_OPTS! --add-opens javafx.graphics/com.sun.javafx.geom=richtextfx"
   )
 )
 
