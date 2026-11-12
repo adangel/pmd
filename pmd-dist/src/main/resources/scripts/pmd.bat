@@ -22,11 +22,12 @@ CALL :add_openjfx_module_path
 IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
 CALL :determine_additional_java_opts
 
+rem no delayed expansion from here on, so that "!" in paths and arguments is preserved
+SETLOCAL DisableDelayedExpansion
+
 SET PMD_MODULE_ARGS=
 IF DEFINED PMD_MODULE_PATH SET PMD_MODULE_ARGS=--module-path "%PMD_MODULE_PATH%"
 IF DEFINED PMD_ADD_MODULES SET PMD_MODULE_ARGS=%PMD_MODULE_ARGS% --add-modules %PMD_ADD_MODULES%
-
-SETLOCAL DisableDelayedExpansion
 
 java ^
   %PMD_JAVA_OPTS% %PMD_ADDITIONAL_JAVA_OPTS% ^
@@ -73,18 +74,19 @@ SET "PMD_MODULE_PATH="
 SET "PMD_ADD_MODULES="
 IF %java_version_feature% EQU 8 (
   rem java8 - only classpath
-  SET "PMD_CLASSPATH=%PMD_HOME%/conf;%PMD_HOME%/lib/classpath/*;%PMD_HOME%/lib/modules/*"
+  SET "PMD_CLASSPATH=%PMD_HOME%/conf;%PMD_HOME%/lib/classpath/*;%PMD_HOME%/lib/modules/*;%PMD_HOME%/lib/controlsfx-java8/*"
   SET "PMD_MAIN_CLASS=net.sourceforge.pmd.cli.PmdCli"
 ) ELSE (
   rem java9+ - modulepath + classpath
   SET "PMD_CLASSPATH=%PMD_HOME%/conf;%PMD_HOME%/lib/classpath/*"
-  SET "PMD_MODULE_PATH=%PMD_HOME%/lib/modules"
+  SET "PMD_MODULE_PATH=%PMD_HOME%/lib/modules;%PMD_HOME%/lib/controlsfx-java11"
   SET "PMD_ADD_MODULES=kotlin.stdlib"
   rem the designer module is only required for the designer, the other commands should work without JavaFX
   IF "%APPNAME%" == "designer" SET "PMD_ADD_MODULES=!PMD_ADD_MODULES!,net.sourceforge.pmd.util.fxdesigner"
   SET "PMD_MAIN_CLASS=--module net.sourceforge.pmd.cli/net.sourceforge.pmd.cli.PmdCli"
 )
-IF DEFINED CLASSPATH SET "PMD_CLASSPATH=%CLASSPATH%;%PMD_CLASSPATH%"
+rem use delayed expansion, so that "!" in CLASSPATH is preserved
+IF DEFINED CLASSPATH SET "PMD_CLASSPATH=!CLASSPATH!;!PMD_CLASSPATH!"
 EXIT /B
 
 :determine_java_version
