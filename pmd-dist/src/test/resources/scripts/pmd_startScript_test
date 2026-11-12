@@ -163,9 +163,9 @@ H="$PMD_HOME_DIR"
 PMD_CLI_MODULE="net.sourceforge.pmd.cli/net.sourceforge.pmd.cli.PmdCli"
 PMD_DESIGNER_MODULE="net.sourceforge.pmd.util.fxdesigner"
 # module path for java 9+
-MP="$H/lib/modules"
+MP="$H/lib/modules:$H/lib/controlsfx-java11"
 # classpath for java 8
-CP8="$H/conf:$H/lib/classpath/*:$H/lib/modules/*"
+CP8="$H/conf:$H/lib/classpath/*:$H/lib/modules/*:$H/lib/controlsfx-java8/*"
 
 echo "Testing start script: $PMD_SCRIPT"
 echo "PMD_HOME: $H"
@@ -290,7 +290,7 @@ expect_arg_value --module-path "$MP"
 echo "Test: symlinked PMD_HOME directory"
 ln -s "$H" "$TMP_DIR/pmd home link"
 run_pmd "21" "$JAVA_HOME_WITHOUT_FX" "$TMP_DIR/pmd home link/bin/pmd" check
-expect_arg_value --module-path "$TMP_DIR/pmd home link/lib/modules"
+expect_arg_value --module-path "$TMP_DIR/pmd home link/lib/modules:$TMP_DIR/pmd home link/lib/controlsfx-java11"
 
 echo "Test: designer, java 21 with OpenJFX (JAVAFX_HOME with spaces)"
 run_pmd "21.0.2" "$JAVA_HOME_WITHOUT_FX" env JAVAFX_HOME="$OPENJFX_HOME" "$H/bin/pmd" designer
